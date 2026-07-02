@@ -7,9 +7,10 @@ import { PricingCard } from "@/components/marketing/PricingCard";
 import { Badge } from "@/components/core/Badge";
 import { IndustryCard } from "@/components/marketing/IndustryCard";
 import { FormatChip } from "@/components/marketing/FormatChip";
-import { ScrollSteps } from "@/components/marketing/ScrollSteps";
+import { StackedSteps } from "@/components/marketing/StackedSteps";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Icon } from "@/components/core/Icon";
+import { Button } from "@/components/core/Button";
 import type { Industry } from "@/data/site";
 import { otherIndustries } from "@/data/site";
 
@@ -54,15 +55,32 @@ export function IndustryPageBody({ data }: { data: Industry }) {
 
       <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">
-          <ScrollReveal>
-            <SectionHeader title="Как проходит перевод" />
-          </ScrollReveal>
-          <ScrollSteps
+          <StackedSteps
+            aside={
+              <>
+                <h2
+                  className="tp-section-header__title"
+                  style={{ fontSize: "var(--tp-text-h1)", lineHeight: "var(--tp-leading-display)" }}
+                >
+                  Как проходит <span className="tp-hero__title-accent">перевод</span>
+                </h2>
+                <p className="tp-section-header__subtitle">
+                  {data.name}: от загрузки документа до сдачи готового перевода в исходном формате.
+                </p>
+                <div>
+                  <Button variant="ghost" as="a" href="/perevodchik">
+                    Попробовать бесплатно →
+                  </Button>
+                </div>
+              </>
+            }
             steps={data.steps.map((s) => ({
-              icon: <Icon name={s.iconName} />,
               title: s.title,
               description: s.description,
-              bullets: s.bullets,
+              rows: (s.bullets ?? []).map((b) => ({
+                icon: <Icon name="check" size={20} color="var(--tp-accent)" />,
+                text: b,
+              })),
             }))}
           />
         </div>
