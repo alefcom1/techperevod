@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { INDUSTRIES } from "@/data/site";
 import { SERVICES } from "@/data/services";
+import { LANGUAGES } from "@/data/languages";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -12,6 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/product/orchestrator",
     "/product/terminology",
     "/product/api",
+    "/uslugi",
+    "/bezopasnost",
     "/o-nas",
     "/blog",
     "/kontakty",
@@ -34,5 +37,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: s.slug === "perevod-kitajskogo-oborudovaniya" ? 0.9 : 0.8,
   }));
 
-  return [...staticRoutes, ...industryRoutes, ...serviceRoutes];
+  const languageRoutes = LANGUAGES.map((l) => ({
+    url: `${SITE_URL}/perevod/${l.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...industryRoutes, ...serviceRoutes, ...languageRoutes];
 }

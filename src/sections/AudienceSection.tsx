@@ -32,6 +32,10 @@ const AUDIENCES = [
       { label: "Машиностроение", href: "/otrasli/mashinostroenie" },
       { label: "Медтех и фарма", href: "/otrasli/medteh" },
       { label: "IT и SaaS", href: "/otrasli/it-saas" },
+      { label: "Строительство", href: "/otrasli/stroitelstvo" },
+      { label: "Автопром и транспорт", href: "/otrasli/avtoprom" },
+      { label: "Металлургия", href: "/otrasli/metallurgiya" },
+      { label: "Авиация и космос", href: "/otrasli/aviatsiya" },
     ],
   },
   {

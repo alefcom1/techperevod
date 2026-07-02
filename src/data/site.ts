@@ -3,6 +3,7 @@
 export const NAV_LINKS = [
   { label: "Переводчик", href: "/perevodchik" },
   { label: "AI-оркестратор", href: "/product/orchestrator" },
+  { label: "Услуги", href: "/uslugi" },
   { label: "Тарифы", href: "/tarify" },
   { label: "Отрасли", href: "/#industries" },
   { label: "Блог", href: "/blog" },
@@ -24,11 +25,18 @@ export const FOOTER_COLUMNS = [
       { label: "Нефтегаз и энергетика", href: "/otrasli/neftegaz" },
       { label: "Машиностроение", href: "/otrasli/mashinostroenie" },
       { label: "Медтех и фарма", href: "/otrasli/medteh" },
+      { label: "Энергетика", href: "/otrasli/energetika" },
+      { label: "Строительство", href: "/otrasli/stroitelstvo" },
+      { label: "Химпром", href: "/otrasli/himprom" },
+      { label: "Автопром и транспорт", href: "/otrasli/avtoprom" },
+      { label: "Металлургия", href: "/otrasli/metallurgiya" },
+      { label: "Авиация и космос", href: "/otrasli/aviatsiya" },
     ],
   },
   {
     title: "Услуги",
     links: [
+      { label: "Все услуги", href: "/uslugi" },
       { label: "Перевод с китайского", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
       { label: "Перевод инструкций", href: "/uslugi/perevod-instrukcij" },
       { label: "Перевод чертежей", href: "/uslugi/perevod-chertezhej" },
@@ -36,6 +44,22 @@ export const FOOTER_COLUMNS = [
       { label: "Перевод патентов", href: "/uslugi/perevod-patentov" },
       { label: "Локализация ПО", href: "/uslugi/lokalizaciya-po" },
       { label: "ТУ и спецификации", href: "/uslugi/perevod-tu-i-specifikacij" },
+      { label: "Регламенты ТО", href: "/uslugi/perevod-reglamentov-to" },
+      { label: "Каталоги запчастей", href: "/uslugi/perevod-katalogov-zapchastej" },
+      { label: "Сертификаты", href: "/uslugi/perevod-sertifikatov" },
+      { label: "Нормативная документация", href: "/uslugi/perevod-normativnoj-dokumentacii" },
+      { label: "Тендерная документация", href: "/uslugi/perevod-tendernoj-dokumentacii" },
+    ],
+  },
+  {
+    title: "Языковые пары",
+    links: [
+      { label: "С английского на русский", href: "/perevod/s-anglijskogo" },
+      { label: "С русского на английский", href: "/perevod/na-anglijskij" },
+      { label: "С немецкого", href: "/perevod/s-nemeckogo" },
+      { label: "С китайского", href: "/perevod/s-kitajskogo" },
+      { label: "С французского", href: "/perevod/s-francuzskogo" },
+      { label: "С испанского", href: "/perevod/s-ispanskogo" },
     ],
   },
   {
@@ -51,6 +75,7 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "О нас", href: "/o-nas" },
       { label: "Блог", href: "/blog" },
+      { label: "Конфиденциальность и 152-ФЗ", href: "/bezopasnost" },
       { label: "Контакты", href: "/kontakty" },
     ],
   },
@@ -73,6 +98,7 @@ export interface Industry {
   docTypes: { title: string; desc: string }[];
   steps: IndustryStep[];
   formats: string[];
+  relatedServiceSlugs: string[]; // существующие слаги /uslugi/*
 }
 
 export const INDUSTRIES: Industry[] = [
@@ -96,6 +122,7 @@ export const INDUSTRIES: Industry[] = [
       { iconName: "package-check", title: "Сдача", description: "Готовые строки — с сохранением исходной структуры файла." },
     ],
     formats: ["JSON", "YAML", "PO", "XLIFF", "Markdown", "XML"],
+    relatedServiceSlugs: ["lokalizaciya-po", "perevod-instrukcij", "perevod-patentov"],
   },
   {
     slug: "neftegaz",
@@ -117,6 +144,7 @@ export const INDUSTRIES: Industry[] = [
       { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением исходной верстки и чертежей." },
     ],
     formats: ["PDF", "DOCX", "DWG", "XLSX"],
+    relatedServiceSlugs: ["perevod-pasportov-bezopasnosti", "perevod-instrukcij", "perevod-tu-i-specifikacij", "perevod-chertezhej"],
   },
   {
     slug: "mashinostroenie",
@@ -138,6 +166,7 @@ export const INDUSTRIES: Industry[] = [
       { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением исходных чертежей и таблиц." },
     ],
     formats: ["DWG", "DXF", "PDF", "XLSX"],
+    relatedServiceSlugs: ["perevod-chertezhej", "perevod-tu-i-specifikacij", "perevod-instrukcij", "perevod-katalogov-zapchastej"],
   },
   {
     slug: "medteh",
@@ -159,6 +188,151 @@ export const INDUSTRIES: Industry[] = [
       { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением регуляторной структуры." },
     ],
     formats: ["PDF", "DOCX", "XML"],
+    relatedServiceSlugs: ["perevod-instrukcij", "perevod-pasportov-bezopasnosti", "perevod-sertifikatov"],
+  },
+
+  // ── Энергетика и электротехника ──
+  {
+    slug: "energetika",
+    name: "Энергетика и электротехника",
+    iconName: "plug-zap",
+    heroTitle: "Технический перевод для энергетики и электротехники",
+    heroSubtitle:
+      "Паспорта подстанций, схемы РЗА и инструкции по эксплуатации трансформаторов — переведены инженером-электротехником с сохранением обозначений ГОСТ Р МЭК.",
+    docTypes: [
+      { title: "Технические паспорта подстанций", desc: "Паспорта комплектных трансформаторных подстанций (КТП), распределительных устройств и силового оборудования — с сохранением заводской нумерации и таблиц параметров." },
+      { title: "Схемы РЗА", desc: "Схемы релейной защиты и автоматики, принципиальные и монтажные схемы шкафов управления — обозначения ANSI и МЭК переводятся без путаницы кодов." },
+      { title: "Инструкции по эксплуатации трансформаторов", desc: "Руководства по эксплуатации силовых и измерительных трансформаторов, регламенты испытаний и диагностики изоляции." },
+      { title: "Сертификаты соответствия", desc: "Сертификаты и декларации соответствия ТР ТС на энергооборудование, протоколы испытаний и заводские акты." },
+    ],
+    steps: [
+      { iconName: "cloud-upload", title: "Загрузка", description: "Загрузите паспорта, схемы РЗА и протоколы испытаний в исходном формате.", bullets: ["PDF, DOCX, XLSX, DWG", "Схемы РЗА и протоколы испытаний"] },
+      { iconName: "cpu", title: "AI-оркестрация", description: "Роутер выбирает модель, обученную на энергетической и электротехнической терминологии ГОСТ Р МЭК." },
+      { iconName: "user-check", title: "Редактор-инженер", description: "Редактор-электротехник проверяет обозначения на схемах и параметры оборудования." },
+      { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением исходных схем и таблиц параметров." },
+    ],
+    formats: ["PDF", "DOCX", "XLSX", "DWG"],
+    relatedServiceSlugs: ["perevod-pasportov-bezopasnosti", "perevod-instrukcij", "perevod-reglamentov-to", "perevod-sertifikatov"],
+  },
+
+  // ── Строительство и проектирование ──
+  {
+    slug: "stroitelstvo",
+    name: "Строительство и проектирование",
+    iconName: "building-2",
+    heroTitle: "Технический перевод для строительства и проектирования",
+    heroSubtitle:
+      "Проектная документация, BIM-спецификации и разрешительные пакеты — переведены с сохранением структуры разделов ПД/РД.",
+    docTypes: [
+      { title: "Проектная документация (ПД/РД)", desc: "Разделы проектной и рабочей документации — пояснительные записки, технологические решения, ведомости объёмов работ." },
+      { title: "BIM-модели и спецификации", desc: "Атрибуты элементов BIM-модели, спецификации оборудования и материалов, экспортированные из Revit и Renga." },
+      { title: "Разрешительная документация", desc: "Заключения экспертизы, разрешения на строительство и ввод в эксплуатацию, акты приёмки." },
+      { title: "Технические условия подключения к сетям", desc: "ТУ на присоединение к электрическим, тепловым, водопроводным и газовым сетям от ресурсоснабжающих организаций." },
+    ],
+    steps: [
+      { iconName: "cloud-upload", title: "Загрузка", description: "Загрузите разделы проектной документации, спецификации и чертежи в исходном формате.", bullets: ["PDF, DOCX, XLSX, DWG", "Разделы ПД/РД и спецификации BIM"] },
+      { iconName: "cpu", title: "AI-оркестрация", description: "Роутер выбирает модель под строительную терминологию и нормативную базу СНиП/СП." },
+      { iconName: "user-check", title: "Редактор-инженер", description: "Редактор с опытом в проектировании проверяет термины и ссылки на нормативные документы." },
+      { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением структуры разделов и вёрстки чертежей." },
+    ],
+    formats: ["PDF", "DOCX", "XLSX", "DWG", "IFC"],
+    relatedServiceSlugs: ["perevod-normativnoj-dokumentacii", "perevod-tu-i-specifikacij", "perevod-tendernoj-dokumentacii"],
+  },
+
+  // ── Химическая промышленность ──
+  {
+    slug: "himprom",
+    name: "Химическая промышленность",
+    iconName: "flask-conical",
+    heroTitle: "Технический перевод для химической промышленности",
+    heroSubtitle:
+      "Паспорта безопасности, регламенты производства и сертификаты ТР ТС — переведены с точной химической номенклатурой по CAS и IUPAC.",
+    docTypes: [
+      { title: "Паспорта безопасности химической продукции", desc: "SDS/паспорта безопасности с приведением структуры к ГОСТ 30333 и стандартными формулировками H- и P-фраз." },
+      { title: "Регламенты производства", desc: "Технологические регламенты, рецептуры и карты контроля процесса — с сохранением параметров и допусков." },
+      { title: "Сертификаты соответствия ТР ТС", desc: "Декларации и сертификаты соответствия на химическую продукцию, протоколы испытаний аккредитованных лабораторий." },
+      { title: "Инструкции по обращению с опасными веществами", desc: "Инструкции по хранению, транспортировке и утилизации опасных веществ, планы ликвидации аварийных ситуаций." },
+    ],
+    steps: [
+      { iconName: "cloud-upload", title: "Загрузка", description: "Загрузите паспорта безопасности, регламенты и сертификаты в исходном формате.", bullets: ["PDF, DOCX, XLSX", "Паспорта безопасности и регламенты"] },
+      { iconName: "cpu", title: "AI-оркестрация", description: "Роутер выбирает модель под химическую номенклатуру и нормативы СГС/REACH." },
+      { iconName: "user-check", title: "Редактор-инженер", description: "Редактор с химическим образованием проверяет номенклатуру веществ и параметры процесса." },
+      { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением структуры и таблиц параметров." },
+    ],
+    formats: ["PDF", "DOCX", "XLSX"],
+    relatedServiceSlugs: ["perevod-pasportov-bezopasnosti", "perevod-sertifikatov", "perevod-normativnoj-dokumentacii"],
+  },
+
+  // ── Автопром и транспорт ──
+  {
+    slug: "avtoprom",
+    name: "Автопром и транспорт",
+    iconName: "car",
+    heroTitle: "Технический перевод для автопрома и транспорта",
+    heroSubtitle:
+      "Руководства по ремонту, каталоги запчастей и сертификаты ОТТС — переведены с сохранением номеров деталей и схем.",
+    docTypes: [
+      { title: "Руководства по ремонту и ТО", desc: "Руководства по ремонту, регламенты технического обслуживания и диагностические карты по узлам и системам." },
+      { title: "Каталоги запчастей", desc: "Номенклатура запасных частей с перекрёстными артикулами и подписями на выносных схемах." },
+      { title: "Сертификаты (ОТТС/ЭПТС)", desc: "Одобрения типа транспортного средства, электронные паспорта транспортных средств и протоколы испытаний." },
+      { title: "Техническая документация поставщиков комплектующих", desc: "Спецификации и datasheet на узлы и компоненты от поставщиков первого и второго уровня." },
+    ],
+    steps: [
+      { iconName: "cloud-upload", title: "Загрузка", description: "Загрузите руководства по ремонту, каталоги запчастей и сертификаты в исходном формате.", bullets: ["PDF, DOCX, XLSX", "Каталоги запчастей и схемы"] },
+      { iconName: "cpu", title: "AI-оркестрация", description: "Роутер выбирает модель под автомобильную терминологию и обозначения узлов." },
+      { iconName: "user-check", title: "Редактор-инженер", description: "Редактор с автомобильным профилем проверяет артикулы и обозначения узлов." },
+      { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением схем и таблиц артикулов." },
+    ],
+    formats: ["PDF", "DOCX", "XLSX", "DWG"],
+    relatedServiceSlugs: ["perevod-katalogov-zapchastej", "perevod-reglamentov-to", "perevod-sertifikatov", "perevod-chertezhej"],
+  },
+
+  // ── Металлургия ──
+  {
+    slug: "metallurgiya",
+    name: "Металлургия",
+    iconName: "gauge",
+    heroTitle: "Технический перевод для металлургии",
+    heroSubtitle:
+      "Технологические регламенты плавки и проката, сертификаты качества металлопродукции — переведены с сохранением обозначений ГОСТ и зарубежных стандартов.",
+    docTypes: [
+      { title: "Технологические регламенты плавки и проката", desc: "Регламенты плавки, разливки и прокатного передела — параметры процесса, допуски и режимы термообработки." },
+      { title: "Сертификаты качества металлопродукции", desc: "Сертификаты по ГОСТ и зарубежным стандартам (EN, ASTM), с указанием марок стали и химического состава." },
+      { title: "Паспорта оборудования", desc: "Паспорта плавильных агрегатов, прокатных станов и вспомогательного оборудования." },
+      { title: "Инструкции по эксплуатации печей и прокатных станов", desc: "Регламенты пуска, останова и обслуживания печей, станов и линий термообработки." },
+    ],
+    steps: [
+      { iconName: "cloud-upload", title: "Загрузка", description: "Загрузите регламенты, сертификаты и паспорта оборудования в исходном формате.", bullets: ["PDF, DOCX, XLSX", "Регламенты и сертификаты качества"] },
+      { iconName: "cpu", title: "AI-оркестрация", description: "Роутер выбирает модель под металлургическую терминологию и марочник сталей." },
+      { iconName: "user-check", title: "Редактор-инженер", description: "Редактор-металлург проверяет марки сплавов, параметры процесса и ссылки на стандарты." },
+      { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением таблиц химического состава и режимов." },
+    ],
+    formats: ["PDF", "DOCX", "XLSX"],
+    relatedServiceSlugs: ["perevod-chertezhej", "perevod-tu-i-specifikacij", "perevod-normativnoj-dokumentacii", "perevod-sertifikatov"],
+  },
+
+  // ── Авиация и космос ──
+  {
+    slug: "aviatsiya",
+    name: "Авиация и космос",
+    iconName: "plane",
+    heroTitle: "Технический перевод для авиации и космоса",
+    heroSubtitle:
+      "Руководства по лётной эксплуатации, сертификационная документация и каталоги запчастей — переведены с точностью, которую требует авиационный регулятор.",
+    docTypes: [
+      { title: "Руководства по лётной эксплуатации (РЛЭ)", desc: "РЛЭ и руководства по технической эксплуатации воздушных судов — с сохранением процедур и ограничений." },
+      { title: "Сертификационная документация", desc: "Документы на соответствие требованиям АП, EASA и FAA — акты, протоколы и заключения по сертификации типа." },
+      { title: "Технические бюллетени", desc: "Сервисные и технические бюллетени производителей, директивы лётной годности и извещения об изменениях." },
+      { title: "Каталоги запчастей воздушных судов", desc: "Иллюстрированные каталоги деталей (IPC) с перекрёстными номерами и позициями на разнесённых схемах." },
+    ],
+    steps: [
+      { iconName: "cloud-upload", title: "Загрузка", description: "Загрузите РЛЭ, сертификационные документы и бюллетени в исходном формате.", bullets: ["PDF, DOCX, XLSX", "РЛЭ и технические бюллетени"] },
+      { iconName: "cpu", title: "AI-оркестрация", description: "Роутер выбирает модель под авиационную терминологию и требования АП/EASA/FAA." },
+      { iconName: "user-check", title: "Редактор-инженер", description: "Редактор с авиационным профилем проверяет процедуры, ограничения и номера бюллетеней." },
+      { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением структуры разделов и нумерации бюллетеней." },
+    ],
+    formats: ["PDF", "DOCX", "XLSX"],
+    relatedServiceSlugs: ["perevod-katalogov-zapchastej", "perevod-reglamentov-to", "perevod-sertifikatov", "perevod-instrukcij"],
   },
 ];
 

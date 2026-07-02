@@ -13,6 +13,7 @@ import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
 import type { Industry } from "@/data/site";
 import { otherIndustries } from "@/data/site";
+import { SERVICES } from "@/data/services";
 
 /**
  * Shared content for every /otrasli/* industry page. Takes a plain Industry
@@ -20,6 +21,7 @@ import { otherIndustries } from "@/data/site";
  */
 export function IndustryPageBody({ data }: { data: Industry }) {
   const others = otherIndustries(data.slug);
+  const relatedServices = SERVICES.filter((s) => data.relatedServiceSlugs.includes(s.slug));
 
   return (
     <>
@@ -134,6 +136,25 @@ export function IndustryPageBody({ data }: { data: Industry }) {
           </div>
         </div>
       </section>
+
+      {relatedServices.length ? (
+        <section className="tp-section">
+          <div className="tp-section__inner">
+            <ScrollReveal>
+              <SectionHeader title="Смежные услуги" />
+            </ScrollReveal>
+            <div className="tp-industry-grid">
+              {relatedServices.map((s, i) => (
+                <ScrollReveal key={s.slug} delay={i * 70}>
+                  <Link href={`/uslugi/${s.slug}`} style={{ textDecoration: "none", display: "block" }}>
+                    <IndustryCard icon={<Icon name={s.iconName} color="var(--tp-primary)" />} name={s.name} />
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="tp-section">
         <div className="tp-section__inner">

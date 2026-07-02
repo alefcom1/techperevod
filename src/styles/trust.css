@@ -1,0 +1,93 @@
+/* ============================================================
+   Страница /bezopasnost — стили, специфичные для SecurityPageBody.
+   Общие блоки (tp-section, tp-service-intro, tp-doctype-*, tp-faq,
+   tp-about-cta) переиспользуются из landing.css и services.css;
+   здесь — только то, чего там нет: нумерованные шаги NDA и
+   выделенный блок-«пояснение» для раздела про 152-ФЗ.
+   ============================================================ */
+
+/* Ряд бейджей под подзаголовком героя ("Россия", "152-ФЗ", "NDA за 2 часа") */
+.tp-trust-badges {
+  display: flex;
+  gap: var(--tp-space-3);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--tp-space-5);
+}
+
+/* Нумерованные шаги процесса подписания NDA */
+.tp-trust-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--tp-space-5);
+  counter-reset: tp-trust-step;
+}
+.tp-trust-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-3);
+}
+.tp-trust-step__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--tp-primary);
+  color: var(--tp-surface);
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-weight-heading);
+  font-size: 15px;
+}
+[data-tp-theme="dark"] .tp-trust-step__num { color: var(--tp-bg); }
+.tp-trust-step__title {
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-weight-heading);
+  font-size: 17px;
+  color: var(--tp-text);
+}
+.tp-trust-step__desc {
+  margin: 0;
+  color: var(--tp-text-muted);
+  font-size: 15px;
+  line-height: var(--tp-leading-body);
+}
+
+/* Блок-пояснение внутри раздела про 152-ФЗ: заметен, но не кричит */
+.tp-trust-callout {
+  max-width: 70ch;
+  margin: var(--tp-space-6) auto 0;
+  padding: var(--tp-space-6);
+  border-left: 3px solid var(--tp-primary);
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-surface-card);
+}
+.tp-trust-callout__title {
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-weight-heading);
+  font-size: 16px;
+  color: var(--tp-text);
+  margin: 0 0 var(--tp-space-4);
+}
+.tp-trust-callout ul {
+  margin: 0;
+  padding-left: 1.2em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-3);
+}
+.tp-trust-callout li {
+  color: var(--tp-text-muted);
+  font-size: 15px;
+  line-height: var(--tp-leading-body);
+}
+.tp-trust-callout li::marker { color: var(--tp-primary); }
+
+@media (max-width: 900px) {
+  .tp-trust-steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .tp-trust-steps { grid-template-columns: 1fr; }
+  .tp-trust-callout { padding: var(--tp-space-5); }
+}

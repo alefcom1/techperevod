@@ -8,27 +8,59 @@ import { FormatChip } from "@/components/marketing/FormatChip";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
-import type { Service } from "@/data/services";
-import { otherServices } from "@/data/services";
-import { getIndustry } from "@/data/site";
+import type { LanguagePage } from "@/data/languages";
+import { SERVICES } from "@/data/services";
+import { INDUSTRIES } from "@/data/site";
 
 const SITE_URL = "https://techperevod.com";
 
-/** JSON-LD FAQPage — собирается на сервере из данных услуги. */
-function faqJsonLd(data: Service) {
+/** Токен инлайн-ссылки в строковых полях данных: [[/путь|текст]]. */
+const LINK_TOKEN_RE = /\[\[(\/[^|\]]+)\|([^\]]+)\]\]/g;
+
+/** Схлопывает токены [[/путь|текст]] до простого текста — для JSON-LD и метаданных. */
+function stripLinkTokens(text: string): string {
+  return text.replace(LINK_TOKEN_RE, (_m, _href, label) => label);
+}
+
+/** Рендерит строку с токенами [[/путь|текст]] как обычный текст вперемешку с <Link>. */
+function renderInlineLinks(text: string): React.ReactNode {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let key = 0;
+  const re = new RegExp(LINK_TOKEN_RE);
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      nodes.push(<React.Fragment key={key++}>{text.slice(lastIndex, match.index)}</React.Fragment>);
+    }
+    nodes.push(
+      <Link key={key++} href={match[1]}>
+        {match[2]}
+      </Link>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    nodes.push(<React.Fragment key={key++}>{text.slice(lastIndex)}</React.Fragment>);
+  }
+  return nodes;
+}
+
+/** JSON-LD FAQPage — собирается на сервере из данных языковой пары. */
+function faqJsonLd(data: LanguagePage) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: data.faq.map((item) => ({
       "@type": "Question",
       name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
+      acceptedAnswer: { "@type": "Answer", text: stripLinkTokens(item.a) },
     })),
   };
 }
 
-/** JSON-LD BreadcrumbList: Главная → страница услуги. */
-function breadcrumbJsonLd(data: Service) {
+/** JSON-LD BreadcrumbList: Главная → страница языковой пары. */
+function breadcrumbJsonLd(data: LanguagePage) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -38,20 +70,23 @@ function breadcrumbJsonLd(data: Service) {
         "@type": "ListItem",
         position: 2,
         name: data.name,
-        item: `${SITE_URL}/uslugi/${data.slug}`,
+        item: `${SITE_URL}/perevod/${data.slug}`,
       },
     ],
   };
 }
 
 /**
- * Общий каркас страницы услуги /uslugi/*. Принимает объект Service,
- * поэтому все семь страниц различаются только контентом — как IndustryPageBody.
+ * Общий каркас страницы языковой пары /perevod/*. Принимает объект
+ * LanguagePage, поэтому все шесть страниц различаются только контентом —
+ * как ServicePageBody и IndustryPageBody.
  */
-export function ServicePageBody({ data }: { data: Service }) {
-  const others = otherServices(data.slug);
+export function LanguagePageBody({ data }: { data: LanguagePage }) {
+  const services = data.relatedServiceSlugs
+    .map((slug) => SERVICES.find((s) => s.slug === slug))
+    .filter((s): s is NonNullable<typeof s> => Boolean(s));
   const industries = data.relatedIndustrySlugs
-    .map((slug) => getIndustry(slug))
+    .map((slug) => INDUSTRIES.find((i) => i.slug === slug))
     .filter((i): i is NonNullable<typeof i> => Boolean(i));
 
   return (
@@ -69,10 +104,9 @@ export function ServicePageBody({ data }: { data: Service }) {
       <PageHero
         breadcrumb={
           <span>
-            <Link href="/">Главная</Link> / Услуги / {data.name}
+            <Link href="/">Главная</Link> / Языковые пары / {data.name}
           </span>
         }
-        icon={<Icon name={data.iconName} size={26} />}
         title={data.heroTitle}
         subtitle={data.heroSubtitle}
         ctaHref="/kontakty"
@@ -85,7 +119,7 @@ export function ServicePageBody({ data }: { data: Service }) {
           <ScrollReveal>
             <div className="tp-service-intro">
               {data.intro.map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
+                <p key={i}>{renderInlineLinks(paragraph)}</p>
               ))}
             </div>
           </ScrollReveal>
@@ -95,14 +129,14 @@ export function ServicePageBody({ data }: { data: Service }) {
       <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">
           <ScrollReveal>
-            <SectionHeader title="Что мы переводим" />
+            <SectionHeader title="Особенности перевода" />
           </ScrollReveal>
           <div className="tp-doctype-grid">
-            {data.whatWeTranslate.map((d, i) => (
-              <ScrollReveal key={d.title} delay={i * 70} as="div">
+            {data.linguisticNotes.map((note, i) => (
+              <ScrollReveal key={note.title} delay={i * 70} as="div">
                 <Card padding="lg" className="tp-doctype-card">
-                  <div className="tp-doctype-card__title">{d.title}</div>
-                  <p className="tp-doctype-card__desc">{d.desc}</p>
+                  <div className="tp-doctype-card__title">{note.title}</div>
+                  <p className="tp-doctype-card__desc">{note.desc}</p>
                 </Card>
               </ScrollReveal>
             ))}
@@ -113,19 +147,11 @@ export function ServicePageBody({ data }: { data: Service }) {
       <section className="tp-section">
         <div className="tp-section__inner">
           <ScrollReveal>
-            <SectionHeader title="Почему это стоит доверить нам" />
+            <SectionHeader title="Какие документы чаще всего переводим" />
           </ScrollReveal>
-          <div className="tp-service-features">
-            {data.features.map((f, i) => (
-              <ScrollReveal key={f.title} delay={i * 70} as="div">
-                <Card padding="lg" className="tp-value-card">
-                  <div className="tp-value-card__icon">
-                    <Icon name={f.iconName} size={22} />
-                  </div>
-                  <div className="tp-value-card__title">{f.title}</div>
-                  <p className="tp-value-card__desc">{f.desc}</p>
-                </Card>
-              </ScrollReveal>
+          <div className="tp-format-strip">
+            {data.typicalDocuments.map((doc) => (
+              <FormatChip key={doc}>{doc}</FormatChip>
             ))}
           </div>
         </div>
@@ -134,12 +160,10 @@ export function ServicePageBody({ data }: { data: Service }) {
       <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">
           <ScrollReveal>
-            <SectionHeader title="Форматы, с которыми работаем" />
+            <SectionHeader title="Кто чаще всего заказывает" />
           </ScrollReveal>
-          <div className="tp-format-strip">
-            {data.formats.map((f) => (
-              <FormatChip key={f}>{f}</FormatChip>
-            ))}
+          <div className="tp-service-intro">
+            <p>{renderInlineLinks(data.whoOrdersThis)}</p>
           </div>
         </div>
       </section>
@@ -158,7 +182,7 @@ export function ServicePageBody({ data }: { data: Service }) {
                     <span>{item.q}</span>
                     <Icon name="arrow-right" size={18} className="tp-faq__chevron" />
                   </summary>
-                  <p className="tp-faq__a">{item.a}</p>
+                  <p className="tp-faq__a">{renderInlineLinks(item.a)}</p>
                 </details>
               </ScrollReveal>
             ))}
@@ -166,8 +190,27 @@ export function ServicePageBody({ data }: { data: Service }) {
         </div>
       </section>
 
-      {industries.length > 0 ? (
+      {services.length > 0 ? (
         <section className="tp-section tp-section--tint">
+          <div className="tp-section__inner">
+            <ScrollReveal>
+              <SectionHeader title="Смежные услуги" />
+            </ScrollReveal>
+            <div className="tp-industry-grid">
+              {services.map((svc, i) => (
+                <ScrollReveal key={svc.slug} delay={i * 70}>
+                  <Link href={`/uslugi/${svc.slug}`} style={{ textDecoration: "none", display: "block" }}>
+                    <IndustryCard icon={<Icon name={svc.iconName} color="var(--tp-primary)" />} name={svc.name} />
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {industries.length > 0 ? (
+        <section className="tp-section">
           <div className="tp-section__inner">
             <ScrollReveal>
               <SectionHeader title="Смежные отрасли" />
@@ -184,23 +227,6 @@ export function ServicePageBody({ data }: { data: Service }) {
           </div>
         </section>
       ) : null}
-
-      <section className="tp-section">
-        <div className="tp-section__inner">
-          <ScrollReveal>
-            <SectionHeader title="Другие услуги" />
-          </ScrollReveal>
-          <div className="tp-industry-grid">
-            {others.map((svc, i) => (
-              <ScrollReveal key={svc.slug} delay={i * 60}>
-                <Link href={`/uslugi/${svc.slug}`} style={{ textDecoration: "none", display: "block" }}>
-                  <IndustryCard icon={<Icon name={svc.iconName} color="var(--tp-primary)" />} name={svc.name} />
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="tp-section">
         <div className="tp-section__inner">
