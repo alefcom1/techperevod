@@ -4,47 +4,85 @@ import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 
 /**
- * «По старинке vs techperevod» — блок по мотивам Crowdin «Why old localization
- * fails»: слева нейтральная панель с болями, справа тёмная акцентная панель
- * с решением.
+ * Сравнение платформы с онлайн-переводчиками и классическими бюро.
+ * Объединяет наш прежний блок «по старинке vs платформа» (его боли стали
+ * вводным текстом) с таблицей в духе Taia «vs Traditional Solutions».
  */
-const OLD_WAY = [
+
+type Cell = { kind: "yes" | "no"; note?: string } | { kind: "text"; note: string };
+
+const yes = (note?: string): Cell => ({ kind: "yes", note });
+const no = (note?: string): Cell => ({ kind: "no", note });
+const text = (note: string): Cell => ({ kind: "text", note });
+
+const ROWS: { feature: string; us: Cell; online: Cell; agency: Cell }[] = [
   {
-    title: "Файлы по почте",
-    desc: "Версии теряются в переписке, статус заказа неизвестен, «финальный_v7_правки2.docx» живёт своей жизнью.",
+    feature: "Понимание контекста документа",
+    us: yes("документ целиком + термбаза"),
+    online: no("перевод по абзацам"),
+    agency: yes(),
   },
   {
-    title: "Excel с терминами",
-    desc: "Терминология расходится от заказа к заказу: один переводчик пишет «привод», другой — «актуатор».",
+    feature: "Ваша терминология и глоссарий",
+    us: yes("подставляется до генерации"),
+    online: no(),
+    agency: text("за доплату, ведётся вручную"),
   },
   {
-    title: "Недели ожидания",
-    desc: "Оценка стоимости — днями, перевод — неделями. Релиз документации стоит и ждёт.",
+    feature: "Память переводов и скидка за повторы",
+    us: yes("скидка видна до оплаты"),
+    online: no(),
+    agency: text("редко и непрозрачно"),
   },
   {
-    title: "Оплата за всё подряд",
-    desc: "Повторяющиеся абзацы и типовые фразы оплачиваются заново в каждом заказе.",
+    feature: "Вёрстка DOCX, PDF, DWG сохраняется",
+    us: yes("65+ форматов"),
+    online: no("только текст"),
+    agency: yes("часто за доплату"),
+  },
+  {
+    feature: "Проверка инженером-редактором",
+    us: yes("по запросу, от 1,5 ₽/слово"),
+    online: no(),
+    agency: yes(),
+  },
+  {
+    feature: "Оценка стоимости и срока",
+    us: text("2 минуты, автоматически"),
+    online: text("не считается"),
+    agency: text("1–2 рабочих дня"),
+  },
+  {
+    feature: "Срок готовности перевода",
+    us: text("минуты — часы"),
+    online: text("мгновенно, но черновик"),
+    agency: text("дни — недели"),
+  },
+  {
+    feature: "API для интеграции в ваш процесс",
+    us: yes("с тарифа Pro"),
+    online: text("у части сервисов"),
+    agency: no(),
+  },
+  {
+    feature: "Конфиденциальность и NDA",
+    us: yes("NDA за 2 часа"),
+    online: no("текст уходит в публичный сервис"),
+    agency: yes(),
   },
 ];
 
-const NEW_WAY = [
-  {
-    title: "Оценка за 2 минуты",
-    desc: "Загрузили файл — сразу видите объём, стоимость и срок. Без звонков и ожидания менеджера.",
-  },
-  {
-    title: "AI-оркестрация моделей",
-    desc: "Роутер сам выбирает лучшую модель под языковую пару и тип документа — и объясняет выбор.",
-  },
-  {
-    title: "Термбаза и память переводов",
-    desc: "Терминология едина во всех заказах, повторы автоматически дешевле — скидка видна до оплаты.",
-  },
-  {
-    title: "Инженер отвечает за смысл",
-    desc: "Финальную проверку делает редактор с профильным образованием — там, где цена ошибки высока.",
-  },
-];
+function CellView({ cell }: { cell: Cell }) {
+  if (cell.kind === "text") return <span>{cell.note}</span>;
+  return (
+    <span className="tp-vs__cell">
+      <span className={`tp-vs__mark tp-vs__mark--${cell.kind}`}>
+        <Icon name={cell.kind === "yes" ? "check" : "x"} size={14} />
+      </span>
+      {cell.note ? <span>{cell.note}</span> : null}
+    </span>
+  );
+}
 
 export function ComparisonSection() {
   return (
@@ -52,44 +90,68 @@ export function ComparisonSection() {
       <div className="tp-section__inner">
         <ScrollReveal>
           <SectionHeader
-            title="Перевод по старинке против платформы"
-            subtitle="Почему «отправить файл в бюро и ждать» больше не работает для технической документации."
+            title="Онлайн-переводчик, бюро переводов или платформа?"
+            subtitle="Честное сравнение трёх способов перевести техническую документацию — по пунктам, которые действительно влияют на результат."
           />
         </ScrollReveal>
-        <div className="tp-compare">
-          <ScrollReveal>
-            <div className="tp-compare__panel tp-compare__panel--old">
-              <h3 className="tp-compare__title">Перевод без системы — это боль</h3>
-              <div className="tp-compare__items">
-                {OLD_WAY.map((item) => (
-                  <div className="tp-compare__item" key={item.title}>
-                    <Icon name="arrow-right" size={22} color="var(--tp-text-muted)" />
-                    <div>
-                      <h4 className="tp-compare__item-title">{item.title}</h4>
-                      <p className="tp-compare__item-desc">{item.desc}</p>
-                    </div>
-                  </div>
+
+        <ScrollReveal>
+          <div className="tp-compare-intro">
+            <p>
+              Технический перевод обычно делают одним из двух способов. Быстрый — вставить текст в онлайн-переводчик:
+              бесплатно и мгновенно, но Google Translate и DeepL не знают вашу терминологию, теряют вёрстку чертежей и
+              таблиц, а конфиденциальный документ отправляется в публичный сервис. Надёжный — заказать перевод в бюро:
+              качество выше, но оценка занимает день-два, сам перевод — недели, а повторяющиеся абзацы регламентов вы
+              оплачиваете заново в каждом заказе.
+            </p>
+            <p>
+              <strong>techperevod объединяет сильные стороны обоих подходов.</strong> AI-оркестратор переводит документ
+              за минуты и подставляет вашу термбазу ещё до генерации текста, память переводов автоматически снижает
+              стоимость повторов, а редактор с инженерным образованием проверяет смысл там, где цена ошибки высока.
+              Файл возвращается в исходном формате — от DOCX до чертежа DWG.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        <ScrollReveal delay={80}>
+          <div className="tp-vs">
+            <table>
+              <thead>
+                <tr>
+                  <th>Возможность</th>
+                  <th className="tp-vs__us">
+                    techperevod
+                    <small>AI-оркестратор + инженер</small>
+                  </th>
+                  <th>
+                    Онлайн-переводчики
+                    <small>Google Translate, DeepL</small>
+                  </th>
+                  <th>
+                    Классическое бюро
+                    <small>перевод «под ключ» вручную</small>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {ROWS.map((row) => (
+                  <tr key={row.feature}>
+                    <td>{row.feature}</td>
+                    <td className="tp-vs__us">
+                      <CellView cell={row.us} />
+                    </td>
+                    <td>
+                      <CellView cell={row.online} />
+                    </td>
+                    <td>
+                      <CellView cell={row.agency} />
+                    </td>
+                  </tr>
                 ))}
-              </div>
-            </div>
-          </ScrollReveal>
-          <ScrollReveal delay={120}>
-            <div className="tp-compare__panel tp-compare__panel--new">
-              <h3 className="tp-compare__title">Как это устроено в techperevod</h3>
-              <div className="tp-compare__items">
-                {NEW_WAY.map((item) => (
-                  <div className="tp-compare__item" key={item.title}>
-                    <Icon name="arrow-right" size={22} color="var(--tp-accent)" />
-                    <div>
-                      <h4 className="tp-compare__item-title">{item.title}</h4>
-                      <p className="tp-compare__item-desc">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
+              </tbody>
+            </table>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
