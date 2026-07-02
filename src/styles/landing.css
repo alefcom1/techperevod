@@ -28,7 +28,7 @@ body::after {
   background-size: 180px 180px;
 }
 #root { position: relative; z-index: 1; }
-.tp-landing { overflow-x: hidden; }
+.tp-landing { overflow-x: clip; } /* clip, а не hidden: hidden ломает position:sticky у потомков */
 
 .tp-section { padding: var(--tp-space-section-y) 0; }
 .tp-section--tint {
