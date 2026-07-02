@@ -1,0 +1,18 @@
+/* ==========================================================================
+   TECHPEREVOD — Webfonts
+   No font binaries were available from the source repo (it was empty at
+   import time), so Inter and JetBrains Mono — standard, freely-licensed
+   Google Fonts — cover the whole system: Inter at 700/800 for display
+   (headline) sizes, 400–600 for body/UI, JetBrains Mono for literal
+   terms/formats/codes. Headings previously used Fredoka (rounded
+   geometric) to echo the logo's rounded terminals; that read as a
+   friendly consumer-app face rather than an engineering B2B tool, so
+   headings now share Inter with body copy (weight/tracking do the work
+   of a "display" feel instead of a second family) — see readme.md.
+   Loaded via Google Fonts' CSS2 endpoint (emits @font-face + woff2,
+   correctly subset per-browser). If self-hosted binaries become
+   available, replace this file with local @font-face rules pointing at
+   /assets/fonts/.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");

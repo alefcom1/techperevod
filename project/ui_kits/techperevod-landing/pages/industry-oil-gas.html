@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru" data-tp-theme="light">
+<head>
+<meta charset="utf-8" />
+<title>Нефтегаз и энергетика — технический перевод | techperevod.com</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../../../assets/favicon-16.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="../../../assets/favicon-192.png" />
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../landing.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../shared/PageShell.jsx"></script>
+<script type="text/babel" src="../shared/PageHero.jsx"></script>
+<script type="text/babel" src="../shared/IndustryPageBody.jsx"></script>
+<script type="text/babel">
+const DATA = {
+  slug: "industry-oil-gas",
+  name: "Нефтегаз и энергетика",
+  iconName: "flame",
+  heroTitle: "Технический перевод для нефтегазовой отрасли",
+  heroSubtitle: "Регламенты, паспорта безопасности и чертежи трубопроводов — переведены инженером с профильным образованием.",
+  docTypes: [
+    { title: "Технические паспорта и регламенты", desc: "Паспорта безопасности, регламенты эксплуатации, инструкции по технике безопасности." },
+    { title: "Проектная документация", desc: "ТУ, ТЗ и пояснительные записки к проектам обустройства месторождений." },
+    { title: "Чертежи и схемы", desc: "Схемы трубопроводов и P&ID с сохранением исходной верстки DWG/PDF." },
+    { title: "Сертификаты и разрешения", desc: "Сертификаты соответствия и разрешительная документация для надзорных органов." },
+  ],
+  steps: [
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="cloud-upload" />, title: "Загрузка", description: "Загрузите чертежи, регламенты и сертификаты в исходном формате.", bullets: ["DWG, PDF, DOCX, XLSX", "Чертежи и схемы P&ID"] },
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="cpu" />, title: "AI-оркестрация", description: "Роутер выбирает модель под отраслевую и нормативную терминологию." },
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="user-check" />, title: "Редактор-инженер", description: "Редактор с опытом в нефтегазовой отрасли проверяет терминологию и нормы." },
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="package-check" />, title: "Сдача", description: "Готовый документ — с сохранением исходной верстки и чертежей." },
+  ],
+  formats: ["PDF", "DOCX", "DWG", "XLSX"],
+  otherIndustries: [
+    { slug: "industry-it-saas", name: "IT и SaaS", iconName: "cpu" },
+    { slug: "industry-machinery", name: "Машиностроение", iconName: "cog" },
+    { slug: "industry-medtech", name: "Медтех и фарма", iconName: "pill" },
+  ],
+};
+
+function App() {
+  const [theme, setTheme] = React.useState(() => localStorage.getItem("tp-landing-theme") || "light");
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-tp-theme", theme);
+    localStorage.setItem("tp-landing-theme", theme);
+  }, [theme]);
+  return (
+    <PageShell theme={theme} setTheme={setTheme} root="../" assetsRoot="../../../">
+      <IndustryPageBody data={DATA} root="../" />
+    </PageShell>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru" data-tp-theme="light">
+<head>
+<meta charset="utf-8" />
+<title>IT и SaaS — технический перевод | techperevod.com</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../../../assets/favicon-16.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="../../../assets/favicon-192.png" />
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../landing.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../shared/PageShell.jsx"></script>
+<script type="text/babel" src="../shared/PageHero.jsx"></script>
+<script type="text/babel" src="../shared/IndustryPageBody.jsx"></script>
+<script type="text/babel">
+const DATA = {
+  slug: "industry-it-saas",
+  name: "IT и SaaS",
+  iconName: "cpu",
+  heroTitle: "Технический перевод для IT и SaaS-продуктов",
+  heroSubtitle: "Строки интерфейса, документация API и справочные центры — переведены с сохранением плейсхолдеров и разметки.",
+  docTypes: [
+    { title: "UI-строки и локализация", desc: "Строки интерфейса с сохранением переменных, плейсхолдеров и ограничений по длине." },
+    { title: "API-документация", desc: "Референсы эндпоинтов, SDK-гайды и примеры кода — без искажения синтаксиса." },
+    { title: "Пользовательские соглашения", desc: "EULA, политика конфиденциальности, условия использования с юридической точностью." },
+    { title: "Справочные центры", desc: "Базы знаний и статьи поддержки, адаптированные под тон продукта." },
+  ],
+  steps: [
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="cloud-upload" />, title: "Загрузка", description: "Загрузите YAML/JSON-строки, Markdown-документацию или экспорт справочного центра.", bullets: ["JSON, YAML, Markdown", "Git-совместимые форматы"] },
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="cpu" />, title: "AI-оркестрация", description: "Роутер выбирает модель, обученную на технической и IT-терминологии." },
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="user-check" />, title: "Редактор-инженер", description: "Редактор с опытом в разработке проверяет термины и плейсхолдеры." },
+    { icon: <window.TechperevodDesignSystem_4028dd.Icon name="package-check" />, title: "Сдача", description: "Готовые строки — с сохранением исходной структуры файла." },
+  ],
+  formats: ["JSON", "YAML", "PO", "XLIFF", "Markdown", "XML"],
+  otherIndustries: [
+    { slug: "industry-oil-gas", name: "Нефтегаз и энергетика", iconName: "flame" },
+    { slug: "industry-machinery", name: "Машиностроение", iconName: "cog" },
+    { slug: "industry-medtech", name: "Медтех и фарма", iconName: "pill" },
+  ],
+};
+
+function App() {
+  const [theme, setTheme] = React.useState(() => localStorage.getItem("tp-landing-theme") || "light");
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-tp-theme", theme);
+    localStorage.setItem("tp-landing-theme", theme);
+  }, [theme]);
+  return (
+    <PageShell theme={theme} setTheme={setTheme} root="../" assetsRoot="../../../">
+      <IndustryPageBody data={DATA} root="../" />
+    </PageShell>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

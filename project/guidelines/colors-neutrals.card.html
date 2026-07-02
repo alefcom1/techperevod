@@ -1,0 +1,20 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Neutrals — bg / surface / border / text" subtitle="Light theme neutral scale" -->
+<!DOCTYPE html>
+<html data-tp-theme="light">
+<head><meta charset="utf-8" /><link rel="stylesheet" href="../styles.css" />
+<style>
+  body{margin:0;background:var(--tp-bg);font-family:var(--tp-font-sans);}
+  .row{display:flex;gap:12px;padding:20px;}
+  .sw{flex:1;height:90px;border-radius:var(--tp-radius-sm);display:flex;flex-direction:column;justify-content:flex-end;padding:10px 12px;border:1px solid var(--tp-border);font-size:12px;color:var(--tp-text);}
+  .sw span{display:block;font-family:var(--tp-font-mono);font-size:11px;color:var(--tp-text-muted);}
+</style></head>
+<body>
+  <div class="row">
+    <div class="sw" style="background:var(--tp-bg)">bg<span>--tp-bg</span></div>
+    <div class="sw" style="background:var(--tp-surface)">surface<span>--tp-surface</span></div>
+    <div class="sw" style="background:var(--tp-surface-sunken)">sunken<span>--tp-surface-sunken</span></div>
+    <div class="sw" style="background:var(--tp-border)">border<span>--tp-border</span></div>
+    <div class="sw" style="background:var(--tp-text);color:#fff;border-color:var(--tp-text)">text<span style="color:#cfd6e0">--tp-text</span></div>
+    <div class="sw" style="background:var(--tp-text-muted);color:#fff;border-color:var(--tp-text-muted)">muted<span style="color:#e5e9ef">--tp-text-muted</span></div>
+  </div>
+</body></html>

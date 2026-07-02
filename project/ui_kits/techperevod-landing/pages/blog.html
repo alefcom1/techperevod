@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru" data-tp-theme="light">
+<head>
+<meta charset="utf-8" />
+<title>Блог | techperevod.com</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../../../assets/favicon-16.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="../../../assets/favicon-192.png" />
+<link rel="apple-touch-icon" href="../../../assets/apple-touch-icon.png" />
+<link rel="stylesheet" href="../../../styles.css" />
+<link rel="stylesheet" href="../landing.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="../shared/PageShell.jsx"></script>
+<script type="text/babel" src="../shared/PageHero.jsx"></script>
+<script type="text/babel">
+const { SectionHeader, Card, Badge, Icon, ScrollReveal } = window.TechperevodDesignSystem_4028dd;
+
+const POSTS = [
+  { category: "AI", date: "24 июня 2026", read: "6 мин", title: "Как AI-оркестрация ускоряет технический перевод", excerpt: "Разбираем, как роутер выбирает модель под языковую пару и тип документа — и почему это быстрее одной универсальной модели." },
+  { category: "Продукт", date: "18 июня 2026", read: "4 мин", title: "Термбаза и TM: как считать скидку за повторы", excerpt: "Что такое память переводов, как повторы снижают стоимость заказа и почему термбаза принадлежит клиенту." },
+  { category: "Машиностроение", date: "10 июня 2026", read: "5 мин", title: "Чек-лист: подготовка чертежей DWG к переводу", excerpt: "Слои, аннотации, блоки текста — что проверить перед отправкой чертежа на перевод." },
+  { category: "Гайд", date: "2 июня 2026", read: "5 мин", title: "MTPE vs Full: как выбрать уровень перевода", excerpt: "Когда достаточно AI-черновика с редактурой, а когда нужен перевод инженером с нуля." },
+  { category: "Форматы", date: "26 мая 2026", read: "3 мин", title: "5 форматов, которые чаще всего теряют верстку при переводе", excerpt: "И как оркестратор сохраняет исходную структуру документа при сдаче." },
+  { category: "Команда", date: "19 мая 2026", read: "4 мин", title: "Как мы обучаем редакторов-инженеров", excerpt: "Профильное образование, тестовые задания и работа с термбазой клиента — что входит в подготовку редактора." },
+];
+
+function BlogPage({ root }) {
+  return (
+    <React.Fragment>
+      <PageHero
+        breadcrumb={<span><a href={root + "index.html"}>Главная</a> / Блог</span>}
+        title="Блог"
+        subtitle="Об AI-оркестрации, работе с термбазой и техническом переводе по отраслям."
+        ctaHref={root + "index.html#hero"}
+      />
+
+      <section className="tp-section" data-screen-label="blog">
+        <div className="tp-section__inner">
+          <div className="tp-blog-grid">
+            {POSTS.map((p, i) => (
+              <ScrollReveal key={p.title} delay={(i % 3) * 70}>
+                <a href="#" style={{ textDecoration: "none", display: "block", height: "100%" }}>
+                  <Card variant="elevated" padding="lg" interactive className="tp-blog-card">
+                    <Badge tone={i % 3 === 0 ? "accent" : "neutral"} size="sm">{p.category}</Badge>
+                    <h3 className="tp-blog-card__title">{p.title}</h3>
+                    <p className="tp-blog-card__excerpt">{p.excerpt}</p>
+                    <div className="tp-blog-card__meta">
+                      <Icon name="calendar" size={14} />
+                      <span>{p.date}</span>
+                      <span>·</span>
+                      <span>{p.read}</span>
+                    </div>
+                  </Card>
+                </a>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    </React.Fragment>
+  );
+}
+
+function App() {
+  const [theme, setTheme] = React.useState(() => localStorage.getItem("tp-landing-theme") || "light");
+  React.useEffect(() => {
+    document.documentElement.setAttribute("data-tp-theme", theme);
+    localStorage.setItem("tp-landing-theme", theme);
+  }, [theme]);
+  return (
+    <PageShell theme={theme} setTheme={setTheme} root="../" assetsRoot="../../../">
+      <BlogPage root="../" />
+    </PageShell>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

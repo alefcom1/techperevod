@@ -1,0 +1,21 @@
+<!-- @dsCard group="Brand" viewport="700x150" name="Motion & easing" subtitle="150-700ms, ease-out for entrances, respects prefers-reduced-motion" -->
+<!DOCTYPE html>
+<html data-tp-theme="light">
+<head><meta charset="utf-8" /><link rel="stylesheet" href="../styles.css" />
+<style>
+  body{margin:0;background:var(--tp-bg);font-family:var(--tp-font-mono);font-size:11px;color:var(--tp-text-muted);padding:20px;}
+  .row{display:flex;gap:24px;align-items:center;}
+  .dot{width:20px;height:20px;border-radius:50%;background:var(--tp-primary);}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  .fast .dot{animation:bob var(--tp-duration-fast) var(--tp-ease) infinite alternate;}
+  .med .dot{animation:bob var(--tp-duration) var(--tp-ease-out) infinite alternate;}
+  .slow .dot{animation:bob var(--tp-duration-slow) var(--tp-ease) infinite alternate;}
+  .col{display:flex;flex-direction:column;align-items:center;gap:10px;height:60px;justify-content:center;}
+</style></head>
+<body>
+  <div class="row">
+    <div class="col fast"><div class="dot"></div>--tp-duration-fast 150ms</div>
+    <div class="col med"><div class="dot" style="background:var(--tp-accent)"></div>--tp-duration 250ms ease-out</div>
+    <div class="col slow"><div class="dot"></div>--tp-duration-slow 700ms</div>
+  </div>
+</body></html>

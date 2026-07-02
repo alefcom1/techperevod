@@ -1,0 +1,18 @@
+<!-- @dsCard group="Spacing" viewport="700x180" name="Shadow & glass" subtitle="Elevation tokens + signature light glassmorphism" -->
+<!DOCTYPE html>
+<html data-tp-theme="light">
+<head><meta charset="utf-8" /><link rel="stylesheet" href="../styles.css" />
+<style>
+  body{margin:0;background:linear-gradient(135deg,var(--tp-primary-soft),var(--tp-accent-soft));font-family:var(--tp-font-sans);padding:20px;}
+  .row{display:flex;gap:20px;}
+  .card{background:var(--tp-surface);border-radius:var(--tp-radius);width:140px;height:110px;display:flex;align-items:center;justify-content:center;font-family:var(--tp-font-mono);font-size:11px;color:var(--tp-text-muted);}
+  .glass{background:var(--tp-glass);border:1px solid var(--tp-glass-border);backdrop-filter:blur(var(--tp-glass-blur));-webkit-backdrop-filter:blur(var(--tp-glass-blur));color:var(--tp-text);}
+</style></head>
+<body>
+  <div class="row">
+    <div class="card" style="box-shadow:var(--tp-shadow-sm)">shadow-sm</div>
+    <div class="card" style="box-shadow:var(--tp-shadow)">shadow</div>
+    <div class="card" style="box-shadow:var(--tp-shadow-lift)">shadow-lift</div>
+    <div class="card glass">glass card</div>
+  </div>
+</body></html>
