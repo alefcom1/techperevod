@@ -8,7 +8,13 @@ import { Button } from "@/components/core/Button";
  * "fits seamlessly into your development workflow": слева sticky-заголовок,
  * справа карточки шагов, растворяющиеся при скролле (StackedSteps).
  */
-export function HowItWorksSection() {
+export interface HowItWorksSectionProps {
+  subtitle?: string;
+}
+
+export function HowItWorksSection({
+  subtitle = "Платформа встраивается в ваш процесс работы с документацией: от загрузки файла до сдачи в исходном формате — с AI-оркестрацией и проверкой инженером.",
+}: HowItWorksSectionProps) {
   return (
     <section className="tp-section" id="how">
       <div className="tp-section__inner">
@@ -18,10 +24,7 @@ export function HowItWorksSection() {
               <h2 className="tp-section-header__title" style={{ fontSize: "var(--tp-text-h1)", lineHeight: "var(--tp-leading-display)" }}>
                 Четыре шага <span className="tp-hero__title-accent">до готового перевода</span>
               </h2>
-              <p className="tp-section-header__subtitle">
-                Платформа встраивается в ваш процесс работы с документацией: от загрузки файла до сдачи в исходном
-                формате — с AI-оркестрацией и проверкой инженером.
-              </p>
+              <p className="tp-section-header__subtitle">{subtitle}</p>
               <div>
                 <Button variant="ghost" as="a" href="/perevodchik">
                   Попробовать бесплатно →

@@ -20,6 +20,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# admin panel live content (edited on the server, must survive deploys)
+/data/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

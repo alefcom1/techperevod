@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { ContactsBody } from "@/sections/ContactsBody";
+import { getContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "Контакты",
-  description:
-    "Свяжитесь с techperevod: email, телефон, Telegram. Оставьте заявку и прикрепите документ — пришлём оценку стоимости в течение рабочего дня.",
-  alternates: { canonical: "/kontakty" },
-  openGraph: { title: "Контакты | techperevod.com", url: "/kontakty", type: "website" },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { title, description } = (await getContent()).meta.kontakty;
+  return {
+    title,
+    description,
+    alternates: { canonical: "/kontakty" },
+    openGraph: { title: `${title} | techperevod.com`, url: "/kontakty", type: "website" },
+  };
+}
 
 export default function ContactsPage() {
   return (

@@ -7,7 +7,13 @@ import { Icon } from "@/components/core/Icon";
 import { ProductWindow } from "@/components/marketing/ProductWindow";
 import { Translator } from "@/components/translator/Translator";
 
-export function HeroSection() {
+export interface HeroSectionProps {
+  subtitle?: string;
+}
+
+export function HeroSection({
+  subtitle = "Документ переводит связка из нескольких AI-моделей и инженера с профильным образованием — а оценку объёма и срока вы получите уже через 2 минуты после загрузки.",
+}: HeroSectionProps) {
   return (
     <section className="tp-hero" id="hero">
       <div className="tp-hero__inner">
@@ -15,10 +21,7 @@ export function HeroSection() {
           <h1 className="tp-hero__title">
             Технический перевод: <span className="tp-hero__title-accent">скорость AI</span>, точность инженера
           </h1>
-          <p className="tp-hero__subtitle">
-            Документ переводит связка из нескольких AI-моделей и инженера с профильным образованием — а оценку
-            объёма и срока вы получите уже через 2 минуты после загрузки.
-          </p>
+          <p className="tp-hero__subtitle">{subtitle}</p>
           <div className="tp-hero__ctas">
             <Button
               size="lg"

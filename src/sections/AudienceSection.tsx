@@ -72,7 +72,15 @@ const AUDIENCES = [
   },
 ];
 
-export function AudienceSection() {
+export interface AudienceSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function AudienceSection({
+  title = "Кому подходит платформа",
+  subtitle = "Командам, которым технический перевод нужен быстро, с единой терминологией и без управления несколькими подрядчиками.",
+}: AudienceSectionProps) {
   const [active, setActive] = React.useState(0);
   const current = AUDIENCES[active];
 
@@ -80,10 +88,7 @@ export function AudienceSection() {
     <section className="tp-section tp-section--tint" id="industries">
       <div className="tp-section__inner">
         <ScrollReveal>
-          <SectionHeader
-            title="Кому подходит платформа"
-            subtitle="Командам, которым технический перевод нужен быстро, с единой терминологией и без управления несколькими подрядчиками."
-          />
+          <SectionHeader title={title} subtitle={subtitle} />
         </ScrollReveal>
         <ScrollReveal>
           <div className="tp-audience">

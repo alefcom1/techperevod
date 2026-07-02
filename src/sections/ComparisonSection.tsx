@@ -84,15 +84,20 @@ function CellView({ cell }: { cell: Cell }) {
   );
 }
 
-export function ComparisonSection() {
+export interface ComparisonSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function ComparisonSection({
+  title = "Онлайн-переводчик, бюро переводов или платформа?",
+  subtitle = "Честное сравнение трёх способов перевести техническую документацию — по пунктам, которые действительно влияют на результат.",
+}: ComparisonSectionProps) {
   return (
     <section className="tp-section" id="compare">
       <div className="tp-section__inner">
         <ScrollReveal>
-          <SectionHeader
-            title="Онлайн-переводчик, бюро переводов или платформа?"
-            subtitle="Честное сравнение трёх способов перевести техническую документацию — по пунктам, которые действительно влияют на результат."
-          />
+          <SectionHeader title={title} subtitle={subtitle} />
         </ScrollReveal>
 
         <ScrollReveal>

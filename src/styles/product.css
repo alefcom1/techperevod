@@ -566,3 +566,70 @@
   .tp-app__logo { display: none; }
   .tp-app__grid { grid-template-columns: 1fr; }
 }
+
+.tp-admin__tabs { display: flex; gap: var(--tp-space-2); border-bottom: 1px solid var(--tp-border); }
+.tp-admin__tab {
+  appearance: none;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: var(--tp-space-3) var(--tp-space-4);
+  font-family: var(--tp-font-sans);
+  font-size: 14px;
+  font-weight: var(--tp-weight-medium);
+  color: var(--tp-text-muted);
+  cursor: pointer;
+  transition: color var(--tp-duration) var(--tp-ease), border-color var(--tp-duration) var(--tp-ease);
+}
+.tp-admin__tab:hover { color: var(--tp-text); }
+.tp-admin__tab--active { color: var(--tp-primary); border-bottom-color: var(--tp-primary); }
+
+.tp-admin__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--tp-space-5); padding-bottom: 96px; }
+.tp-admin__card { display: flex; flex-direction: column; gap: var(--tp-space-3); }
+.tp-admin__card-title { font-family: var(--tp-font-display); font-weight: var(--tp-weight-heading); font-size: 15px; color: var(--tp-text); }
+.tp-admin__textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-surface-card);
+  color: var(--tp-text);
+  font-family: var(--tp-font-sans);
+  font-size: 14px;
+  padding: 10px 12px;
+  line-height: var(--tp-leading-body);
+}
+.tp-admin__textarea:focus { outline: none; border-color: var(--tp-primary); }
+
+.tp-admin__save-bar {
+  position: fixed;
+  bottom: var(--tp-space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  background: var(--tp-glass);
+  backdrop-filter: blur(var(--tp-glass-blur));
+  -webkit-backdrop-filter: blur(var(--tp-glass-blur));
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-pill);
+  padding: var(--tp-space-2);
+  box-shadow: var(--tp-shadow-lift);
+}
+
+.tp-admin__toast {
+  position: fixed;
+  top: var(--tp-space-6);
+  right: var(--tp-space-6);
+  z-index: 30;
+  padding: 10px 16px;
+  border-radius: var(--tp-radius-sm);
+  font-size: 14px;
+  font-weight: var(--tp-weight-medium);
+  box-shadow: var(--tp-shadow-lift);
+}
+.tp-admin__toast--ok { background: #1E7B4D; color: #fff; }
+.tp-admin__toast--error { background: #E5484D; color: #fff; }
+
+@media (max-width: 720px) {
+  .tp-admin__grid { grid-template-columns: 1fr; }
+}

@@ -4,17 +4,21 @@ import { StatMetric } from "@/components/marketing/StatMetric";
 import { LogoStrip } from "@/components/marketing/LogoStrip";
 import { Testimonial } from "@/components/marketing/Testimonial";
 
-export function ProofSection() {
+export interface ProofSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function ProofSection({
+  title = "Не только слова — конкретные цифры",
+  subtitle = "Иллюстративные показатели пилота; обновим на реальные данные по итогам первого отчётного периода.",
+}: ProofSectionProps) {
   return (
     <section className="tp-section" id="proof">
       <div className="tp-section__inner">
         <div className="tp-proof-layout">
           <div className="tp-proof-layout__stats">
-            <SectionHeader
-              align="left"
-              title="Не только слова — конкретные цифры"
-              subtitle="Иллюстративные показатели пилота; обновим на реальные данные по итогам первого отчётного периода."
-            />
+            <SectionHeader align="left" title={title} subtitle={subtitle} />
             <div className="tp-proof-row tp-proof-row--left">
               <StatMetric value="40 млн+" label="слов переведено" />
               <StatMetric value="35%" label="экономии по TM" />

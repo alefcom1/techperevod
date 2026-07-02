@@ -9,6 +9,7 @@ import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
+import type { SiteContent } from "@/lib/site-content";
 
 /**
  * Тарифы по концепции «конвейер качества»: Free → подписка (Start/Pro/Business)
@@ -89,9 +90,14 @@ function recommendPlan(words: number): string {
   return "business";
 }
 
-export function PricingPlansBody() {
+export interface PricingPlansBodyProps {
+  content: SiteContent["tarify"];
+}
+
+export function PricingPlansBody({ content }: PricingPlansBodyProps) {
   const [words, setWords] = React.useState(60_000);
   const recommended = recommendPlan(words);
+  const plans = PLANS.map((plan) => ({ ...plan, ...content.plans[plan.id as keyof typeof content.plans] }));
 
   return (
     <>
@@ -101,8 +107,8 @@ export function PricingPlansBody() {
             <Link href="/">Главная</Link> / Тарифы
           </span>
         }
-        title="Один конвейер — три уровня качества"
-        subtitle="Бесплатный AI-перевод фрагментов, подписка с оркестрацией моделей для рабочих объёмов и редактура инженером или носителем языка — по слову, когда она нужна."
+        title={content.heroTitle}
+        subtitle={content.heroSubtitle}
         ctaHref="/perevodchik"
         ctaLabel="Попробовать бесплатно"
       />
@@ -128,14 +134,14 @@ export function PricingPlansBody() {
                 aria-label="Объём слов в месяц"
               />
               <span className="tp-calc__hint">
-                Вам подойдёт тариф <strong>{PLANS.find((p) => p.id === recommended)?.name}</strong>
+                Вам подойдёт тариф <strong>{plans.find((p) => p.id === recommended)?.name}</strong>
                 {recommended === "business" ? " — обсудим объём индивидуально" : ""}
               </span>
             </div>
           </ScrollReveal>
 
           <div className="tp-plans" style={{ marginTop: "var(--tp-space-7)" }}>
-            {PLANS.map((plan, i) => (
+            {plans.map((plan, i) => (
               <ScrollReveal key={plan.id} delay={i * 70}>
                 <div
                   className={[
@@ -184,10 +190,7 @@ export function PricingPlansBody() {
       <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">
           <ScrollReveal>
-            <SectionHeader
-              title="Уровень 3 — проверка человеком"
-              subtitle="Доплата за слово поверх любого тарифа. Заказывается в один клик из кабинета — для документов, где цена ошибки высока."
-            />
+            <SectionHeader title={content.addonTitle} subtitle={content.addonSubtitle} />
           </ScrollReveal>
           <div className="tp-addon">
             <ScrollReveal delay={0}>
@@ -195,10 +198,8 @@ export function PricingPlansBody() {
                 <div className="tp-value-card__icon">
                   <Icon name="user-check" size={22} />
                 </div>
-                <div className="tp-value-card__title">Редактор-инженер · от 1,5 ₽/слово</div>
-                <p className="tp-value-card__desc">
-                  Специалист с профильным образованием сверяет терминологию, обозначения и смысл с термбазой вашей отрасли.
-                </p>
+                <div className="tp-value-card__title">{content.addonEngineerTitle}</div>
+                <p className="tp-value-card__desc">{content.addonEngineerDesc}</p>
               </Card>
             </ScrollReveal>
             <ScrollReveal delay={80}>
@@ -206,10 +207,8 @@ export function PricingPlansBody() {
                 <div className="tp-value-card__icon">
                   <Icon name="globe" size={22} />
                 </div>
-                <div className="tp-value-card__title">Носитель языка · от 3 ₽/слово</div>
-                <p className="tp-value-card__desc">
-                  Финальная стилистическая вычитка носителем целевого языка — для публичных и маркетинговых материалов.
-                </p>
+                <div className="tp-value-card__title">{content.addonNativeTitle}</div>
+                <p className="tp-value-card__desc">{content.addonNativeDesc}</p>
               </Card>
             </ScrollReveal>
           </div>

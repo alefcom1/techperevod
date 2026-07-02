@@ -8,14 +8,19 @@ import { Card } from "@/components/core/Card";
 import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Button } from "@/components/core/Button";
+import { getContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "Термбаза и память переводов",
-  description:
-    "Глоссарий и память переводов (TM) на каждого клиента: единая терминология во всех заказах, скидка за повторы видна до оплаты. Термбаза принадлежит вам.",
-  alternates: { canonical: "/product/terminology" },
-  openGraph: { title: "Термбаза и TM | techperevod.com", url: "/product/terminology", type: "website" },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { title, description } = (await getContent()).meta["product/terminology"];
+  return {
+    title,
+    description,
+    alternates: { canonical: "/product/terminology" },
+    openGraph: { title: `${title} | techperevod.com`, url: "/product/terminology", type: "website" },
+  };
+}
 
 const ROWS = [
   { ru: "привод", en: "actuator", uses: 24 },

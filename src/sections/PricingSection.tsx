@@ -4,12 +4,16 @@ import { PricingCard } from "@/components/marketing/PricingCard";
 import { Badge } from "@/components/core/Badge";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 
-export function PricingSection() {
+export interface PricingSectionProps {
+  title?: string;
+}
+
+export function PricingSection({ title = "Три уровня — вы платите за нужную глубину" }: PricingSectionProps) {
   return (
     <section className="tp-section tp-section--tint" id="pricing">
       <div className="tp-section__inner">
         <ScrollReveal>
-          <SectionHeader title="Три уровня — вы платите за нужную глубину" />
+          <SectionHeader title={title} />
         </ScrollReveal>
         <div className="tp-pricing-grid">
           <ScrollReveal delay={0}>

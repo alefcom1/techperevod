@@ -8,14 +8,19 @@ import { Card } from "@/components/core/Card";
 import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Button } from "@/components/core/Button";
+import { getContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "API технического перевода",
-  description:
-    "REST API платформы techperevod: перевод текста и документов из вашего кода, с оркестрацией моделей и термбазой. Доступен на тарифах Pro и Business.",
-  alternates: { canonical: "/product/api" },
-  openGraph: { title: "API | techperevod.com", url: "/product/api", type: "website" },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { title, description } = (await getContent()).meta["product/api"];
+  return {
+    title,
+    description,
+    alternates: { canonical: "/product/api" },
+    openGraph: { title: `${title} | techperevod.com`, url: "/product/api", type: "website" },
+  };
+}
 
 const EXAMPLE = `POST /v1/translate HTTP/1.1
 Host: api.techperevod.com

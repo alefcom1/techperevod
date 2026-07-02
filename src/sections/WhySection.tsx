@@ -49,15 +49,20 @@ const CARDS = [
   },
 ];
 
-export function WhySection() {
+export interface WhySectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function WhySection({
+  title = "Почему techperevod",
+  subtitle = "Единственная платформа, где в одном конвейере работают AI-оркестратор нескольких моделей, ваша собственная терминология и живые инженеры-редакторы.",
+}: WhySectionProps) {
   return (
     <section className="tp-section" id="why">
       <div className="tp-section__inner">
         <ScrollReveal>
-          <SectionHeader
-            title="Почему techperevod"
-            subtitle="Единственная платформа, где в одном конвейере работают AI-оркестратор нескольких моделей, ваша собственная терминология и живые инженеры-редакторы."
-          />
+          <SectionHeader title={title} subtitle={subtitle} />
         </ScrollReveal>
         <div className="tp-why">
           {CARDS.map((card, i) => (

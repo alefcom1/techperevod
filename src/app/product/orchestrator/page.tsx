@@ -10,14 +10,19 @@ import { Card } from "@/components/core/Card";
 import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Button } from "@/components/core/Button";
+import { getContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "AI-оркестратор — роутер моделей перевода",
-  description:
-    "Роутер выбирает лучшую модель под языковую пару и тип документа: GPT, Claude, DeepL и YandexGPT, DeepSeek — легально в одном процессе, с объяснением выбора.",
-  alternates: { canonical: "/product/orchestrator" },
-  openGraph: { title: "AI-оркестратор | techperevod.com", url: "/product/orchestrator", type: "website" },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { title, description } = (await getContent()).meta["product/orchestrator"];
+  return {
+    title,
+    description,
+    alternates: { canonical: "/product/orchestrator" },
+    openGraph: { title: `${title} | techperevod.com`, url: "/product/orchestrator", type: "website" },
+  };
+}
 
 const POINTS = [
   { icon: "cpu", title: "Оба контура моделей", desc: "Западные (GPT, Claude, DeepL) и локальные (YandexGPT, DeepSeek) — легально в одном рабочем процессе." },

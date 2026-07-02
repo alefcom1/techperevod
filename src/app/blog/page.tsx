@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { BlogBody } from "@/sections/BlogBody";
+import { getContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "Блог",
-  description:
-    "Статьи об AI-оркестрации, работе с термбазой и памятью переводов, и техническом переводе по отраслям — от нефтегаза до медтеха.",
-  alternates: { canonical: "/blog" },
-  openGraph: { title: "Блог | techperevod.com", url: "/blog", type: "website" },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { title, description } = (await getContent()).meta.blog;
+  return {
+    title,
+    description,
+    alternates: { canonical: "/blog" },
+    openGraph: { title: `${title} | techperevod.com`, url: "/blog", type: "website" },
+  };
+}
 
 export default function BlogPage() {
   return (

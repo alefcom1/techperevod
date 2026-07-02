@@ -9,15 +9,19 @@ const ROWS = [
   { ru: "гидравлический удар", en: "hydraulic shock", uses: 9 },
 ];
 
-export function GlossarySection() {
+export interface GlossarySectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function GlossarySection({
+  title = "Ваша терминология под контролем",
+  subtitle = "Глоссарий и память переводов на каждого клиента. Повторы считаются автоматически — скидка видна до оплаты.",
+}: GlossarySectionProps) {
   return (
     <section className="tp-section" id="glossary">
       <div className="tp-section__inner">
-        <SectionHeader
-          align="left"
-          title="Ваша терминология под контролем"
-          subtitle="Глоссарий и память переводов на каждого клиента. Повторы считаются автоматически — скидка видна до оплаты."
-        />
+        <SectionHeader align="left" title={title} subtitle={subtitle} />
         <ProductWindow url="app.techperevod.com/glossary">
           <div className="tp-glossary__toolbar">
             <Input placeholder="Поиск термина…" mono />

@@ -3,7 +3,15 @@ import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { ProductWindow } from "@/components/marketing/ProductWindow";
 import { Badge } from "@/components/core/Badge";
 
-export function OrchestratorSection() {
+export interface OrchestratorSectionProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function OrchestratorSection({
+  title = "Единственная платформа с доступом к обоим контурам моделей",
+  subtitle = "GPT, Claude, DeepL и YandexGPT, DeepSeek — легально в одном рабочем процессе. Роутер выбирает модель под языковую пару и тип документа, и показывает, почему выбрал именно её.",
+}: OrchestratorSectionProps) {
   return (
     <section className="tp-section tp-section--tint" id="orchestrator">
       <div className="tp-section__inner tp-orchestrator-layout">
@@ -40,11 +48,7 @@ export function OrchestratorSection() {
           </ProductWindow>
         </div>
         <div className="tp-orchestrator-layout__copy" style={{ order: 2 }}>
-          <SectionHeader
-            align="left"
-            title="Единственная платформа с доступом к обоим контурам моделей"
-            subtitle="GPT, Claude, DeepL и YandexGPT, DeepSeek — легально в одном рабочем процессе. Роутер выбирает модель под языковую пару и тип документа, и показывает, почему выбрал именно её."
-          />
+          <SectionHeader align="left" title={title} subtitle={subtitle} />
           <div className="tp-legend">
             <span className="tp-legend__item">
               <span className="tp-legend__dot tp-legend__dot--western" />

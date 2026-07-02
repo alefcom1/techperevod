@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { AboutBody } from "@/sections/AboutBody";
+import { getContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "О нас",
-  description:
-    "techperevod — платформа технического перевода: AI-оркестрация моделей плюс редактура инженеров-переводчиков. Скорость AI, точность инженера.",
-  alternates: { canonical: "/o-nas" },
-  openGraph: { title: "О нас | techperevod.com", url: "/o-nas", type: "website" },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { title, description } = (await getContent()).meta["o-nas"];
+  return {
+    title,
+    description,
+    alternates: { canonical: "/o-nas" },
+    openGraph: { title: `${title} | techperevod.com`, url: "/o-nas", type: "website" },
+  };
+}
 
 export default function AboutPage() {
   return (

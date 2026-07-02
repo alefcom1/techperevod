@@ -8,18 +8,19 @@ import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Button } from "@/components/core/Button";
 import { Translator } from "@/components/translator/Translator";
+import { getContent } from "@/lib/site-content";
 
-export const metadata: Metadata = {
-  title: "Бесплатный онлайн-переводчик технических текстов",
-  description:
-    "Переведите технический текст онлайн бесплатно — до 2 000 знаков. AI-перевод с сохранением терминологии, чисел и единиц измерения. Русский, английский, немецкий, китайский.",
-  alternates: { canonical: "/perevodchik" },
-  openGraph: {
-    title: "Бесплатный онлайн-переводчик технических текстов | techperevod.com",
-    url: "/perevodchik",
-    type: "website",
-  },
-};
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { title, description } = (await getContent()).meta.perevodchik;
+  return {
+    title,
+    description,
+    alternates: { canonical: "/perevodchik" },
+    openGraph: { title: `${title} | techperevod.com`, url: "/perevodchik", type: "website" },
+  };
+}
 
 const PERKS = [
   { icon: "cpu", title: "Технический AI", desc: "Модель настроена на терминологию: сохраняет числа, единицы измерения и формат." },

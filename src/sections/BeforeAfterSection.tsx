@@ -1,13 +1,17 @@
 import React from "react";
 import { Card } from "@/components/core/Card";
 
-export function BeforeAfterSection() {
+export interface BeforeAfterSectionProps {
+  title?: string;
+}
+
+export function BeforeAfterSection({ title = "Разница видна" }: BeforeAfterSectionProps) {
   return (
     <section className="tp-section" id="before-after">
       <div className="tp-section__inner">
         <div className="tp-section-header-wrap">
           <h2 className="tp-section-header__title" style={{ textAlign: "center" }}>
-            Разница видна
+            {title}
           </h2>
         </div>
         <div className="tp-before-after">
