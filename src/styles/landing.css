@@ -82,8 +82,7 @@ body::after {
   margin: 0 0 var(--tp-space-7);
   max-width: 520px;
 }
-.tp-hero__ctas { display: flex; gap: var(--tp-space-4); margin-bottom: var(--tp-space-9); flex-wrap: wrap; }
-.tp-hero__quote { display: flex; flex-direction: column; gap: var(--tp-space-4); max-width: 480px; }
+.tp-hero__ctas { display: flex; gap: var(--tp-space-4); flex-wrap: wrap; }
 .tp-hero__estimate-row { display: flex; justify-content: space-between; gap: var(--tp-space-4); }
 .tp-hero__estimate-value { font-family: var(--tp-font-display); font-weight: var(--tp-weight-heading); font-size: 22px; color: var(--tp-text); }
 .tp-hero__estimate-label { font-size: 13px; color: var(--tp-text-muted); }

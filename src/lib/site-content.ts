@@ -37,6 +37,8 @@ export interface SiteContent {
   };
   home: {
     heroSubtitle: string;
+    translatorTitle: string;
+    translatorSubtitle: string;
     comparisonTitle: string;
     comparisonSubtitle: string;
     howItWorksSubtitle: string;
@@ -124,6 +126,9 @@ export const DEFAULT_CONTENT: SiteContent = {
   home: {
     heroSubtitle:
       "Документ переводит связка из нескольких AI-моделей и инженера с профильным образованием — а оценку объёма и срока вы получите уже через 2 минуты после загрузки.",
+    translatorTitle: "Попробуйте технический перевод прямо сейчас",
+    translatorSubtitle:
+      "Бесплатно и без регистрации — до 2 000 знаков. Терминология, числа и единицы измерения сохраняются.",
     comparisonTitle: "Онлайн-переводчик, бюро переводов или платформа?",
     comparisonSubtitle:
       "Честное сравнение трёх способов перевести техническую документацию — по пунктам, которые действительно влияют на результат.",

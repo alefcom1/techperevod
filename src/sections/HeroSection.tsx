@@ -5,7 +5,7 @@ import { Button } from "@/components/core/Button";
 import { Badge } from "@/components/core/Badge";
 import { Icon } from "@/components/core/Icon";
 import { ProductWindow } from "@/components/marketing/ProductWindow";
-import { Translator } from "@/components/translator/Translator";
+import { reachGoal } from "@/lib/metrika";
 
 export interface HeroSectionProps {
   subtitle?: string;
@@ -23,20 +23,12 @@ export function HeroSection({
           </h1>
           <p className="tp-hero__subtitle">{subtitle}</p>
           <div className="tp-hero__ctas">
-            <Button
-              size="lg"
-              variant="primary"
-              onClick={() => document.getElementById("quote")?.scrollIntoView({ block: "center" })}
-            >
-              Загрузить документ
+            <Button size="lg" variant="primary" as="a" href="/kontakty" onClick={() => reachGoal("doc_cta")}>
+              Перевести документ
             </Button>
-            <Button size="lg" variant="ghost" as="a" href="#how">
-              Как это работает
+            <Button size="lg" variant="ghost" as="a" href="#translate">
+              Попробовать переводчик
             </Button>
-          </div>
-
-          <div id="quote" className="tp-hero__quote">
-            <Translator compact />
           </div>
         </div>
 

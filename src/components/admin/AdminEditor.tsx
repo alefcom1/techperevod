@@ -205,6 +205,11 @@ export function AdminEditor({ initialContent }: { initialContent: SiteContent })
                 <TextField label="Подзаголовок" value={content.home.heroSubtitle} onChange={(v) => updateHome("heroSubtitle", v)} multiline />
               </Card>
               <Card padding="lg" className="tp-admin__card">
+                <div className="tp-admin__card-title">Блок переводчика («Попробуйте перевод прямо сейчас»)</div>
+                <TextField label="Заголовок" value={content.home.translatorTitle} onChange={(v) => updateHome("translatorTitle", v)} />
+                <TextField label="Подзаголовок" value={content.home.translatorSubtitle} onChange={(v) => updateHome("translatorSubtitle", v)} multiline />
+              </Card>
+              <Card padding="lg" className="tp-admin__card">
                 <div className="tp-admin__card-title">Сравнение (блок «Онлайн-переводчик, бюро или платформа?»)</div>
                 <TextField label="Заголовок" value={content.home.comparisonTitle} onChange={(v) => updateHome("comparisonTitle", v)} />
                 <TextField label="Подзаголовок" value={content.home.comparisonSubtitle} onChange={(v) => updateHome("comparisonSubtitle", v)} multiline />

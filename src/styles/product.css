@@ -55,30 +55,85 @@
   cursor: pointer;
   outline: none;
 }
+.tp-translator__pane-tools { display: flex; align-items: center; gap: var(--tp-space-2); }
 .tp-translator__count { font-family: var(--tp-font-mono); font-size: 12px; color: var(--tp-text-muted); }
+.tp-translator__count--warn { color: var(--tp-primary); }
+/* Мини-прогресс заполнения лимита в 2 000 знаков */
+.tp-translator__meter {
+  width: 52px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--tp-border);
+  overflow: hidden;
+  flex: none;
+}
+.tp-translator__meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--tp-primary), var(--tp-accent));
+  transition: width var(--tp-duration) var(--tp-ease-out);
+}
+/* Большие панели «как у DeepL»: авторост по контенту + ручной resize */
 .tp-translator__text {
   flex: 1;
-  min-height: 148px;
+  min-height: 220px;
   resize: vertical;
+  overflow: hidden;
   border: none;
   outline: none;
   background: transparent;
   color: var(--tp-text);
   font-family: var(--tp-font-sans);
-  font-size: 15px;
+  font-size: 16px;
   line-height: var(--tp-leading-body);
-  padding: var(--tp-space-4);
+  padding: var(--tp-space-4) var(--tp-space-5);
 }
 .tp-translator__output {
   flex: 1;
-  min-height: 148px;
-  padding: var(--tp-space-4);
+  min-height: 220px;
+  padding: var(--tp-space-4) var(--tp-space-5);
   color: var(--tp-text);
-  font-size: 15px;
+  font-size: 16px;
   line-height: var(--tp-leading-body);
   white-space: pre-wrap;
 }
 .tp-translator__output--empty { color: var(--tp-text-muted); }
+/* Иконки-действия в шапке панели: копировать / очистить */
+.tp-translator__action,
+.tp-translator__rate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 4px;
+  border: none;
+  border-radius: var(--tp-radius-sm);
+  background: transparent;
+  color: var(--tp-text-muted);
+  cursor: pointer;
+  transition: color var(--tp-duration) var(--tp-ease), background var(--tp-duration) var(--tp-ease);
+}
+.tp-translator__action:hover,
+.tp-translator__rate:hover:not(:disabled) { color: var(--tp-primary); background: var(--tp-primary-soft); }
+.tp-translator__rate:disabled { cursor: default; }
+.tp-translator__rate--active { color: var(--tp-primary); background: var(--tp-primary-soft); }
+.tp-translator__copied { font-size: 12px; font-weight: var(--tp-weight-medium); color: var(--tp-accent-hover); white-space: nowrap; }
+/* Мягкий апселл у лимита знаков */
+.tp-translator__upsell { font-size: 13px; color: var(--tp-text-muted); }
+.tp-translator__upsell a { color: var(--tp-primary); text-decoration: none; font-weight: var(--tp-weight-medium); }
+/* Дружелюбное сообщение о дневном лимите */
+.tp-translator__limit {
+  font-size: 14px;
+  line-height: var(--tp-leading-body);
+  color: var(--tp-text);
+  padding: 12px 16px;
+  border: 1px solid color-mix(in srgb, var(--tp-primary) 35%, transparent);
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-primary-soft);
+}
+.tp-translator__limit a { color: var(--tp-primary); font-weight: var(--tp-weight-medium); }
 .tp-translator__swap {
   align-self: center;
   width: 38px;
@@ -93,8 +148,9 @@
   justify-content: center;
   transition: color var(--tp-duration) var(--tp-ease), border-color var(--tp-duration) var(--tp-ease), transform var(--tp-duration-fast) var(--tp-ease-out);
 }
-.tp-translator__swap:hover { color: var(--tp-primary); border-color: var(--tp-primary); }
-.tp-translator__swap:active { transform: rotate(180deg); }
+.tp-translator__swap:hover:not(:disabled) { color: var(--tp-primary); border-color: var(--tp-primary); }
+.tp-translator__swap:active:not(:disabled) { transform: rotate(180deg); }
+.tp-translator__swap:disabled { opacity: 0.45; cursor: default; }
 .tp-translator__foot {
   display: flex;
   align-items: center;
@@ -123,16 +179,49 @@
   border-radius: var(--tp-radius-pill);
   padding: 3px 10px;
 }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .tp-translator__panes { grid-template-columns: 1fr; }
   .tp-translator__swap { transform: rotate(90deg); }
+  .tp-translator__text,
+  .tp-translator__output { min-height: 148px; }
 }
-/* Узкая колонка hero: панели одна под другой */
-.tp-hero__quote { max-width: 520px; }
-.tp-hero__quote .tp-translator__panes { grid-template-columns: 1fr; }
-.tp-hero__quote .tp-translator__swap { transform: rotate(90deg); }
-.tp-hero__quote .tp-translator__text,
-.tp-hero__quote .tp-translator__output { min-height: 96px; }
+
+/* --- CTA-карточка «перетащите документ» под переводчиком (ведёт на /kontakty) --- */
+.tp-drop-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--tp-space-4);
+  padding: var(--tp-space-4) var(--tp-space-6);
+  border: 1.5px dashed var(--tp-border-strong);
+  border-radius: var(--tp-radius);
+  background: var(--tp-surface-card);
+  color: var(--tp-text-muted);
+  cursor: pointer;
+  transition: border-color var(--tp-duration) var(--tp-ease), color var(--tp-duration) var(--tp-ease), background var(--tp-duration) var(--tp-ease), box-shadow var(--tp-duration) var(--tp-ease);
+}
+.tp-drop-cta:hover,
+.tp-drop-cta:focus-visible,
+.tp-drop-cta--over {
+  border-color: var(--tp-primary);
+  color: var(--tp-text);
+  background: var(--tp-primary-soft);
+  box-shadow: var(--tp-shadow-sm);
+  outline: none;
+}
+.tp-drop-cta__icon {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-primary-soft);
+  color: var(--tp-primary);
+}
+.tp-drop-cta__text { flex: 1; font-size: 15px; line-height: var(--tp-leading-body); }
+.tp-drop-cta__text strong { color: var(--tp-text); font-weight: 600; }
+.tp-drop-cta__arrow { font-size: 20px; color: var(--tp-primary); flex: none; }
 
 /* --- Comparison «по старинке vs techperevod» (Crowdin: why old fails) --- */
 .tp-compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--tp-space-6); align-items: stretch; }

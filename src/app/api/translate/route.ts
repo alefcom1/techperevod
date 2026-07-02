@@ -17,7 +17,8 @@ export const runtime = "nodejs";
  */
 
 const MAX_CHARS = 2000;
-const DAILY_LIMIT = 20;
+// Автоперевод в UI (дебаунс при наборе) расходует больше запросов — лимит выше
+const DAILY_LIMIT = 30;
 
 const LANG_NAMES: Record<string, string> = {
   ru: "русский",
@@ -57,7 +58,8 @@ export async function POST(req: NextRequest) {
   }
 
   const text = (body.text || "").trim();
-  const source = body.source && LANG_NAMES[body.source] ? body.source : "ru";
+  // source: "auto" — модель сама определяет язык оригинала
+  const source = body.source === "auto" ? "auto" : body.source && LANG_NAMES[body.source] ? body.source : "ru";
   const target = body.target && LANG_NAMES[body.target] ? body.target : "en";
 
   if (!text) {
@@ -103,7 +105,10 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: "user",
-          content: `Переведи с языка «${LANG_NAMES[source]}» на язык «${LANG_NAMES[target]}»:\n\n${text}`,
+          content:
+            source === "auto"
+              ? `Определи язык исходного текста самостоятельно и переведи его на язык «${LANG_NAMES[target]}»:\n\n${text}`
+              : `Переведи с языка «${LANG_NAMES[source]}» на язык «${LANG_NAMES[target]}»:\n\n${text}`,
         },
       ],
     });

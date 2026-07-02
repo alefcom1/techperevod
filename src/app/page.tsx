@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { HeroSection } from "@/sections/HeroSection";
+import { TranslatorSection } from "@/sections/TranslatorSection";
 import { ComparisonSection } from "@/sections/ComparisonSection";
 import { HowItWorksSection } from "@/sections/HowItWorksSection";
 import { OrchestratorSection } from "@/sections/OrchestratorSection";
@@ -11,6 +12,7 @@ import { GlossarySection } from "@/sections/GlossarySection";
 import { AudienceSection } from "@/sections/AudienceSection";
 import { FormatsSection } from "@/sections/FormatsSection";
 import { ProofSection } from "@/sections/ProofSection";
+import { FinalCtaSection } from "@/sections/FinalCtaSection";
 import { getContent } from "@/lib/site-content";
 
 export const dynamic = "force-dynamic";
@@ -30,16 +32,18 @@ export default async function HomePage() {
   return (
     <SiteShell>
       <HeroSection subtitle={home.heroSubtitle} />
-      <ComparisonSection title={home.comparisonTitle} subtitle={home.comparisonSubtitle} />
+      <TranslatorSection title={home.translatorTitle} subtitle={home.translatorSubtitle} />
       <HowItWorksSection subtitle={home.howItWorksSubtitle} />
-      <OrchestratorSection title={home.orchestratorTitle} subtitle={home.orchestratorSubtitle} />
+      <ComparisonSection title={home.comparisonTitle} subtitle={home.comparisonSubtitle} />
       <WhySection title={home.whyTitle} subtitle={home.whySubtitle} />
-      <BeforeAfterSection title={home.beforeAfterTitle} />
-      <PricingSection title={home.pricingTitle} />
+      <OrchestratorSection title={home.orchestratorTitle} subtitle={home.orchestratorSubtitle} />
       <GlossarySection title={home.glossaryTitle} subtitle={home.glossarySubtitle} />
-      <AudienceSection title={home.audienceTitle} subtitle={home.audienceSubtitle} />
       <FormatsSection title={home.formatsTitle} />
+      <AudienceSection title={home.audienceTitle} subtitle={home.audienceSubtitle} />
+      <BeforeAfterSection title={home.beforeAfterTitle} />
       <ProofSection title={home.proofTitle} subtitle={home.proofSubtitle} />
+      <PricingSection title={home.pricingTitle} />
+      <FinalCtaSection />
     </SiteShell>
   );
 }

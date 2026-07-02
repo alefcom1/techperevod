@@ -27,6 +27,18 @@ export const FOOTER_COLUMNS = [
     ],
   },
   {
+    title: "Услуги",
+    links: [
+      { label: "Перевод с китайского", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
+      { label: "Перевод инструкций", href: "/uslugi/perevod-instrukcij" },
+      { label: "Перевод чертежей", href: "/uslugi/perevod-chertezhej" },
+      { label: "Паспорта безопасности", href: "/uslugi/perevod-pasportov-bezopasnosti" },
+      { label: "Перевод патентов", href: "/uslugi/perevod-patentov" },
+      { label: "Локализация ПО", href: "/uslugi/lokalizaciya-po" },
+      { label: "ТУ и спецификации", href: "/uslugi/perevod-tu-i-specifikacij" },
+    ],
+  },
+  {
     title: "Платформа",
     links: [
       { label: "AI-оркестратор", href: "/product/orchestrator" },

@@ -37,7 +37,7 @@ export default function EditorPage() {
       {() => (
         <>
           <Card padding="lg">
-            <Translator compact />
+            <Translator />
           </Card>
 
           <Card padding="lg">
