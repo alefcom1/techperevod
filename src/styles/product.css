@@ -134,6 +134,80 @@
 .tp-hero__quote .tp-translator__text,
 .tp-hero__quote .tp-translator__output { min-height: 96px; }
 
+/* --- Comparison «по старинке vs techperevod» (Crowdin: why old fails) --- */
+.tp-compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--tp-space-6); align-items: stretch; }
+.tp-compare__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-6);
+  padding: var(--tp-space-9);
+  border-radius: 24px;
+  border: 1px solid var(--tp-border);
+}
+.tp-compare__panel--old { background: var(--tp-surface-sunken); }
+.tp-compare__panel--new {
+  position: relative;
+  border-color: transparent;
+  background:
+    radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--tp-accent) 28%, transparent), transparent 60%),
+    linear-gradient(160deg, #0E1826, color-mix(in oklch, #0E1826 78%, var(--tp-primary)));
+  box-shadow: var(--tp-shadow-lift);
+}
+[data-tp-theme="dark"] .tp-compare__panel--new {
+  background:
+    radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--tp-accent) 30%, transparent), transparent 60%),
+    linear-gradient(160deg, #0D1420, color-mix(in oklch, #0D1420 70%, var(--tp-primary)));
+  border-color: var(--tp-border);
+}
+.tp-compare__title {
+  margin: 0;
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-weight-heading);
+  font-size: var(--tp-text-h3);
+  letter-spacing: var(--tp-tracking-tight);
+  color: var(--tp-text-heading);
+}
+.tp-compare__panel--new .tp-compare__title { color: #F1F5FB; }
+.tp-compare__items { display: flex; flex-direction: column; gap: var(--tp-space-6); }
+.tp-compare__item { display: flex; align-items: flex-start; gap: var(--tp-space-4); }
+.tp-compare__item .tp-icon { flex: none; margin-top: 2px; }
+.tp-compare__item-title { font-family: var(--tp-font-sans); font-weight: 600; font-size: 16px; color: var(--tp-text); margin: 0 0 4px; }
+.tp-compare__item-desc { margin: 0; font-size: 14px; line-height: var(--tp-leading-body); color: var(--tp-text-muted); }
+.tp-compare__panel--new .tp-compare__item-title { color: #F1F5FB; }
+.tp-compare__panel--new .tp-compare__item-desc { color: rgba(241, 245, 251, 0.75); }
+@media (max-width: 900px) {
+  .tp-compare { grid-template-columns: 1fr; }
+}
+
+/* --- AI suite --- */
+.tp-suite { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--tp-space-5); }
+.tp-suite__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-3);
+  padding: var(--tp-space-6);
+  border-radius: var(--tp-radius);
+  border: 1px solid var(--tp-border);
+  background: var(--tp-surface-card);
+  transition: transform var(--tp-duration) var(--tp-ease-out), box-shadow var(--tp-duration) var(--tp-ease-out);
+}
+.tp-suite__card:hover { transform: translateY(-4px); box-shadow: var(--tp-shadow-lift), inset 0 1px 0 var(--tp-surface-highlight); }
+.tp-suite__icon {
+  width: 44px; height: 44px;
+  border-radius: var(--tp-radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--tp-primary-soft);
+  color: var(--tp-primary);
+}
+/* карточки обёрнуты в ScrollReveal — чередуем по обёртке */
+.tp-suite > :nth-child(even) .tp-suite__icon { background: var(--tp-accent-soft); color: color-mix(in oklch, var(--tp-accent) 55%, black); }
+[data-tp-theme="dark"] .tp-suite > :nth-child(even) .tp-suite__icon { color: var(--tp-accent); }
+.tp-suite__title { font-family: var(--tp-font-sans); font-weight: 600; font-size: 16px; color: var(--tp-text); }
+.tp-suite__desc { margin: 0; font-size: 14px; line-height: var(--tp-leading-body); color: var(--tp-text-muted); }
+.tp-suite__tag { align-self: flex-start; }
+@media (max-width: 900px) { .tp-suite { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .tp-suite { grid-template-columns: 1fr; } }
+
 /* --- StackedSteps (Crowdin-style CardsParallax) --- */
 .tp-stacked {
   display: grid;

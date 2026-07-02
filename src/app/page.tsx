@@ -1,7 +1,9 @@
 import { SiteShell } from "@/components/layout/SiteShell";
 import { HeroSection } from "@/sections/HeroSection";
+import { ComparisonSection } from "@/sections/ComparisonSection";
 import { HowItWorksSection } from "@/sections/HowItWorksSection";
 import { OrchestratorSection } from "@/sections/OrchestratorSection";
+import { AiSuiteSection } from "@/sections/AiSuiteSection";
 import { BeforeAfterSection } from "@/sections/BeforeAfterSection";
 import { PricingSection } from "@/sections/PricingSection";
 import { GlossarySection } from "@/sections/GlossarySection";
@@ -14,8 +16,10 @@ export default function HomePage() {
   return (
     <SiteShell>
       <HeroSection />
+      <ComparisonSection />
       <HowItWorksSection />
       <OrchestratorSection />
+      <AiSuiteSection />
       <BeforeAfterSection />
       <PricingSection />
       <GlossarySection />
