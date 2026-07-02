@@ -4,7 +4,17 @@ import { INDUSTRIES } from "@/data/site";
 const SITE_URL = "https://techperevod.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/o-nas", "/blog", "/kontakty"].map((path) => ({
+  const staticRoutes = [
+    "",
+    "/perevodchik",
+    "/tarify",
+    "/product/orchestrator",
+    "/product/terminology",
+    "/product/api",
+    "/o-nas",
+    "/blog",
+    "/kontakty",
+  ].map((path) => ({
     url: `${SITE_URL}${path}`,
     changeFrequency: "monthly" as const,
     priority: path === "" ? 1 : 0.7,

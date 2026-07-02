@@ -2,23 +2,12 @@
 
 import React from "react";
 import { Button } from "@/components/core/Button";
-import { Card } from "@/components/core/Card";
 import { Badge } from "@/components/core/Badge";
 import { Icon } from "@/components/core/Icon";
-import { FileDropzone } from "@/components/forms/FileDropzone";
 import { ProductWindow } from "@/components/marketing/ProductWindow";
+import { Translator } from "@/components/translator/Translator";
 
 export function HeroSection() {
-  const [quote, setQuote] = React.useState<{ words: string; price: string; eta: string } | null>(null);
-  const [fileName, setFileName] = React.useState<string | null>(null);
-
-  function handleFiles(files: FileList) {
-    const f = files[0];
-    setFileName(f.name);
-    // Presentational only — fake instant estimate for the click-through demo.
-    setQuote({ words: "12 400", price: "34 800 ₽", eta: "2 дня" });
-  }
-
   return (
     <section className="tp-hero" id="hero">
       <div className="tp-hero__inner">
@@ -44,30 +33,7 @@ export function HeroSection() {
           </div>
 
           <div id="quote" className="tp-hero__quote">
-            <FileDropzone
-              hint="DOCX, PDF, XLIFF, JSON"
-              state={fileName ? "done" : "idle"}
-              fileName={fileName ?? undefined}
-              onFiles={handleFiles}
-            />
-            {quote ? (
-              <Card variant="glass" padding="sm" className="tp-hero__estimate">
-                <div className="tp-hero__estimate-row">
-                  <div>
-                    <div className="tp-hero__estimate-value">{quote.words}</div>
-                    <div className="tp-hero__estimate-label">слов</div>
-                  </div>
-                  <div>
-                    <div className="tp-hero__estimate-value">{quote.price}</div>
-                    <div className="tp-hero__estimate-label">оценка стоимости</div>
-                  </div>
-                  <div>
-                    <div className="tp-hero__estimate-value">{quote.eta}</div>
-                    <div className="tp-hero__estimate-label">срок</div>
-                  </div>
-                </div>
-              </Card>
-            ) : null}
+            <Translator compact />
           </div>
         </div>
 

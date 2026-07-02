@@ -1,20 +1,20 @@
 /** Central route + nav config so links stay consistent across every page. */
 
 export const NAV_LINKS = [
-  { label: "Как это работает", href: "/#how" },
-  { label: "AI-оркестратор", href: "/#orchestrator" },
-  { label: "Тарифы", href: "/#pricing" },
+  { label: "Переводчик", href: "/perevodchik" },
+  { label: "AI-оркестратор", href: "/product/orchestrator" },
+  { label: "Тарифы", href: "/tarify" },
   { label: "Отрасли", href: "/#industries" },
   { label: "Блог", href: "/blog" },
 ];
 
 export const FOOTER_COLUMNS = [
   {
-    title: "Услуги",
+    title: "Продукт",
     links: [
-      { label: "Full", href: "/#pricing" },
-      { label: "MTPE", href: "/#pricing" },
-      { label: "Express", href: "/#pricing" },
+      { label: "Переводчик", href: "/perevodchik" },
+      { label: "Тарифы", href: "/tarify" },
+      { label: "Кабинет", href: "/app" },
     ],
   },
   {
@@ -29,9 +29,9 @@ export const FOOTER_COLUMNS = [
   {
     title: "Платформа",
     links: [
-      { label: "AI-оркестратор", href: "/#orchestrator" },
-      { label: "Термбаза и TM", href: "/#glossary" },
-      { label: "Форматы", href: "/#formats" },
+      { label: "AI-оркестратор", href: "/product/orchestrator" },
+      { label: "Термбаза и TM", href: "/product/terminology" },
+      { label: "API", href: "/product/api" },
     ],
   },
   {

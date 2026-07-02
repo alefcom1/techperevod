@@ -27,10 +27,17 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           </Link>
         }
         links={NAV_LINKS}
-        right={<ThemeToggle theme={theme} onChange={setTheme} />}
+        right={
+          <>
+            <ThemeToggle theme={theme} onChange={setTheme} />
+            <Button size="sm" variant="ghost" as="a" href="/app">
+              Войти
+            </Button>
+          </>
+        }
         cta={
-          <Button size="sm" variant="primary" as="a" href="/#hero">
-            Загрузить документ
+          <Button size="sm" variant="primary" as="a" href="/perevodchik">
+            Попробовать бесплатно
           </Button>
         }
       />
