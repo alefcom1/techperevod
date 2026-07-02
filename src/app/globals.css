@@ -1,0 +1,15 @@
+/* TECHPEREVOD — global stylesheet entry point.
+   Mirrors project/styles.css. Fonts are loaded via <link> in the root layout
+   (next/font-free, keeps the exact "Inter"/"JetBrains Mono" family names the
+   token CSS references), so tokens/fonts.css is intentionally not imported here.
+   Keep this file as @import statements only. */
+
+@import "../styles/colors.css";
+@import "../styles/typography.css";
+@import "../styles/spacing.css";
+@import "../styles/effects.css";
+@import "../styles/core.css";
+@import "../styles/forms.css";
+@import "../styles/marketing.css";
+@import "../styles/navigation.css";
+@import "../styles/landing.css";

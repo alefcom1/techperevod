@@ -1,0 +1,85 @@
+/* ==========================================================================
+   TECHPEREVOD — Color tokens
+   Namespace: --tp-*
+   Light theme lives on :root. Dark theme overrides on [data-tp-theme="dark"].
+   Toggle by setting data-tp-theme="dark" on <html> or any wrapper element
+   (see components/navigation/ThemeToggle.jsx).
+   ========================================================================== */
+
+:root {
+  /* --- base palette (light) --- */
+  --tp-bg: #FAFBFC;
+  --tp-surface: #FFFFFF;
+  --tp-text: #0E1826;
+  --tp-text-muted: #5B6B7F;
+  --tp-primary: #1B4DFF;      /* electric blue — brand / "western models" */
+  --tp-accent: #00C4A7;       /* turquoise — AI accents / "local models" */
+  --tp-border: #E4E9F0;
+  --tp-glass: rgba(255, 255, 255, 0.6);
+
+  /* --- semantic aliases --- */
+  --tp-surface-card: var(--tp-surface);
+  --tp-surface-elevated: #FFFFFF;
+  --tp-surface-sunken: #F0F3F7;
+  --tp-text-heading: var(--tp-text);
+  --tp-text-body: var(--tp-text);
+  --tp-text-inverse: #FFFFFF;
+  --tp-border-strong: #C9D3E0;
+
+  /* interactive states — derived, stay correct across themes */
+  --tp-primary-hover: color-mix(in oklch, var(--tp-primary) 88%, black);
+  --tp-primary-active: color-mix(in oklch, var(--tp-primary) 76%, black);
+  --tp-primary-soft: color-mix(in oklch, var(--tp-primary) 10%, white);
+  --tp-accent-hover: color-mix(in oklch, var(--tp-accent) 88%, black);
+  --tp-accent-active: color-mix(in oklch, var(--tp-accent) 76%, black);
+  --tp-accent-soft: color-mix(in oklch, var(--tp-accent) 14%, white);
+
+  /* glass border derived from surface */
+  --tp-glass-border: rgba(255, 255, 255, 0.5);
+
+  /* --- premium depth: tinted shadows + ambient mesh + surface sheen ---
+     A flat light/dark surface with neutral-gray shadows is what reads as
+     generic/AI-templated. These tokens tint elevation with the brand hue
+     (not a foreign purple) so cards, windows and buttons feel designed —
+     see readme.md § Revision notes (premium depth pass). */
+  --tp-shadow-tint: color-mix(in oklch, var(--tp-primary) 32%, #0E1826 68%);
+  --tp-surface-highlight: rgba(255, 255, 255, 0.6);
+  --tp-mesh-primary: color-mix(in oklch, var(--tp-primary) 20%, transparent);
+  --tp-mesh-accent: color-mix(in oklch, var(--tp-accent) 18%, transparent);
+  --tp-grain-opacity: 0.05; /* @kind other */
+}
+
+[data-tp-theme="dark"] {
+  /* --- base palette (dark) --- */
+  --tp-bg: #0A0F1A;
+  --tp-surface: #111827;
+  --tp-text: #F1F5FB;
+  --tp-text-muted: #8A99AD;
+  --tp-primary: #4D7BFF;
+  --tp-accent: #1FE0C0;
+  --tp-border: #1E2A3C;
+  --tp-glass: rgba(17, 24, 39, 0.5);
+
+  --tp-surface-card: var(--tp-surface);
+  --tp-surface-elevated: #151E30;
+  --tp-surface-sunken: #0D1420;
+  --tp-text-heading: var(--tp-text);
+  --tp-text-body: var(--tp-text);
+  --tp-text-inverse: #0A0F1A;
+  --tp-border-strong: #2A3B52;
+
+  --tp-primary-hover: color-mix(in oklch, var(--tp-primary) 88%, white);
+  --tp-primary-active: color-mix(in oklch, var(--tp-primary) 76%, white);
+  --tp-primary-soft: color-mix(in oklch, var(--tp-primary) 16%, black);
+  --tp-accent-hover: color-mix(in oklch, var(--tp-accent) 88%, white);
+  --tp-accent-active: color-mix(in oklch, var(--tp-accent) 76%, white);
+  --tp-accent-soft: color-mix(in oklch, var(--tp-accent) 18%, black);
+
+  --tp-glass-border: rgba(255, 255, 255, 0.08);
+
+  --tp-shadow-tint: color-mix(in oklch, var(--tp-primary) 42%, black 58%);
+  --tp-surface-highlight: rgba(255, 255, 255, 0.07);
+  --tp-mesh-primary: color-mix(in oklch, var(--tp-primary) 30%, transparent);
+  --tp-mesh-accent: color-mix(in oklch, var(--tp-accent) 26%, transparent);
+  --tp-grain-opacity: 0.09; /* @kind other */
+}

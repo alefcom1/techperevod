@@ -1,0 +1,39 @@
+/* ==========================================================================
+   TECHPEREVOD — Spacing & radius tokens
+   Base unit 4px. --tp-space (24px) is the brief's default gap/padding unit
+   and aliases --tp-space-6 below.
+   ========================================================================== */
+
+:root {
+  --tp-space-1: 4px;
+  --tp-space-2: 8px;
+  --tp-space-3: 12px;
+  --tp-space-4: 16px;
+  --tp-space-5: 20px;
+  --tp-space-6: 24px;
+  --tp-space-7: 32px;
+  --tp-space-8: 40px;
+  --tp-space-9: 48px;
+  --tp-space-10: 64px;
+  --tp-space-11: 80px;
+  --tp-space-12: 96px;
+  --tp-space-13: 128px;
+
+  --tp-space: var(--tp-space-6); /* default control padding/gap unit */
+
+  --tp-space-section-y: 96px;   /* vertical section padding, desktop */
+  --tp-container-max: 1200px;
+  --tp-container-pad: 24px;
+
+  /* radius */
+  --tp-radius: 16px;      /* cards */
+  --tp-radius-sm: 10px;   /* buttons, inputs, chips */
+  --tp-radius-pill: 999px; /* badges, toggles, tags */
+}
+
+@media (max-width: 640px) {
+  :root {
+    --tp-space-section-y: 56px;
+    --tp-container-pad: 16px;
+  }
+}

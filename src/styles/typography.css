@@ -1,0 +1,48 @@
+/* ==========================================================================
+   TECHPEREVOD — Typography tokens
+   Headings: Inter (700/800) — one confident grotesk shared with body
+   copy, set heavier + tighter for display sizes instead of switching
+   families. Replaces an earlier Fredoka (rounded-geometric) headline
+   face that read as a friendly consumer-app face — at odds with the
+   engineering-grade B2B positioning; see readme.md § revision notes.
+   Body/UI:  Inter (400–600)
+   Terms/formats/code: JetBrains Mono
+   Sizes are the exact desktop values from the brief; mobile overrides
+   below the 640px breakpoint (also exact brief values — not snapped to a grid).
+   ========================================================================== */
+
+:root {
+  --tp-font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --tp-font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --tp-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --tp-tracking-tight: -0.02em;
+  --tp-tracking-normal: 0;
+
+  /* desktop */
+  --tp-text-h1: 56px;
+  --tp-text-h2: 40px;
+  --tp-text-h3: 24px;
+  --tp-text-body: 17px;
+  --tp-text-caption: 14px;
+
+  --tp-leading-display: 1.08;
+  --tp-leading-heading: 1.2;
+  --tp-leading-body: 1.6;
+  --tp-leading-caption: 1.4;
+
+  --tp-weight-display: 800;  /* Inter ExtraBold — display/H1 */
+  --tp-weight-heading: 700;  /* Inter Bold — H2/H3 */
+  --tp-weight-medium: 500;
+  --tp-weight-regular: 400;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --tp-text-h1: 36px;
+    --tp-text-h2: 28px;
+    --tp-text-h3: 20px;
+    --tp-text-body: 16px;
+    --tp-text-caption: 14px;
+  }
+}

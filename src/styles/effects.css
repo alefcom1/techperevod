@@ -1,0 +1,48 @@
+/* ==========================================================================
+   TECHPEREVOD — Effects: shadow, glass, motion
+   ========================================================================== */
+
+:root {
+  /* Shadows are tinted with the brand hue (--tp-shadow-tint, defined in
+     tokens/colors.css) rather than flat neutral black — this is most of
+     what separates a "designed" elevation system from a generic one. */
+  --tp-shadow-sm: 0 2px 8px color-mix(in srgb, var(--tp-shadow-tint) 14%, transparent);
+  --tp-shadow: 0 14px 32px color-mix(in srgb, var(--tp-shadow-tint) 16%, transparent), 0 2px 8px color-mix(in srgb, var(--tp-shadow-tint) 10%, transparent);
+  --tp-shadow-lift: 0 32px 64px color-mix(in srgb, var(--tp-shadow-tint) 22%, transparent), 0 10px 24px color-mix(in srgb, var(--tp-shadow-tint) 14%, transparent);
+
+  /* Colored hover/ambient glows — used sparingly (product mockups, primary
+     CTA hover), never as a default resting state. */
+  --tp-glow-primary: 0 0 0 1px color-mix(in srgb, var(--tp-primary) 22%, transparent), 0 20px 48px color-mix(in srgb, var(--tp-primary) 26%, transparent);
+  --tp-glow-accent: 0 0 0 1px color-mix(in srgb, var(--tp-accent) 22%, transparent), 0 20px 48px color-mix(in srgb, var(--tp-accent) 26%, transparent);
+
+  /* Ambient mesh background (hero/section washes) + fine film-grain overlay
+     — applied at the page level in landing.css, tokens live here so any
+     surface in the system can opt in. */
+  --tp-mesh-bg: radial-gradient(1100px 640px at 6% -14%, var(--tp-mesh-primary), transparent 60%), radial-gradient(900px 620px at 98% 2%, var(--tp-mesh-accent), transparent 55%), radial-gradient(760px 520px at 46% 112%, var(--tp-mesh-primary), transparent 62%); /* @kind other */
+  --tp-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); /* @kind other */
+
+  --tp-glass-blur: 20px;
+
+  --tp-ease: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --tp-ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --tp-duration-fast: 150ms; /* @kind other */
+  --tp-duration: 250ms; /* @kind other */
+  --tp-duration-slow: 700ms; /* @kind other */
+
+  --tp-focus-ring: 0 0 0 3px color-mix(in oklch, var(--tp-primary) 35%, transparent);
+}
+
+[data-tp-theme="dark"] {
+  --tp-shadow-sm: 0 2px 10px color-mix(in srgb, var(--tp-shadow-tint) 34%, transparent);
+  --tp-shadow: 0 16px 40px color-mix(in srgb, var(--tp-shadow-tint) 46%, transparent), 0 2px 10px color-mix(in srgb, var(--tp-shadow-tint) 26%, transparent);
+  --tp-shadow-lift: 0 36px 76px color-mix(in srgb, var(--tp-shadow-tint) 58%, transparent), 0 12px 28px color-mix(in srgb, var(--tp-shadow-tint) 34%, transparent);
+}
+
+/* Respect reduced-motion everywhere in the system */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
