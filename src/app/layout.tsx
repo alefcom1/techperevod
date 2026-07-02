@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
+import { YandexMetrika } from "@/components/analytics/YandexMetrika";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
+        <YandexMetrika />
         {/* #root keeps content above the fixed film-grain overlay (landing.css) */}
         <div id="root">
           <ThemeProvider>{children}</ThemeProvider>
