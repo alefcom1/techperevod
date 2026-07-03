@@ -12,47 +12,43 @@ export const NAV_LINKS = [
 export const FOOTER_COLUMNS = [
   {
     title: "Продукт",
+    href: "/",
     links: [
       { label: "Переводчик", href: "/perevodchik" },
       { label: "Тарифы", href: "/tarify" },
       { label: "Кабинет", href: "/app" },
+      { label: "AI-оркестратор", href: "/product/orchestrator" },
+      { label: "Термбаза и TM", href: "/product/terminology" },
+      { label: "API", href: "/product/api" },
     ],
   },
   {
     title: "Отрасли",
+    href: "/otrasli",
     links: [
       { label: "IT и SaaS", href: "/otrasli/it-saas" },
       { label: "Нефтегаз и энергетика", href: "/otrasli/neftegaz" },
       { label: "Машиностроение", href: "/otrasli/mashinostroenie" },
       { label: "Медтех и фарма", href: "/otrasli/medteh" },
-      { label: "Энергетика", href: "/otrasli/energetika" },
       { label: "Строительство", href: "/otrasli/stroitelstvo" },
-      { label: "Химпром", href: "/otrasli/himprom" },
       { label: "Автопром и транспорт", href: "/otrasli/avtoprom" },
-      { label: "Металлургия", href: "/otrasli/metallurgiya" },
-      { label: "Авиация и космос", href: "/otrasli/aviatsiya" },
     ],
   },
   {
     title: "Услуги",
+    href: "/uslugi",
     links: [
-      { label: "Все услуги", href: "/uslugi" },
       { label: "Перевод с китайского", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
       { label: "Перевод инструкций", href: "/uslugi/perevod-instrukcij" },
       { label: "Перевод чертежей", href: "/uslugi/perevod-chertezhej" },
       { label: "Паспорта безопасности", href: "/uslugi/perevod-pasportov-bezopasnosti" },
       { label: "Перевод патентов", href: "/uslugi/perevod-patentov" },
       { label: "Локализация ПО", href: "/uslugi/lokalizaciya-po" },
-      { label: "ТУ и спецификации", href: "/uslugi/perevod-tu-i-specifikacij" },
-      { label: "Регламенты ТО", href: "/uslugi/perevod-reglamentov-to" },
-      { label: "Каталоги запчастей", href: "/uslugi/perevod-katalogov-zapchastej" },
-      { label: "Сертификаты", href: "/uslugi/perevod-sertifikatov" },
-      { label: "Нормативная документация", href: "/uslugi/perevod-normativnoj-dokumentacii" },
-      { label: "Тендерная документация", href: "/uslugi/perevod-tendernoj-dokumentacii" },
     ],
   },
   {
     title: "Языковые пары",
+    href: "/perevod",
     links: [
       { label: "С английского на русский", href: "/perevod/s-anglijskogo" },
       { label: "С русского на английский", href: "/perevod/na-anglijskij" },
@@ -63,15 +59,8 @@ export const FOOTER_COLUMNS = [
     ],
   },
   {
-    title: "Платформа",
-    links: [
-      { label: "AI-оркестратор", href: "/product/orchestrator" },
-      { label: "Термбаза и TM", href: "/product/terminology" },
-      { label: "API", href: "/product/api" },
-    ],
-  },
-  {
     title: "Компания",
+    href: "/o-nas",
     links: [
       { label: "О нас", href: "/o-nas" },
       { label: "Блог", href: "/blog" },

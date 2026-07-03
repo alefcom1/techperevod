@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/product/terminology",
     "/product/api",
     "/uslugi",
+    "/otrasli",
+    "/perevod",
     "/bezopasnost",
     "/o-nas",
     "/blog",
