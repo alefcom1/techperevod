@@ -722,3 +722,35 @@
 @media (max-width: 720px) {
   .tp-admin__grid { grid-template-columns: 1fr; }
 }
+
+/* --- Живой тестер API на /product/api --- */
+.tp-api-try { display: flex; flex-direction: column; gap: var(--tp-space-4); }
+.tp-api-try__row { display: flex; align-items: center; gap: var(--tp-space-4); flex-wrap: wrap; }
+.tp-api-try__textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-surface-card);
+  color: var(--tp-text);
+  font-family: var(--tp-font-sans);
+  font-size: 15px;
+  padding: 12px 14px;
+  line-height: var(--tp-leading-body);
+}
+.tp-api-try__textarea:focus { outline: none; border-color: var(--tp-primary); }
+.tp-api-try__note { font-size: 13px; color: var(--tp-text-muted); }
+.tp-api-try__note code { font-family: var(--tp-font-mono); background: var(--tp-surface-sunken); padding: 2px 6px; border-radius: 4px; }
+.tp-api-try__result {
+  background: var(--tp-surface-sunken);
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-sm);
+  padding: 14px 16px;
+  font-family: var(--tp-font-mono);
+  font-size: 13px;
+  color: var(--tp-text);
+  white-space: pre-wrap;
+  overflow-x: auto;
+  margin: 0;
+}

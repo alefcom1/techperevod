@@ -4,11 +4,14 @@ import { SiteShell } from "@/components/layout/SiteShell";
 import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { ProductWindow } from "@/components/marketing/ProductWindow";
+import { ApiTryIt } from "@/components/marketing/ApiTryIt";
 import { Card } from "@/components/core/Card";
 import { Icon } from "@/components/core/Icon";
+import { Badge } from "@/components/core/Badge";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Button } from "@/components/core/Button";
 import { getContent } from "@/lib/site-content";
+import { DEMO_API_KEY } from "@/lib/api-keys";
 
 export const dynamic = "force-dynamic";
 
@@ -22,31 +25,26 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const EXAMPLE = `POST /v1/translate HTTP/1.1
-Host: api.techperevod.com
-Authorization: Bearer tp_live_xxx
-Content-Type: application/json
-
-{
-  "source": "ru",
-  "target": "en",
-  "glossary_id": "gls_9f2c",
-  "text": "Перед запуском насоса переведите клапан
-           в положение «закрыто»."
-}
+const EXAMPLE = `curl -X POST https://techperevod.com/api/v1/translate \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "source": "ru",
+    "target": "en",
+    "text": "Перед запуском насоса переведите клапан в положение «закрыто»."
+  }'
 
 HTTP/1.1 200 OK
 {
-  "translation": "Before starting the pump, set the
-                  valve to the \\"closed\\" position.",
-  "model": "deepl",
+  "translation": "Before starting the pump, set the valve to the \\"closed\\" position.",
+  "model": "claude-opus-4-8",
   "words": 11
 }`;
 
 const POINTS = [
-  { icon: "plug-zap", title: "Простая интеграция", desc: "Один REST-эндпоинт для текста и документов. Ключи и квоты — в кабинете." },
-  { icon: "cpu", title: "Та же оркестрация", desc: "API использует тот же роутер моделей и термбазу, что и кабинет — качество не отличается." },
-  { icon: "shield-check", title: "Предсказуемые лимиты", desc: "Квота в словах общая с тарифом. Ответы включают счётчик расхода." },
+  { icon: "plug-zap", title: "Работает прямо сейчас", desc: "Демо-ключ не нужно запрашивать — вставьте его в заголовок и вызывайте API немедленно, без регистрации." },
+  { icon: "cpu", title: "Та же оркестрация", desc: "API использует ту же модель и системный промпт, что и переводчик на сайте — качество не отличается." },
+  { icon: "shield-check", title: "Предсказуемые лимиты", desc: "Демо-ключ — до 20 запросов в день с одного адреса. Для продакшн-ключа с более высоким лимитом напишите нам." },
 ];
 
 export default function ApiPage() {
@@ -58,11 +56,12 @@ export default function ApiPage() {
             <Link href="/">Главная</Link> / Платформа / API
           </span>
         }
+        badge={<Badge tone="accent">Работает прямо сейчас — попробуйте ниже</Badge>}
         icon={<Icon name="plug-zap" size={26} />}
         title="API технического перевода"
-        subtitle="Встройте перевод с оркестрацией моделей и термбазой прямо в ваш продукт или пайплайн документации."
+        subtitle="Встройте перевод с оркестрацией моделей прямо в ваш продукт или пайплайн документации."
         ctaHref="/tarify"
-        ctaLabel="Доступен с тарифа Pro"
+        ctaLabel="Тарифы для продакшн-ключа"
       />
 
       <section className="tp-section">
@@ -85,12 +84,25 @@ export default function ApiPage() {
             </ProductWindow>
           </ScrollReveal>
           <p style={{ textAlign: "center", color: "var(--tp-text-muted)", fontSize: 13 }}>
-            * спецификация иллюстративная — финальная документация публикуется с запуском API
+            Демо-ключ <code className="tp-mono">{DEMO_API_KEY}</code> открыт для всех — до 20 запросов в день с
+            одного адреса, без регистрации.
           </p>
         </div>
       </section>
 
       <section className="tp-section tp-section--tint">
+        <div className="tp-section__inner">
+          <ScrollReveal>
+            <SectionHeader
+              title="Попробуйте прямо здесь"
+              subtitle="Реальный вызов POST /api/v1/translate из браузера — тот же эндпоинт, что и в примере curl выше."
+            />
+          </ScrollReveal>
+          <ApiTryIt />
+        </div>
+      </section>
+
+      <section className="tp-section">
         <div className="tp-section__inner">
           <ScrollReveal>
             <SectionHeader title="Что внутри" />
@@ -111,7 +123,7 @@ export default function ApiPage() {
         </div>
       </section>
 
-      <section className="tp-section">
+      <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">
           <ScrollReveal>
             <Card variant="glass" className="tp-about-cta">
