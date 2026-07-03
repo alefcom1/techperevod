@@ -21,6 +21,33 @@
 .tp-service-intro p + p { color: var(--tp-text-muted); }
 .tp-service-intro p:first-child { color: var(--tp-text); }
 
+/* Инлайн-ссылки в прозе (интро, «кто заказывает», FAQ-ответы, CTA-подписи) —
+   без этого правила они падают на дефолт браузера (синий/лиловый посещённый),
+   плохо читаемый в обеих темах. */
+.tp-service-intro a,
+.tp-faq__a a,
+.tp-value-card__desc a,
+.tp-doctype-card__desc a {
+  color: var(--tp-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--tp-primary) 40%, transparent);
+  text-underline-offset: 2px;
+  font-weight: var(--tp-weight-medium);
+  transition: color var(--tp-duration) var(--tp-ease);
+}
+.tp-service-intro a:hover,
+.tp-faq__a a:hover,
+.tp-value-card__desc a:hover,
+.tp-doctype-card__desc a:hover {
+  color: var(--tp-primary-hover);
+}
+.tp-service-intro a:visited,
+.tp-faq__a a:visited,
+.tp-value-card__desc a:visited,
+.tp-doctype-card__desc a:visited {
+  color: var(--tp-primary);
+}
+
 /* «Почему мы» — сетка подстраивается под 3 или 4 карточки */
 .tp-service-features {
   display: grid;
