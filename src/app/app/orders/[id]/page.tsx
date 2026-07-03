@@ -14,7 +14,18 @@ interface Segment {
   aiDraft: string | null;
   qaFlags: string | null;
   glossaryHits: string | null;
+  confidence: number | null;
+  concerns: string | null;
   needsReview: boolean;
+}
+
+// Та же ставка, что и в src/lib/quote.ts (WORD_RATE_RUB) — не импортируем
+// оттуда напрямую, чтобы не тянуть на клиент серверные зависимости парсинга
+// документов (mammoth/pdf-parse), которые лежат в том же модуле.
+const WORD_RATE_RUB = 1.5;
+
+function wordCount(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
 interface OrderDetail {
@@ -61,6 +72,16 @@ function parseHits(raw: string | null): { ru: string; en: string }[] {
   }
 }
 
+function parseConcerns(raw: string | null): string[] {
+  if (!raw) return [];
+  try {
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr.filter((c): c is string => typeof c === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function OrderReportPage() {
   const params = useParams<{ id: string }>();
   const [order, setOrder] = React.useState<OrderDetail | null>(null);
@@ -81,6 +102,11 @@ export default function OrderReportPage() {
 
         const flaggedCount = order.segments.filter((s) => s.needsReview).length;
         const hasDraft = order.segments.some((s) => s.aiDraft);
+        const reviewWords = order.segments.filter((s) => s.needsReview).reduce((sum, s) => sum + wordCount(s.sourceText), 0);
+        const autoWords = order.segments.filter((s) => !s.needsReview).reduce((sum, s) => sum + wordCount(s.sourceText), 0);
+        const fullReviewCost = Math.round((autoWords + reviewWords) * WORD_RATE_RUB);
+        const routedReviewCost = Math.round(reviewWords * WORD_RATE_RUB);
+        const savings = fullReviewCost - routedReviewCost;
 
         return (
           <>
@@ -122,6 +148,41 @@ export default function OrderReportPage() {
 
             {hasDraft ? (
               <Card padding="lg">
+                <div className="tp-value-card__title" style={{ fontSize: 18, marginBottom: 8 }}>
+                  Маршрутизация на человека
+                </div>
+                <p className="tp-value-card__desc" style={{ marginBottom: "var(--tp-space-4)" }}>
+                  Каждый сегмент помечается для проверки, если сработала эвристика (числа, отрицания, техника
+                  безопасности) ИЛИ сама модель оценила уверенность ниже 4 из 5 — низкая самооценка не наказывается,
+                  она и есть сигнал для маршрутизации.
+                </p>
+                <div className="tp-app__grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+                  <div>
+                    <div className="tp-value-card__title" style={{ fontSize: 22 }}>
+                      {order.segments.length - flaggedCount} / {order.segments.length}
+                    </div>
+                    <div className="tp-value-card__desc">сегментов — автосдача ({autoWords.toLocaleString("ru-RU")} слов)</div>
+                  </div>
+                  <div>
+                    <div className="tp-value-card__title" style={{ fontSize: 22, color: flaggedCount > 0 ? "#E5484D" : undefined }}>
+                      {flaggedCount} / {order.segments.length}
+                    </div>
+                    <div className="tp-value-card__desc">на проверку человеку ({reviewWords.toLocaleString("ru-RU")} слов)</div>
+                  </div>
+                  <div>
+                    <div className="tp-value-card__title" style={{ fontSize: 22 }}>
+                      {savings.toLocaleString("ru-RU")} ₽
+                    </div>
+                    <div className="tp-value-card__desc">
+                      экономия на редактуре против сплошной вычитки всего документа инженером
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ) : null}
+
+            {hasDraft ? (
+              <Card padding="lg">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--tp-space-4)", flexWrap: "wrap", gap: "var(--tp-space-3)" }}>
                   <div className="tp-value-card__title" style={{ fontSize: 18 }}>
                     Отчёт о качестве · {order.segments.length} сегментов
@@ -136,13 +197,14 @@ export default function OrderReportPage() {
                 </div>
                 <p className="tp-value-card__desc" style={{ marginBottom: "var(--tp-space-4)" }}>
                   Черновик сгенерирован AI-переводчиком. Правка живым инженером по этим сегментам появится, когда на
-                  платформе будет готов инструмент для редактора — сейчас это только автоматические проверки и
-                  сверка с вашей термбазой.
+                  платформе будет готов инструмент для редактора — сейчас это только автоматические проверки,
+                  самооценка модели и сверка с вашей термбазой.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "var(--tp-space-4)" }}>
                   {order.segments.map((s) => {
                     const flags = parseFlags(s.qaFlags);
                     const hits = parseHits(s.glossaryHits);
+                    const concerns = parseConcerns(s.concerns);
                     return (
                       <div
                         key={s.id}
@@ -163,18 +225,31 @@ export default function OrderReportPage() {
                           <div style={{ fontSize: 11, color: "var(--tp-text-muted)", marginBottom: 4 }}>AI-ЧЕРНОВИК</div>
                           <div className="tp-mono" style={{ fontSize: 14 }}>{s.aiDraft}</div>
                         </div>
-                        {flags.length > 0 || hits.length > 0 ? (
-                          <div style={{ gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", gap: 8 }}>
-                            {flags.map((f) => (
-                              <Badge key={f} tone="neutral" size="sm">
-                                ⚠ {f}
-                              </Badge>
-                            ))}
-                            {hits.map((h) => (
-                              <Badge key={h.ru} tone="accent" size="sm">
-                                термбаза: {h.ru} → {h.en}
-                              </Badge>
-                            ))}
+                        <div style={{ gridColumn: "1 / -1", display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                          {s.confidence != null ? (
+                            <Badge tone={s.confidence >= 4 ? "accent" : "neutral"} size="sm">
+                              AI-уверенность: {s.confidence}/5
+                            </Badge>
+                          ) : null}
+                          {s.needsReview ? (
+                            <span style={{ color: "#E5484D", fontSize: 13 }}>→ на проверку человеку</span>
+                          ) : (
+                            <span style={{ color: "var(--tp-text-muted)", fontSize: 13 }}>→ автосдача</span>
+                          )}
+                          {flags.map((f) => (
+                            <Badge key={f} tone="neutral" size="sm">
+                              ⚠ {f}
+                            </Badge>
+                          ))}
+                          {hits.map((h) => (
+                            <Badge key={h.ru} tone="accent" size="sm">
+                              термбаза: {h.ru} → {h.en}
+                            </Badge>
+                          ))}
+                        </div>
+                        {concerns.length > 0 ? (
+                          <div style={{ gridColumn: "1 / -1", fontSize: 13, color: "var(--tp-text-muted)" }}>
+                            Сомнения модели: {concerns.join("; ")}
                           </div>
                         ) : null}
                       </div>

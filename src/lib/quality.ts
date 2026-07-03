@@ -1,8 +1,11 @@
 /**
- * Автоматические QA-проверки и сверка с термбазой для отчёта о качестве
- * (см. docs/product-features-plan.md, п.2). Честная граница: это только то,
- * что можно посчитать без участия живого редактора — самой правки инженера
- * здесь нет, потому что на платформе пока нет инструмента для редактора.
+ * Автоматические QA-проверки, сверка с термбазой и маршрутизация "на
+ * человека" для отчёта о качестве (см. docs/product-features-plan.md,
+ * п.2 и п.3). Честная граница: это только то, что можно посчитать без
+ * участия живого редактора — самой правки инженера здесь нет, потому что
+ * на платформе пока нет инструмента для редактора. "Маршрутизация" —
+ * это решение, какие сегменты ТРЕБУЮТ такой правки, когда инструмент появится;
+ * пока это просто явная пометка в отчёте.
  */
 
 export interface QaFlags {
@@ -40,6 +43,18 @@ export function computeQaFlags(sourceText: string, aiDraft: string): QaFlags {
 
 export function needsReview(flags: QaFlags): boolean {
   return flags.numbersMismatch || flags.hasNegation || flags.safetyCritical;
+}
+
+/**
+ * Ниже этого порога самооценки модель сама сомневается в переводе — сегмент
+ * маршрутизируется на проверку человеком независимо от эвристик. У Anthropic
+ * Messages API нет измеренного confidence score — это промпт-based
+ * самооценка (см. translateSegmentGraded в src/lib/translate.ts).
+ */
+export const CONFIDENCE_REVIEW_THRESHOLD = 4;
+
+export function shouldRouteToHuman(flags: QaFlags, confidence: number): boolean {
+  return needsReview(flags) || confidence < CONFIDENCE_REVIEW_THRESHOLD;
 }
 
 export interface GlossaryHit {

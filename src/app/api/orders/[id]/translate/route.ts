@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { SESSION_COOKIE, getSessionUser } from "@/lib/auth";
-import { isKnownLang, translateText } from "@/lib/translate";
-import { computeQaFlags, needsReview as flagsNeedReview, matchGlossary } from "@/lib/quality";
+import { isKnownLang, translateSegmentGraded } from "@/lib/translate";
+import { computeQaFlags, shouldRouteToHuman, matchGlossary } from "@/lib/quality";
 
 export const runtime = "nodejs";
 
@@ -14,8 +14,10 @@ const BATCH_SIZE = 5;
 
 /**
  * Превращает сохранённую оценку (Order + Segment) в реальный AI-черновик по
- * сегментам с автоматическими QA-проверками и сверкой с термбазой —
- * "отчёт о качестве" из плана (п.2), без выдуманной правки живого редактора.
+ * сегментам с автоматическими QA-проверками, сверкой с термбазой и
+ * маршрутизацией на человека по самооценке модели — "отчёт о качестве" и
+ * "умная маршрутизация" из плана (п.2 и п.3), без выдуманной правки живого
+ * редактора.
  */
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
@@ -57,7 +59,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const batch = segments.slice(i, i + BATCH_SIZE);
     await Promise.all(
       batch.map(async (segment) => {
-        const { translation } = await translateText(segment.sourceText, order.sourceLang, order.targetLang);
+        const { translation, confidence, concerns } = await translateSegmentGraded(
+          segment.sourceText,
+          order.sourceLang,
+          order.targetLang,
+        );
         const flags = computeQaFlags(segment.sourceText, translation);
         const hits = matchGlossary(segment.sourceText, glossaryTerms);
         await prisma.segment.update({
@@ -66,7 +72,9 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
             aiDraft: translation,
             qaFlags: JSON.stringify(flags),
             glossaryHits: JSON.stringify(hits),
-            needsReview: flagsNeedReview(flags),
+            confidence,
+            concerns: JSON.stringify(concerns),
+            needsReview: shouldRouteToHuman(flags, confidence),
           },
         });
       }),

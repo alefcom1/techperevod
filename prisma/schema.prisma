@@ -70,5 +70,7 @@ model Segment {
   aiDraft      String?
   qaFlags      String? // JSON: {numbersMismatch, hasNegation, shortSegment, safetyCritical}
   glossaryHits String? // JSON: [{ru, en}]
-  needsReview  Boolean @default(false)
+  confidence   Int? // самооценка модели, 1-5 (см. src/lib/translate.ts translateSegmentGraded)
+  concerns     String? // JSON: string[] — на что сама модель обращает внимание
+  needsReview  Boolean @default(false) // эвристики ИЛИ низкая самооценка — маршрутизация на человека
 }
