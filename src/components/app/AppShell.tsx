@@ -50,7 +50,7 @@ export function AppShell({
     <div className="tp-app">
       <aside className="tp-app__sidebar">
         <div className="tp-app__logo">
-          <Link href="/" aria-label="techperevod.com — на главную">
+          <Link href="/" aria-label="Техперевод.com — на главную">
             <BrandMark theme={theme} height={36} tagline={false} />
           </Link>
         </div>

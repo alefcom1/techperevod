@@ -11,7 +11,7 @@ export interface BrandMarkProps {
 }
 
 /**
- * Фирменный лекап (шестерёнка-облачко + «techperevod.com» + подпись
+ * Фирменный лекап (шестерёнка-облачко + «Техперевод.com» + подпись
  * «технические переводы»), подобранный под тему. Использует webp-логотипы,
  * загруженные владельцем: logo-bright.webp (светлая тема) 1486×404,
  * logo-dark.webp (тёмная) 1512×414.
@@ -35,7 +35,7 @@ export function BrandMark({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
-      alt="techperevod.com — технические переводы"
+      alt="Техперевод.com — технические переводы"
       height={height}
       width={width}
       className={["tp-brandmark", className].filter(Boolean).join(" ")}

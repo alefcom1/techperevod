@@ -22,7 +22,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     <div className="tp-landing">
       <NavBar
         logo={
-          <Link href="/" style={{ display: "flex" }} aria-label="techperevod.com — на главную">
+          <Link href="/" style={{ display: "flex" }} aria-label="Техперевод.com — на главную">
             <BrandMark theme={theme} height={48} tagline={false} />
           </Link>
         }
@@ -46,12 +46,19 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
       <Footer
         logo={
-          <Link href="/" style={{ display: "flex" }} aria-label="techperevod.com — на главную">
+          <Link href="/" style={{ display: "flex" }} aria-label="Техперевод.com — на главную">
             <BrandMark theme={theme} height={68} />
           </Link>
         }
         columns={FOOTER_COLUMNS}
-        bottom={<span>© 2026 techperevod.com</span>}
+        bottom={
+          <div className="tp-footer__bottom-row">
+            <span>
+              © 2026 <a href="https://techperevod.com">Техперевод.com</a>
+            </span>
+            <Link href="/bezopasnost">Конфиденциальность и 152-ФЗ</Link>
+          </div>
+        }
       />
     </div>
   );

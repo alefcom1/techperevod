@@ -8,8 +8,8 @@ const SITE_URL = "https://techperevod.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "techperevod.com — технический перевод AI + инженер",
-    template: "%s | techperevod.com",
+    default: "Техперевод.com — технический перевод AI + инженер",
+    template: "%s | Техперевод.com",
   },
   description:
     "Технический перевод для инженерных, IT и промышленных компаний: связка AI-моделей и редактора-инженера. Оценка объёма и срока за 2 минуты после загрузки документа.",
@@ -25,20 +25,20 @@ export const metadata: Metadata = {
     "термбаза",
     "память переводов",
   ],
-  authors: [{ name: "techperevod.com" }],
+  authors: [{ name: "Техперевод.com" }],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "ru_RU",
     url: SITE_URL,
-    siteName: "techperevod.com",
-    title: "techperevod.com — технический перевод AI + инженер",
+    siteName: "Техперевод.com",
+    title: "Техперевод.com — технический перевод AI + инженер",
     description:
       "Связка AI-моделей и инженера-редактора для технического перевода. Оценка за 2 минуты, 65+ форматов, специализация по отраслям.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "techperevod.com — технический перевод AI + инженер",
+    title: "Техперевод.com — технический перевод AI + инженер",
     description:
       "Связка AI-моделей и инженера-редактора для технического перевода. Оценка за 2 минуты, 65+ форматов.",
   },

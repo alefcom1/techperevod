@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: "/kontakty" },
-    openGraph: { title: `${title} | techperevod.com`, url: "/kontakty", type: "website" },
+    openGraph: { title: `${title} | Техперевод.com`, url: "/kontakty", type: "website" },
   };
 }
 

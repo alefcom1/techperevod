@@ -5,7 +5,7 @@ import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 
 /**
- * «Почему techperevod» — по формату Taia «Why Taia?»: три насыщенные
+ * «Почему Техперевод» — по формату Taia «Why Taia?»: три насыщенные
  * карточки-ссылки (иконка + заголовок + тезис + чек-лист полными
  * предложениями). Вобрал в себя прежний «AI-набор»: все шесть его
  * возможностей распределены по буллетам трёх карточек.
@@ -55,7 +55,7 @@ export interface WhySectionProps {
 }
 
 export function WhySection({
-  title = "Почему techperevod",
+  title = "Почему Техперевод",
   subtitle = "Единственная платформа, где в одном конвейере работают AI-оркестратор нескольких моделей, ваша собственная терминология и живые инженеры-редакторы.",
 }: WhySectionProps) {
   return (

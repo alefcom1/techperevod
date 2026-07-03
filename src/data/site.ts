@@ -38,7 +38,7 @@ export const FOOTER_COLUMNS = [
     title: "Услуги",
     href: "/uslugi",
     links: [
-      { label: "Перевод с китайского", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
+      { label: "Перевод китайской документации", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
       { label: "Перевод инструкций", href: "/uslugi/perevod-instrukcij" },
       { label: "Перевод чертежей", href: "/uslugi/perevod-chertezhej" },
       { label: "Паспорта безопасности", href: "/uslugi/perevod-pasportov-bezopasnosti" },
@@ -64,7 +64,6 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "О нас", href: "/o-nas" },
       { label: "Блог", href: "/blog" },
-      { label: "Конфиденциальность и 152-ФЗ", href: "/bezopasnost" },
       { label: "Контакты", href: "/kontakty" },
     ],
   },

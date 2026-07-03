@@ -18,14 +18,14 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: { canonical: "/perevodchik" },
-    openGraph: { title: `${title} | techperevod.com`, url: "/perevodchik", type: "website" },
+    openGraph: { title: `${title} | Техперевод.com`, url: "/perevodchik", type: "website" },
   };
 }
 
 const PERKS = [
   { icon: "cpu", title: "Технический AI", desc: "Модель настроена на терминологию: сохраняет числа, единицы измерения и формат." },
   { icon: "gauge", title: "Мгновенно", desc: "Перевод за секунды, без регистрации — до 2 000 знаков за раз." },
-  { icon: "shield-check", title: "Без рекламы", desc: "Никаких баннеров и продажи данных. Free-уровень платформы techperevod." },
+  { icon: "shield-check", title: "Без рекламы", desc: "Никаких баннеров и продажи данных. Free-уровень платформы Техперевод." },
 ];
 
 export default function TranslatorPage() {

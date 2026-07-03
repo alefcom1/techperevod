@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="tp-login">
       <Card variant="elevated" padding="lg" className="tp-login__card">
-        <Link href="/" style={{ alignSelf: "center" }} aria-label="techperevod.com — на главную">
+        <Link href="/" style={{ alignSelf: "center" }} aria-label="Техперевод.com — на главную">
           <BrandMark theme={theme} height={40} tagline={false} />
         </Link>
         <div>

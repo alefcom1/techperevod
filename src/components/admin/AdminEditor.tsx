@@ -131,7 +131,7 @@ export function AdminEditor({ initialContent }: { initialContent: SiteContent })
     <div className="tp-app">
       <div className="tp-app__main" style={{ maxWidth: 900, margin: "0 auto", width: "100%" }}>
         <div className="tp-app__topbar">
-          <h1 className="tp-app__title">Админ-панель techperevod.com</h1>
+          <h1 className="tp-app__title">Админ-панель Техперевод.com</h1>
           <div className="tp-app__user">
             <Button variant="ghost" size="sm" as="a" href="/" target="_blank">
               Открыть сайт
@@ -224,7 +224,7 @@ export function AdminEditor({ initialContent }: { initialContent: SiteContent })
                 <TextField label="Подзаголовок" value={content.home.orchestratorSubtitle} onChange={(v) => updateHome("orchestratorSubtitle", v)} multiline />
               </Card>
               <Card padding="lg" className="tp-admin__card">
-                <div className="tp-admin__card-title">«Почему techperevod»</div>
+                <div className="tp-admin__card-title">«Почему Техперевод»</div>
                 <TextField label="Заголовок" value={content.home.whyTitle} onChange={(v) => updateHome("whyTitle", v)} />
                 <TextField label="Подзаголовок" value={content.home.whySubtitle} onChange={(v) => updateHome("whySubtitle", v)} multiline />
               </Card>
