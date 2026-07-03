@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { INDUSTRIES } from "@/data/site";
 import { SERVICES } from "@/data/services";
 import { LANGUAGES } from "@/data/languages";
+import { POSTS } from "@/data/posts";
+import { DICTIONARIES } from "@/data/dictionary";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -16,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/uslugi",
     "/otrasli",
     "/perevod",
+    "/slovar",
     "/bezopasnost",
     "/o-nas",
     "/blog",
@@ -45,5 +48,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...industryRoutes, ...serviceRoutes, ...languageRoutes];
+  const postRoutes = POSTS.map((p) => ({
+    url: `${SITE_URL}/blog/${p.slug}`,
+    changeFrequency: "yearly" as const,
+    priority: 0.6,
+  }));
+
+  const dictionaryRoutes = DICTIONARIES.map((d) => ({
+    url: `${SITE_URL}/slovar/${d.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...industryRoutes,
+    ...serviceRoutes,
+    ...languageRoutes,
+    ...postRoutes,
+    ...dictionaryRoutes,
+  ];
 }

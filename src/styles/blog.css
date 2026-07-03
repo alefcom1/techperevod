@@ -1,0 +1,62 @@
+/* ============================================================
+   Блог /blog/* — типографика лонгрида (PostPageBody) и мелкие
+   элементы карточек/шапки статьи. Сетка карточек и общие блоки
+   (tp-section, tp-industry-grid, tp-value-card, tp-about-cta,
+   tp-blog-grid, tp-blog-card) переиспользуются из landing.css —
+   здесь только то, что специфично для длинного текста статьи.
+   ============================================================ */
+
+/* Строка метаданных в шапке статьи: категория + дата + время чтения */
+.tp-post-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tp-space-2);
+  font-family: var(--tp-font-mono);
+  font-size: 13px;
+  color: var(--tp-text-muted);
+  white-space: nowrap;
+}
+.tp-post-meta__dot { opacity: 0.5; }
+
+/* Узкая читабельная колонка тела статьи — как .tp-service-intro, но со
+   своими <h2> между абзацами вместо плоского списка <p>. */
+.tp-post-body {
+  max-width: 70ch;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-8);
+}
+.tp-post-section__title {
+  margin: 0 0 var(--tp-space-4);
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-weight-heading);
+  font-size: var(--tp-text-h3);
+  line-height: var(--tp-leading-heading);
+  color: var(--tp-text);
+}
+.tp-post-section p {
+  margin: 0;
+  color: var(--tp-text);
+  font-size: 17px;
+  line-height: var(--tp-leading-body);
+}
+.tp-post-section p + p { margin-top: var(--tp-space-4); }
+
+/* Инлайн-ссылки внутри прозы статьи — тот же язык, что и в услугах/языках,
+   без этого правила ссылки падают на дефолт браузера. */
+.tp-post-body a {
+  color: var(--tp-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--tp-primary) 40%, transparent);
+  text-underline-offset: 2px;
+  font-weight: var(--tp-weight-medium);
+  transition: color var(--tp-duration) var(--tp-ease);
+}
+.tp-post-body a:hover { color: var(--tp-primary-hover); }
+.tp-post-body a:visited { color: var(--tp-primary); }
+
+@media (max-width: 640px) {
+  .tp-post-section p { font-size: 16px; }
+  .tp-post-section__title { font-size: 20px; }
+}

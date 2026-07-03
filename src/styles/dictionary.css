@@ -1,0 +1,88 @@
+/* ============================================================
+   Раздел словаря /slovar/* — стили, специфичные для DictionaryHubBody и
+   DictionaryPageBody. Общие блоки (tp-section, tp-service-intro,
+   tp-value-card, tp-service-features, tp-about-cta, tp-mono) переиспользуются
+   из landing.css и services.css — здесь только новое: таблица терминов и её
+   инструментальная панель.
+   ============================================================ */
+
+.tp-dict {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-5);
+}
+
+.tp-dict__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tp-space-4);
+  flex-wrap: wrap;
+}
+.tp-dict__toolbar .tp-field { min-width: 260px; flex: 1 1 260px; }
+
+.tp-dict__count {
+  font-family: var(--tp-font-mono);
+  font-size: 14px;
+  color: var(--tp-accent-hover);
+  background: var(--tp-accent-soft);
+  padding: 6px 14px;
+  border-radius: var(--tp-radius-pill);
+  white-space: nowrap;
+}
+
+.tp-dict__table-wrap {
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius);
+  background: var(--tp-surface);
+  overflow-x: auto;
+}
+
+.tp-dict__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.tp-dict__table th {
+  text-align: left;
+  color: var(--tp-text-muted);
+  font-size: var(--tp-text-caption);
+  font-weight: var(--tp-weight-medium);
+  padding: var(--tp-space-4) var(--tp-space-5);
+  border-bottom: 1px solid var(--tp-border);
+  position: sticky;
+  top: 0;
+  background: var(--tp-surface);
+}
+.tp-dict__table td {
+  padding: var(--tp-space-4) var(--tp-space-5);
+  border-bottom: 1px solid var(--tp-border);
+  color: var(--tp-text);
+  vertical-align: top;
+}
+.tp-dict__table tr:last-child td { border-bottom: none; }
+.tp-dict__table tr:hover td { background: var(--tp-accent-soft); }
+
+.tp-dict__note {
+  margin-top: 4px;
+  font-family: var(--tp-font-sans, inherit);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--tp-text-muted);
+  line-height: var(--tp-leading-body);
+  max-width: 46ch;
+}
+
+.tp-dict__empty {
+  margin: 0;
+  padding: var(--tp-space-6);
+  text-align: center;
+  color: var(--tp-text-muted);
+  border: 1px dashed var(--tp-border);
+  border-radius: var(--tp-radius);
+}
+
+@media (max-width: 640px) {
+  .tp-dict__toolbar { flex-direction: column; align-items: stretch; }
+  .tp-dict__table th, .tp-dict__table td { padding: var(--tp-space-3) var(--tp-space-4); }
+}

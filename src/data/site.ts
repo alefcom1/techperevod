@@ -64,6 +64,7 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "О нас", href: "/o-nas" },
       { label: "Блог", href: "/blog" },
+      { label: "Словарь терминов", href: "/slovar" },
       { label: "Контакты", href: "/kontakty" },
     ],
   },
