@@ -19,6 +19,7 @@ const NAV = [
   { href: "/app", icon: "gauge", label: "Обзор" },
   { href: "/app/editor", icon: "file-text", label: "Перевод" },
   { href: "/app/glossary", icon: "database", label: "Термбаза" },
+  { href: "/app/localization", icon: "globe", label: "Локализация сайта" },
   { href: "/app/billing", icon: "package-check", label: "Тариф" },
 ];
 

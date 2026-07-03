@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/product/orchestrator",
     "/product/terminology",
     "/product/api",
+    "/product/localization",
     "/uslugi",
     "/otrasli",
     "/perevod",

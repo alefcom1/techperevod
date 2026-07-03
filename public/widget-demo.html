@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Демо-сайт клиента — виджет локализации Техперевод.com</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #1a1a1a; }
+  header { border-bottom: 2px solid #eee; padding-bottom: 16px; margin-bottom: 24px; }
+  .banner { background: #FFF7E6; border: 1px solid #F5C453; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; font-size: 14px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 20px; margin-top: 32px; }
+  ul { padding-left: 20px; }
+</style>
+</head>
+<body>
+
+<div class="banner" data-notranslate>
+  Это демонстрационная страница, имитирующая сайт стороннего клиента с вставленным виджетом Техперевод.com —
+  подтверждение того, что подход "перевод на лету" реально работает, а не макет. Кнопка 🌐 внизу справа появится
+  через секунду после загрузки скрипта.
+</div>
+
+<header>
+  <h1>Насосная станция ПН-40: инструкция по эксплуатации</h1>
+  <p>Раздел технической документации для инженеров-эксплуатационников.</p>
+</header>
+
+<h2>Назначение оборудования</h2>
+<p>
+  Насосная станция ПН-40 предназначена для перекачивания технической воды в системах охлаждения промышленного
+  оборудования. Станция рассчитана на непрерывную работу при температуре окружающей среды от -10°C до +45°C.
+</p>
+
+<h2>Требования безопасности</h2>
+<p>
+  Перед запуском насоса переведите клапан в положение «закрыто». Не допускается эксплуатация оборудования без
+  защитного кожуха. Давление в системе не должно превышать 16 бар.
+</p>
+<ul>
+  <li>Регулярно проверяйте уровень масла в редукторе.</li>
+  <li>Запрещается запускать станцию при обнаружении утечек рабочей жидкости.</li>
+  <li>Все работы по обслуживанию проводить только при полном отключении питания.</li>
+</ul>
+
+<h2>Техническое обслуживание</h2>
+<p>
+  Плановое техническое обслуживание проводится каждые 2000 часов наработки. В комплект планового обслуживания
+  входит замена уплотнений, проверка балансировки ротора и калибровка датчиков давления.
+</p>
+
+<script>
+  fetch("/api/widget/demo-site")
+    .then(function (res) { return res.json(); })
+    .then(function (cfg) {
+      var s = document.createElement("script");
+      s.src = "/widget.js";
+      s.setAttribute("data-site", cfg.siteKey);
+      s.setAttribute("data-source", cfg.sourceLang);
+      s.setAttribute("data-langs", cfg.targetLangs.join(","));
+      document.body.appendChild(s);
+    });
+</script>
+
+</body>
+</html>

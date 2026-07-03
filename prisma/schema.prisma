@@ -19,6 +19,7 @@ model User {
   sessions      Session[]
   orders        Order[]
   glossaryTerms GlossaryTerm[]
+  widgetSites   WidgetSite[]
 }
 
 model Session {
@@ -73,4 +74,37 @@ model Segment {
   confidence   Int? // самооценка модели, 1-5 (см. src/lib/translate.ts translateSegmentGraded)
   concerns     String? // JSON: string[] — на что сама модель обращает внимание
   needsReview  Boolean @default(false) // эвристики ИЛИ низкая самооценка — маршрутизация на человека
+}
+
+// П.4 — локализация сайтов «на лету» (JS-виджет, см. docs/product-features-plan.md).
+// siteKey — публичный ключ, встраивается в HTML клиента, поэтому не секрет.
+model WidgetSite {
+  id           String              @id @default(cuid())
+  userId       String? // null — служебный сайт (напр. /widget-demo.html), не привязан к аккаунту
+  user         User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  siteKey      String              @unique
+  domain       String
+  sourceLang   String              @default("ru")
+  targetLangs  String // JSON: string[], напр. ["en","de"]
+  createdAt    DateTime            @default(now())
+  translations WidgetTranslation[]
+}
+
+// Кэш переводов по сайту+языку+хэшу исходного текста — один и тот же текст
+// на разных страницах сайта переводится и хранится один раз.
+model WidgetTranslation {
+  id          String     @id @default(cuid())
+  siteId      String
+  site        WidgetSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  pageUrl     String
+  targetLang  String
+  textHash    String
+  sourceText  String
+  translation String
+  editedByUser Boolean   @default(false) // вручную поправлено в кабинете — не перезаписывать автопереводом
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([siteId, targetLang, textHash])
+  @@index([siteId, pageUrl])
 }

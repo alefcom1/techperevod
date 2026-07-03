@@ -20,6 +20,7 @@ export const FOOTER_COLUMNS = [
       { label: "AI-оркестратор", href: "/product/orchestrator" },
       { label: "Термбаза и TM", href: "/product/terminology" },
       { label: "API", href: "/product/api" },
+      { label: "Локализация сайта", href: "/product/localization" },
     ],
   },
   {
