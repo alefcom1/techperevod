@@ -46,6 +46,9 @@ export function IndustryPageBody({ data }: { data: Industry }) {
             {data.docTypes.map((d, i) => (
               <ScrollReveal key={d.title} delay={i * 70} as="div">
                 <Card padding="lg" className="tp-doctype-card">
+                  <div className="tp-doctype-card__icon">
+                    <Icon name={d.iconName} size={20} />
+                  </div>
                   <div className="tp-doctype-card__title">{d.title}</div>
                   <p className="tp-doctype-card__desc">{d.desc}</p>
                 </Card>

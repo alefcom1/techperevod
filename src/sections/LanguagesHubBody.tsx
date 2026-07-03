@@ -3,9 +3,11 @@ import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Card } from "@/components/core/Card";
+import { Badge } from "@/components/core/Badge";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
+import { ProductWindow } from "@/components/marketing/ProductWindow";
 import { LANGUAGES } from "@/data/languages";
 
 const SITE_URL = "https://techperevod.com";
@@ -72,12 +74,43 @@ export function LanguagesHubBody() {
             <Link href="/">Главная</Link> / Языковые пары
           </span>
         }
+        badge={<Badge tone="primary">{LANGUAGES.length} языковых пар</Badge>}
         icon={<Icon name="globe" size={26} />}
         title="С какими языками мы работаем"
         subtitle="AI-оркестратор моделей плюс инженер-редактор для каждой языковой пары — с учётом терминологии, стандартов и грамматических особенностей конкретного языка."
         ctaHref="/kontakty"
         ctaLabel="Получить оценку за 2 минуты"
       />
+
+      <section className="tp-section" style={{ paddingTop: 0 }}>
+        <div className="tp-section__inner">
+          <ScrollReveal>
+            <ProductWindow url="app.techperevod.com/router">
+              <div className="tp-routing-row">
+                <span className="tp-routing-row__doc">pump-manual.docx · de→ru</span>
+                <Badge tone="primary" size="sm">
+                  DeepL
+                </Badge>
+                <span className="tp-routing-row__reason">точнее для европейских языков</span>
+              </div>
+              <div className="tp-routing-row">
+                <span className="tp-routing-row__doc">panel-errors.pdf · zh→ru</span>
+                <Badge tone="accent" size="sm">
+                  GPT + носитель
+                </Badge>
+                <span className="tp-routing-row__reason">двухступенчатая проверка</span>
+              </div>
+              <div className="tp-routing-row">
+                <span className="tp-routing-row__doc">tender-spec.docx · en→ru</span>
+                <Badge tone="primary" size="sm">
+                  Claude
+                </Badge>
+                <span className="tp-routing-row__reason">юридическая точность формулировок</span>
+              </div>
+            </ProductWindow>
+          </ScrollReveal>
+        </div>
+      </section>
 
       <section className="tp-section">
         <div className="tp-section__inner">

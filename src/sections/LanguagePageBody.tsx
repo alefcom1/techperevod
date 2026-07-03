@@ -8,9 +8,11 @@ import { FormatChip } from "@/components/marketing/FormatChip";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
+import { StackedSteps } from "@/components/marketing/StackedSteps";
 import type { LanguagePage } from "@/data/languages";
 import { SERVICES } from "@/data/services";
 import { INDUSTRIES } from "@/data/site";
+import { GENERIC_PROCESS_STEPS } from "@/data/genericSteps";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -135,6 +137,9 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
             {data.linguisticNotes.map((note, i) => (
               <ScrollReveal key={note.title} delay={i * 70} as="div">
                 <Card padding="lg" className="tp-doctype-card">
+                  <div className="tp-doctype-card__icon">
+                    <Icon name={note.iconName} size={20} />
+                  </div>
                   <div className="tp-doctype-card__title">{note.title}</div>
                   <p className="tp-doctype-card__desc">{note.desc}</p>
                 </Card>
@@ -145,6 +150,39 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
       </section>
 
       <section className="tp-section">
+        <div className="tp-section__inner">
+          <StackedSteps
+            aside={
+              <>
+                <h2
+                  className="tp-section-header__title"
+                  style={{ fontSize: "var(--tp-text-h1)", lineHeight: "var(--tp-leading-display)" }}
+                >
+                  Как проходит <span className="tp-hero__title-accent">перевод</span>
+                </h2>
+                <p className="tp-section-header__subtitle">
+                  {data.name}: от загрузки документа до сдачи готового перевода в исходном формате.
+                </p>
+                <div>
+                  <Button variant="ghost" as="a" href="/perevodchik">
+                    Попробовать бесплатно →
+                  </Button>
+                </div>
+              </>
+            }
+            steps={GENERIC_PROCESS_STEPS.map((s) => ({
+              title: s.title,
+              description: s.description,
+              rows: s.bullets.map((b) => ({
+                icon: <Icon name="check" size={20} color="var(--tp-accent)" />,
+                text: b,
+              })),
+            }))}
+          />
+        </div>
+      </section>
+
+      <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">
           <ScrollReveal>
             <SectionHeader title="Какие документы чаще всего переводим" />
@@ -157,7 +195,7 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
         </div>
       </section>
 
-      <section className="tp-section tp-section--tint">
+      <section className="tp-section">
         <div className="tp-section__inner">
           <ScrollReveal>
             <SectionHeader title="Кто чаще всего заказывает" />
@@ -169,7 +207,7 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
       </section>
 
       {/* FAQ — доступный аккордеон на <details>, дублируется в JSON-LD выше */}
-      <section className="tp-section">
+      <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">
           <ScrollReveal>
             <SectionHeader title="Частые вопросы" />
@@ -191,7 +229,7 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
       </section>
 
       {services.length > 0 ? (
-        <section className="tp-section tp-section--tint">
+        <section className="tp-section">
           <div className="tp-section__inner">
             <ScrollReveal>
               <SectionHeader title="Смежные услуги" />
@@ -210,7 +248,7 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
       ) : null}
 
       {industries.length > 0 ? (
-        <section className="tp-section">
+        <section className="tp-section tp-section--tint">
           <div className="tp-section__inner">
             <ScrollReveal>
               <SectionHeader title="Смежные отрасли" />

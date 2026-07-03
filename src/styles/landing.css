@@ -168,11 +168,18 @@ body::after {
 .tp-pagehero__breadcrumb a:hover { color: var(--tp-primary); }
 .tp-pagehero__title-row { display: flex; align-items: center; justify-content: center; gap: var(--tp-space-4); }
 .tp-pagehero__icon {
-  width: 56px; height: 56px; flex: none;
+  width: 64px; height: 64px; flex: none;
   border-radius: var(--tp-radius);
-  background: var(--tp-primary-soft);
-  color: var(--tp-primary);
+  background: linear-gradient(135deg, var(--tp-primary), var(--tp-accent));
+  color: #fff;
   display: flex; align-items: center; justify-content: center;
+  position: relative;
+  box-shadow: var(--tp-shadow), 0 0 0 6px color-mix(in srgb, var(--tp-primary) 10%, transparent);
+  animation: tp-pagehero-icon-in 0.5s var(--tp-ease-out) both;
+}
+@keyframes tp-pagehero-icon-in {
+  from { opacity: 0; transform: scale(0.8) rotate(-6deg); }
+  to { opacity: 1; transform: none; }
 }
 .tp-pagehero__title {
   font-family: var(--tp-font-display);
@@ -183,6 +190,7 @@ body::after {
   line-height: var(--tp-leading-display);
   margin: 0;
 }
+.tp-pagehero__badge { display: flex; justify-content: center; margin-top: var(--tp-space-4); }
 .tp-pagehero__subtitle {
   font-size: var(--tp-text-body);
   color: var(--tp-text-muted);
@@ -198,6 +206,14 @@ body::after {
 /* Doc-type / info tiles reused across interior pages */
 .tp-doctype-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--tp-space-5); }
 .tp-doctype-card { display: flex; flex-direction: column; gap: var(--tp-space-3); }
+.tp-doctype-card__icon {
+  width: 44px; height: 44px; flex: none;
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-accent-soft);
+  color: color-mix(in oklch, var(--tp-accent) 55%, black);
+  display: flex; align-items: center; justify-content: center;
+}
+[data-tp-theme="dark"] .tp-doctype-card__icon { color: var(--tp-accent); }
 .tp-doctype-card__title { font-family: var(--tp-font-display); font-weight: var(--tp-weight-heading); font-size: 18px; color: var(--tp-text); }
 .tp-doctype-card__desc { margin: 0; color: var(--tp-text-muted); font-size: 15px; line-height: var(--tp-leading-body); }
 @media (max-width: 640px) {

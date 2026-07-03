@@ -3,9 +3,11 @@ import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Card } from "@/components/core/Card";
+import { Badge } from "@/components/core/Badge";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
+import { ProductWindow } from "@/components/marketing/ProductWindow";
 import { SERVICES } from "@/data/services";
 
 const SITE_URL = "https://techperevod.com";
@@ -77,12 +79,43 @@ export function ServicesHubBody() {
             <Link href="/">Главная</Link> / Услуги
           </span>
         }
+        badge={<Badge tone="primary">{SERVICES.length} направлений</Badge>}
         icon={<Icon name="package-check" size={26} />}
         title="Услуги перевода технической документации"
         subtitle="Документы, чертежи, ПО и регуляторные досье — на 15+ языковых парах, с проверкой инженером-носителем профильной специальности."
         ctaHref="/kontakty"
         ctaLabel="Получить оценку за 2 минуты"
       />
+
+      <section className="tp-section" style={{ paddingTop: 0 }}>
+        <div className="tp-section__inner">
+          <ScrollReveal>
+            <ProductWindow url="app.techperevod.com/uslugi">
+              <div className="tp-routing-row">
+                <span className="tp-routing-row__doc">patent-claims.pdf</span>
+                <Badge tone="accent" size="sm">
+                  Патентный специалист
+                </Badge>
+                <span className="tp-routing-row__reason">формула изобретения проверена</span>
+              </div>
+              <div className="tp-routing-row">
+                <span className="tp-routing-row__doc">pump-manual.docx</span>
+                <Badge tone="primary" size="sm">
+                  Инженер-механик
+                </Badge>
+                <span className="tp-routing-row__reason">термбаза применена</span>
+              </div>
+              <div className="tp-routing-row">
+                <span className="tp-routing-row__doc">sds-safety-sheet.pdf</span>
+                <Badge tone="accent" size="sm">
+                  Редактор-химик
+                </Badge>
+                <span className="tp-routing-row__reason">H- и P-фразы сверены с ГОСТ</span>
+              </div>
+            </ProductWindow>
+          </ScrollReveal>
+        </div>
+      </section>
 
       {/* Вводный SEO-текст */}
       <section className="tp-section">

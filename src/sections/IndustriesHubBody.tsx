@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Card } from "@/components/core/Card";
+import { Badge } from "@/components/core/Badge";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
@@ -67,6 +68,7 @@ export function IndustriesHubBody() {
             <Link href="/">Главная</Link> / Отрасли
           </span>
         }
+        badge={<Badge tone="primary">{INDUSTRIES.length} отраслей</Badge>}
         icon={<Icon name="cog" size={26} />}
         title="Технический перевод по отраслям"
         subtitle="Своя терминологическая база, форматы и специалист-редактор для каждой отрасли — от нефтегаза до авиации."
