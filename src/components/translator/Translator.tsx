@@ -33,7 +33,7 @@ const LANGS_STORAGE_KEY = "tp-translator-langs";
  * оценка перевода (цели Метрики). Вкладка «Документ» сохраняет прежний
  * демо-сценарий мгновенной оценки файла.
  */
-export function Translator() {
+export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: string) => void } = {}) {
   const [tab, setTab] = React.useState<"text" | "doc">("text");
   const [source, setSource] = React.useState("ru");
   const [target, setTarget] = React.useState("en");
@@ -53,9 +53,11 @@ export function Translator() {
   const hydratedRef = React.useRef(false);
   const copiedTimerRef = React.useRef<number | undefined>(undefined);
 
-  // Документ-вкладка: демо мгновенной оценки (как в исходном дизайне hero)
+  // Документ-вкладка: реальная мгновенная оценка через /api/quote
   const [fileName, setFileName] = React.useState<string | null>(null);
-  const [quote, setQuote] = React.useState<{ words: string; price: string; eta: string } | null>(null);
+  const [quote, setQuote] = React.useState<{ words: string; price: string; eta: string; note?: string } | null>(null);
+  const [docState, setDocState] = React.useState<"idle" | "loading" | "done" | "error">("idle");
+  const [docError, setDocError] = React.useState<string | null>(null);
 
   // Восстанавливаем языковую пару из localStorage (после монтирования — SSR-safe)
   React.useEffect(() => {
@@ -208,9 +210,41 @@ export function Translator() {
     }
   }
 
-  function handleFiles(files: FileList) {
-    setFileName(files[0].name);
-    setQuote({ words: "12 400", price: "34 800 ₽", eta: "2 дня" });
+  async function handleFiles(files: FileList) {
+    const file = files[0];
+    setFileName(file.name);
+    setQuote(null);
+    setDocError(null);
+    setDocState("loading");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("source", source === AUTO ? "ru" : source);
+      formData.append("target", target);
+
+      const res = await fetch("/api/quote", { method: "POST", body: formData });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setDocError(data.error || "Не удалось оценить документ");
+        setDocState("error");
+        return;
+      }
+
+      setQuote({
+        words: data.words.toLocaleString("ru-RU"),
+        price: `${data.priceRub.toLocaleString("ru-RU")} ₽`,
+        eta: `${data.etaDays} ${data.etaDays === 1 ? "день" : data.etaDays < 5 ? "дня" : "дней"}`,
+        note: data.note,
+      });
+      setDocState("done");
+      reachGoal("quote_done");
+      onQuoteCreated?.(data.orderId);
+    } catch {
+      setDocError("Нет соединения с сервером. Попробуйте ещё раз.");
+      setDocState("error");
+    }
   }
 
   const ratio = Math.min(text.length / MAX_CHARS, 1);
@@ -418,11 +452,20 @@ export function Translator() {
       ) : (
         <>
           <FileDropzone
-            hint="DOCX, PDF, XLIFF, JSON"
-            state={fileName ? "done" : "idle"}
+            accept=".docx,.doc,.pdf,.xlsx,.xls,.csv,.txt,.md,.dwg,.dxf"
+            hint="DOCX, PDF, XLSX, TXT, DWG/DXF — до 10 МБ"
+            state={docState === "loading" ? "idle" : docState === "error" ? "error" : fileName ? "done" : "idle"}
             fileName={fileName ?? undefined}
             onFiles={handleFiles}
           />
+          {docState === "loading" ? (
+            <Card variant="glass" padding="sm">
+              <div className="tp-hero__estimate-row">
+                <span className="tp-translator__note">Считаем слова и сегменты…</span>
+              </div>
+            </Card>
+          ) : null}
+          {docError ? <div className="tp-translator__error">{docError}</div> : null}
           {quote ? (
             <Card variant="glass" padding="sm">
               <div className="tp-hero__estimate-row">
@@ -439,6 +482,7 @@ export function Translator() {
                   <div className="tp-hero__estimate-label">срок</div>
                 </div>
               </div>
+              {quote.note ? <p className="tp-translator__note" style={{ marginTop: 8 }}>{quote.note}</p> : null}
             </Card>
           ) : null}
           <span className="tp-translator__note">

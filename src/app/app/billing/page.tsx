@@ -5,9 +5,10 @@ import Link from "next/link";
 import { AppShell } from "@/components/app/AppShell";
 import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
-import { setPlan, PLAN_QUOTAS, type DemoUser } from "@/lib/demo-account";
 
-const PLANS: { id: DemoUser["plan"]; name: string; price: string; features: string[] }[] = [
+const PLAN_QUOTAS: Record<string, number> = { free: 10_000, start: 100_000, pro: 500_000 };
+
+const PLANS: { id: "free" | "start" | "pro"; name: string; price: string; features: string[] }[] = [
   {
     id: "free",
     name: "Free",
@@ -29,54 +30,69 @@ const PLANS: { id: DemoUser["plan"]; name: string; price: string; features: stri
 ];
 
 export default function BillingPage() {
-  const [, force] = React.useReducer((x: number) => x + 1, 0);
+  const [plan, setPlanState] = React.useState<string | null>(null);
+  const [saving, setSaving] = React.useState(false);
+
+  async function changePlan(id: string) {
+    setSaving(true);
+    try {
+      const res = await fetch("/api/account/plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: id }),
+      });
+      if (res.ok) setPlanState(id);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <AppShell title="Тариф">
-      {(user) => (
-        <>
-          <div className="tp-plans" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
-            {PLANS.map((plan) => {
-              const active = user.plan === plan.id;
-              return (
-                <div key={plan.id} className={`tp-plan ${active ? "tp-plan--recommended" : ""}`}>
-                  {active ? (
-                    <span className="tp-plan__badge">
-                      <Badge tone="primary">Текущий</Badge>
-                    </span>
-                  ) : null}
-                  <div className="tp-plan__name">{plan.name}</div>
-                  <div className="tp-plan__price" style={{ fontSize: 24 }}>
-                    {plan.price}
+      {(user) => {
+        const activePlan = plan ?? user.plan;
+        return (
+          <>
+            <div className="tp-plans" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+              {PLANS.map((p) => {
+                const active = activePlan === p.id;
+                return (
+                  <div key={p.id} className={`tp-plan ${active ? "tp-plan--recommended" : ""}`}>
+                    {active ? (
+                      <span className="tp-plan__badge">
+                        <Badge tone="primary">Текущий</Badge>
+                      </span>
+                    ) : null}
+                    <div className="tp-plan__name">{p.name}</div>
+                    <div className="tp-plan__price" style={{ fontSize: 24 }}>
+                      {p.price}
+                    </div>
+                    <ul className="tp-plan__features">
+                      {p.features.map((f) => (
+                        <li key={f}>{f}</li>
+                      ))}
+                    </ul>
+                    <Button
+                      variant={active ? "secondary" : "primary"}
+                      disabled={active || saving}
+                      fullWidth
+                      onClick={() => changePlan(p.id)}
+                    >
+                      {active ? "Подключён" : `Перейти на ${p.name}`}
+                    </Button>
                   </div>
-                  <ul className="tp-plan__features">
-                    {plan.features.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                  <Button
-                    variant={active ? "secondary" : "primary"}
-                    disabled={active}
-                    fullWidth
-                    onClick={() => {
-                      setPlan(plan.id);
-                      force();
-                    }}
-                  >
-                    {active ? "Подключён" : `Перейти на ${plan.name}`}
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
 
-          <div className="tp-app__demo-note">
-            Оплата картой (ЮKassa) подключается с запуском биллинга — в демо смена тарифа мгновенная и бесплатная,
-            квота обновляется сразу: сейчас {PLAN_QUOTAS[user.plan].toLocaleString("ru-RU")} слов/мес. Объёмы
-            Business — <Link href="/kontakty">по договору</Link>.
-          </div>
-        </>
-      )}
+            <div className="tp-app__demo-note">
+              Оплата картой (ЮKassa) подключается отдельно — сейчас смена тарифа мгновенная и бесплатная, квота
+              обновляется сразу: {(PLAN_QUOTAS[activePlan] ?? PLAN_QUOTAS.free).toLocaleString("ru-RU")} слов/мес.
+              Объёмы Business — <Link href="/kontakty">по договору</Link>.
+            </div>
+          </>
+        );
+      }}
     </AppShell>
   );
 }

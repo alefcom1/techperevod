@@ -8,7 +8,12 @@ import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
 import { useTheme } from "@/lib/theme";
-import { getUser, logout, type DemoUser } from "@/lib/demo-account";
+
+export interface AccountUser {
+  email: string;
+  plan: "free" | "start" | "pro";
+  createdAt: string;
+}
 
 const NAV = [
   { href: "/app", icon: "gauge", label: "Обзор" },
@@ -18,7 +23,8 @@ const NAV = [
 ];
 
 /**
- * Каркас кабинета: сайдбар + топбар. Гард: без демо-аккаунта редиректит
+ * Каркас кабинета: сайдбар + топбар. Аккаунт настоящий (Prisma/SQLite,
+ * см. src/lib/auth.ts) — гард дёргает /api/auth/me и без сессии редиректит
  * на /app/login. children получает user через render-prop.
  */
 export function AppShell({
@@ -26,22 +32,30 @@ export function AppShell({
   children,
 }: {
   title: string;
-  children: (user: DemoUser) => React.ReactNode;
+  children: (user: AccountUser) => React.ReactNode;
 }) {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = React.useState<DemoUser | null>(null);
+  const [user, setUser] = React.useState<AccountUser | null>(null);
   const [checked, setChecked] = React.useState(false);
 
   React.useEffect(() => {
-    const u = getUser();
-    if (!u) {
-      router.replace("/app/login");
-      return;
-    }
-    setUser(u);
-    setChecked(true);
+    let cancelled = false;
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        if (cancelled) return;
+        setUser(data.user);
+        setChecked(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        router.replace("/app/login");
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [router]);
 
   if (!checked || !user) return null;
@@ -70,8 +84,7 @@ export function AppShell({
           className="tp-app__nav-link"
           style={{ border: "none", background: "none", cursor: "pointer", width: "100%", textAlign: "left" }}
           onClick={() => {
-            logout();
-            router.push("/");
+            fetch("/api/auth/logout", { method: "POST" }).finally(() => router.push("/"));
           }}
         >
           <Icon name="user-round" size={18} />
@@ -87,13 +100,7 @@ export function AppShell({
             <ThemeToggle theme={theme} onChange={setTheme} />
           </div>
         </header>
-        <main className="tp-app__content">
-          <div className="tp-app__demo-note">
-            Демо-кабинет: данные хранятся в вашем браузере. Регистрация, оплата и командная работа появятся с
-            запуском биллинга.
-          </div>
-          {children(user)}
-        </main>
+        <main className="tp-app__content">{children(user)}</main>
       </div>
     </div>
   );

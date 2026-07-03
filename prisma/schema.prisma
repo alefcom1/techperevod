@@ -1,0 +1,74 @@
+// Этап 0 — минимальная база данных (SQLite-файл на диске VPS, вне git — см. /data в .gitignore).
+// Заменяет localStorage-демо кабинет реальными аккаунтами, заказами и термбазой.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String
+  plan          String         @default("free") // free | start | pro
+  createdAt     DateTime       @default(now())
+  sessions      Session[]
+  orders        Order[]
+  glossaryTerms GlossaryTerm[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model GlossaryTerm {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ru        String
+  en        String
+  createdAt DateTime @default(now())
+}
+
+// Один заказ = одна загруженная документ-оценка. Анонимные оценки (виджет на
+// главной) имеют userId = null; заказы из кабинета привязаны к пользователю.
+model Order {
+  id            String    @id @default(cuid())
+  userId        String?
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  fileName      String
+  fileKind      String // docx | pdf | xlsx | txt | drawing | other
+  sourceLang    String
+  targetLang    String
+  words         Int
+  segmentsCount Int
+  repeatPct     Float
+  priceRub      Int
+  etaDays       Int
+  status        String    @default("quote") // quote | ai_draft | in_review | done
+  note          String? // честная оговорка (напр. для чертежей DWG/DXF)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  segments      Segment[]
+}
+
+model Segment {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  index        Int
+  sourceText   String
+  aiDraft      String?
+  qaFlags      String? // JSON: {numbersMismatch, hasNegation, shortSegment, safetyCritical}
+  glossaryHits String? // JSON: [{ru, en}]
+  needsReview  Boolean @default(false)
+}

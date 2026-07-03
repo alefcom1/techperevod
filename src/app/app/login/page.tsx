@@ -8,26 +8,42 @@ import { Input } from "@/components/forms/Input";
 import { Button } from "@/components/core/Button";
 import { BrandMark } from "@/components/navigation/BrandMark";
 import { useTheme } from "@/lib/theme";
-import { login, getUser } from "@/lib/demo-account";
 
 export default function LoginPage() {
   const router = useRouter();
   const { theme } = useTheme();
   const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    if (getUser()) router.replace("/app");
+    fetch("/api/auth/me").then((res) => {
+      if (res.ok) router.replace("/app");
+    });
   }, [router]);
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      setError("Введите корректный email");
-      return;
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Не удалось войти");
+        return;
+      }
+      router.push("/app");
+    } catch {
+      setError("Нет соединения с сервером. Попробуйте ещё раз.");
+    } finally {
+      setLoading(false);
     }
-    login(email.trim().toLowerCase());
-    router.push("/app");
   }
 
   return (
@@ -41,7 +57,7 @@ export default function LoginPage() {
             Вход в кабинет
           </div>
           <p className="tp-value-card__desc" style={{ textAlign: "center", marginTop: 8 }}>
-            Демо-режим: достаточно email, пароль не нужен. 10 000 слов AI-перевода в месяц — бесплатно.
+            Новый email — аккаунт создастся автоматически. 10 000 слов AI-перевода в месяц — бесплатно.
           </p>
         </div>
         <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "var(--tp-space-4)" }}>
@@ -56,9 +72,21 @@ export default function LoginPage() {
             }}
             required
           />
+          <Input
+            label="Пароль"
+            type="password"
+            placeholder="не короче 6 символов"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setError(null);
+            }}
+            minLength={6}
+            required
+          />
           {error ? <span style={{ color: "#E5484D", fontSize: 14 }}>{error}</span> : null}
-          <Button type="submit" variant="primary" size="lg" fullWidth>
-            Войти
+          <Button type="submit" variant="primary" size="lg" fullWidth disabled={loading}>
+            {loading ? "Входим…" : "Войти"}
           </Button>
         </form>
         <span className="tp-translator__note" style={{ textAlign: "center" }}>

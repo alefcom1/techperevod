@@ -5,57 +5,73 @@ import Link from "next/link";
 import { AppShell } from "@/components/app/AppShell";
 import { Card } from "@/components/core/Card";
 import { Badge } from "@/components/core/Badge";
-import { Button } from "@/components/core/Button";
 import { StatMetric } from "@/components/marketing/StatMetric";
-import { getUsage, getProjects, PLAN_QUOTAS, PLAN_NAMES, type DemoProject } from "@/lib/demo-account";
+import { Button } from "@/components/core/Button";
 
-const STATUS_LABELS: Record<DemoProject["status"], { label: string; tone: "accent" | "primary" | "neutral" }> = {
+const PLAN_QUOTAS: Record<string, number> = { free: 10_000, start: 100_000, pro: 500_000 };
+const PLAN_NAMES: Record<string, string> = { free: "Free", start: "Start", pro: "Pro" };
+
+const STATUS_LABELS: Record<string, { label: string; tone: "accent" | "primary" | "neutral" }> = {
+  quote: { label: "Оценка", tone: "neutral" },
+  ai_draft: { label: "AI-черновик готов", tone: "primary" },
+  in_review: { label: "На редактуре", tone: "primary" },
   done: { label: "Готово", tone: "accent" },
-  review: { label: "На редактуре", tone: "primary" },
-  draft: { label: "Черновик", tone: "neutral" },
 };
 
+interface OrderRow {
+  id: string;
+  fileName: string;
+  sourceLang: string;
+  targetLang: string;
+  words: number;
+  status: string;
+  priceRub: number;
+  createdAt: string;
+}
+
 export default function DashboardPage() {
-  const [usage, setUsage] = React.useState(0);
-  const [projects, setProjects] = React.useState<DemoProject[]>([]);
+  const [orders, setOrders] = React.useState<OrderRow[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    setUsage(getUsage());
-    setProjects(getProjects());
+    fetch("/api/orders")
+      .then((res) => res.json())
+      .then((data) => setOrders(data.orders ?? []))
+      .finally(() => setLoading(false));
   }, []);
+
+  const monthPrefix = new Date().toISOString().slice(0, 7);
+  const usage = orders
+    .filter((o) => o.createdAt.slice(0, 7) === monthPrefix)
+    .reduce((sum, o) => sum + o.words, 0);
 
   return (
     <AppShell title="Обзор">
       {(user) => {
-        const quota = PLAN_QUOTAS[user.plan];
+        const quota = PLAN_QUOTAS[user.plan] ?? PLAN_QUOTAS.free;
         const pct = Math.min(100, Math.round((usage / quota) * 100));
         return (
           <>
             <div className="tp-app__grid">
               <Card padding="lg" className="tp-quota">
                 <div className="tp-value-card__title" style={{ fontSize: 16 }}>
-                  Квота слов · тариф {PLAN_NAMES[user.plan]}
+                  Слов за месяц · тариф {PLAN_NAMES[user.plan] ?? user.plan}
                 </div>
                 <div className="tp-quota__bar">
                   <span className="tp-quota__fill" style={{ width: `${pct}%` }} />
                 </div>
                 <div className="tp-quota__meta">
-                  <span>{usage.toLocaleString("ru-RU")} использовано</span>
+                  <span>{usage.toLocaleString("ru-RU")} обработано</span>
                   <span>{quota.toLocaleString("ru-RU")} / мес</span>
                 </div>
-                {user.plan === "free" ? (
-                  <Button size="sm" variant="ghost" as="a" href="/app/billing">
-                    Увеличить квоту
-                  </Button>
-                ) : null}
               </Card>
               <Card padding="lg">
-                <StatMetric value={String(projects.length)} label="проектов в работе" />
+                <StatMetric value={String(orders.length)} label="заказов всего" />
               </Card>
               <Card padding="lg">
                 <StatMetric
-                  value={projects.reduce((s, p) => s + p.words, 0).toLocaleString("ru-RU")}
-                  label="слов в проектах"
+                  value={orders.reduce((s, o) => s + o.words, 0).toLocaleString("ru-RU")}
+                  label="слов обработано всего"
                 />
               </Card>
             </div>
@@ -72,7 +88,7 @@ export default function DashboardPage() {
                 }}
               >
                 <div className="tp-value-card__title" style={{ fontSize: 18 }}>
-                  Проекты
+                  Заказы
                 </div>
                 <Button size="sm" variant="primary" as="a" href="/app/editor">
                   Новый перевод
@@ -85,29 +101,34 @@ export default function DashboardPage() {
                     <th>Пара</th>
                     <th>Слов</th>
                     <th>Статус</th>
-                    <th>Обновлён</th>
+                    <th>Создан</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {projects.map((p) => (
-                    <tr key={p.id}>
-                      <td className="tp-mono">{p.name}</td>
-                      <td className="tp-mono">
-                        {p.source.toUpperCase()}→{p.target.toUpperCase()}
-                      </td>
-                      <td>{p.words.toLocaleString("ru-RU")}</td>
-                      <td>
-                        <Badge tone={STATUS_LABELS[p.status].tone} size="sm">
-                          {STATUS_LABELS[p.status].label}
-                        </Badge>
-                      </td>
-                      <td className="tp-mono">{p.updatedAt}</td>
-                    </tr>
-                  ))}
-                  {projects.length === 0 ? (
+                  {orders.map((o) => {
+                    const status = STATUS_LABELS[o.status] ?? STATUS_LABELS.quote;
+                    return (
+                      <tr key={o.id}>
+                        <td className="tp-mono">
+                          <Link href={`/app/orders/${o.id}`}>{o.fileName}</Link>
+                        </td>
+                        <td className="tp-mono">
+                          {o.sourceLang.toUpperCase()}→{o.targetLang.toUpperCase()}
+                        </td>
+                        <td>{o.words.toLocaleString("ru-RU")}</td>
+                        <td>
+                          <Badge tone={status.tone} size="sm">
+                            {status.label}
+                          </Badge>
+                        </td>
+                        <td className="tp-mono">{new Date(o.createdAt).toLocaleDateString("ru-RU")}</td>
+                      </tr>
+                    );
+                  })}
+                  {!loading && orders.length === 0 ? (
                     <tr>
                       <td colSpan={5} style={{ color: "var(--tp-text-muted)" }}>
-                        Пока нет проектов — <Link href="/app/editor">создайте первый перевод</Link>
+                        Пока нет заказов — <Link href="/app/editor">создайте первый перевод</Link>
                       </td>
                     </tr>
                   ) : null}
