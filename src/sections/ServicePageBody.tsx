@@ -148,6 +148,11 @@ export function ServicePageBody({ data }: { data: Service }) {
               ))}
             </div>
           </ScrollReveal>
+          <ScrollReveal delay={40}>
+            <p style={{ textAlign: "center", marginTop: 8 }}>
+              <Badge tone="primary">от 375 ₽ за страницу (250 слов) с редактурой инженером</Badge>
+            </p>
+          </ScrollReveal>
         </div>
       </section>
 

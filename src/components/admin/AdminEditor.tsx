@@ -133,6 +133,9 @@ export function AdminEditor({ initialContent }: { initialContent: SiteContent })
         <div className="tp-app__topbar">
           <h1 className="tp-app__title">Админ-панель Техперевод.com</h1>
           <div className="tp-app__user">
+            <Button variant="ghost" size="sm" as="a" href="/admin/leads">
+              Заявки
+            </Button>
             <Button variant="ghost" size="sm" as="a" href="/" target="_blank">
               Открыть сайт
             </Button>

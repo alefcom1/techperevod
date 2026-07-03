@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 import { BrandMark } from "@/components/navigation/BrandMark";
 import { Button } from "@/components/core/Button";
 import { useTheme } from "@/lib/theme";
-import { NAV_LINKS, FOOTER_COLUMNS } from "@/data/site";
+import { NAV_LINKS, FOOTER_COLUMNS, SITE_EMAIL, SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/data/site";
 
 /**
  * Shared chrome for every page: sticky NavBar (logo + links + theme toggle +
@@ -46,9 +46,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
       <Footer
         logo={
-          <Link href="/" style={{ display: "flex" }} aria-label="Техперевод.com — на главную">
-            <BrandMark theme={theme} height={68} />
-          </Link>
+          <>
+            <Link href="/" style={{ display: "flex" }} aria-label="Техперевод.com — на главную">
+              <BrandMark theme={theme} height={68} />
+            </Link>
+            <div className="tp-footer__contacts">
+              <a href={`tel:${SITE_PHONE_TEL}`}>{SITE_PHONE_DISPLAY}</a>
+              <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a>
+            </div>
+          </>
         }
         columns={FOOTER_COLUMNS}
         bottom={

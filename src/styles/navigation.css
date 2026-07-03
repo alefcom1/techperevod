@@ -109,6 +109,14 @@
 .tp-footer__link { color: var(--tp-text); text-decoration: none; font-size: 15px; }
 .tp-footer__link:hover { color: var(--tp-primary); }
 .tp-footer__brand a { color: inherit; text-decoration: none; }
+.tp-footer__contacts { display: flex; flex-direction: column; gap: 4px; }
+.tp-footer__contacts a {
+  font-family: var(--tp-font-sans);
+  font-weight: var(--tp-weight-regular);
+  font-size: 14px;
+  color: var(--tp-text-muted);
+}
+.tp-footer__contacts a:hover { color: var(--tp-primary); }
 .tp-footer__bottom {
   max-width: var(--tp-container-max);
   margin: 0 auto;

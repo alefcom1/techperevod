@@ -2,8 +2,28 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
 import { YandexMetrika } from "@/components/analytics/YandexMetrika";
+import { SITE_EMAIL, SITE_PHONE_TEL, SITE_TELEGRAM_URL } from "@/data/site";
 
 const SITE_URL = "https://techperevod.com";
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Техперевод.com",
+  url: SITE_URL,
+  logo: `${SITE_URL}/assets/favicon-192.png`,
+  email: SITE_EMAIL,
+  telephone: SITE_PHONE_TEL,
+  sameAs: [SITE_TELEGRAM_URL],
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: SITE_PHONE_TEL,
+    email: SITE_EMAIL,
+    contactType: "customer service",
+    areaServed: "RU",
+    availableLanguage: ["Russian", "English"],
+  },
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -67,6 +87,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
         />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
       </head>
       <body>
         <YandexMetrika />

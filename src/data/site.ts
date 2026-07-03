@@ -1,5 +1,12 @@
 /** Central route + nav config so links stay consistent across every page. */
 
+export const SITE_PHONE_DISPLAY = "+7 985 970-44-13";
+export const SITE_PHONE_TEL = "+79859704413";
+export const SITE_WHATSAPP_URL = "https://wa.me/79859704413";
+export const SITE_EMAIL = "info@techperevod.com";
+export const SITE_TELEGRAM_HANDLE = "@techperevod";
+export const SITE_TELEGRAM_URL = "https://t.me/techperevod";
+
 export const NAV_LINKS = [
   { label: "Переводчик", href: "/perevodchik" },
   { label: "AI-оркестратор", href: "/product/orchestrator" },

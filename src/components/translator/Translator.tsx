@@ -452,8 +452,8 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
       ) : (
         <>
           <FileDropzone
-            accept=".docx,.doc,.pdf,.xlsx,.xls,.csv,.txt,.md,.dwg,.dxf"
-            hint="DOCX, PDF, XLSX, TXT, DWG/DXF — до 10 МБ"
+            accept=".docx,.doc,.pdf,.xlsx,.xls,.csv,.pptx,.srt,.vtt,.html,.htm,.txt,.md,.dwg,.dxf"
+            hint="DOCX, PDF, XLSX, PPTX, SRT/VTT, HTML, TXT, DWG/DXF — до 10 МБ"
             state={docState === "loading" ? "idle" : docState === "error" ? "error" : fileName ? "done" : "idle"}
             fileName={fileName ?? undefined}
             onFiles={handleFiles}

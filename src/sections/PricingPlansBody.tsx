@@ -200,6 +200,9 @@ export function PricingPlansBody({ content }: PricingPlansBodyProps) {
                 </div>
                 <div className="tp-value-card__title">{content.addonEngineerTitle}</div>
                 <p className="tp-value-card__desc">{content.addonEngineerDesc}</p>
+                <p className="tp-value-card__desc" style={{ marginTop: 4, fontWeight: 600 }}>
+                  ≈ 375 ₽ за переводческую страницу (250 слов)
+                </p>
               </Card>
             </ScrollReveal>
             <ScrollReveal delay={80}>
@@ -209,6 +212,9 @@ export function PricingPlansBody({ content }: PricingPlansBodyProps) {
                 </div>
                 <div className="tp-value-card__title">{content.addonNativeTitle}</div>
                 <p className="tp-value-card__desc">{content.addonNativeDesc}</p>
+                <p className="tp-value-card__desc" style={{ marginTop: 4, fontWeight: 600 }}>
+                  ≈ 750 ₽ за переводческую страницу (250 слов)
+                </p>
               </Card>
             </ScrollReveal>
           </div>

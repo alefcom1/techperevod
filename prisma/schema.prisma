@@ -76,6 +76,22 @@ model Segment {
   needsReview  Boolean @default(false) // эвристики ИЛИ низкая самооценка — маршрутизация на человека
 }
 
+// Заявки с формы /kontakty. Если приложен файл — words/priceRub считаются
+// через тот же /api/quote, что и мгновенная оценка на сайте (не выдумка).
+model Lead {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  company       String?
+  langPair      String?
+  comment       String?
+  fileName      String?
+  quoteWords    Int?
+  quotePriceRub Int?
+  status        String   @default("new") // new | contacted | won | lost
+  createdAt     DateTime @default(now())
+}
+
 // П.4 — локализация сайтов «на лету» (JS-виджет, см. docs/product-features-plan.md).
 // siteKey — публичный ключ, встраивается в HTML клиента, поэтому не секрет.
 model WidgetSite {
