@@ -48,7 +48,8 @@ export const FOOTER_COLUMNS = [
     href: "/otrasli",
     links: [
       { label: "IT и SaaS", href: "/otrasli/it-saas" },
-      { label: "Нефтегаз и энергетика", href: "/otrasli/neftegaz" },
+      { label: "Нефтегаз", href: "/otrasli/neftegaz" },
+      { label: "Энергетика", href: "/otrasli/energetika" },
       { label: "Машиностроение", href: "/otrasli/mashinostroenie" },
       { label: "Медтех и фарма", href: "/otrasli/medteh" },
       { label: "Строительство", href: "/otrasli/stroitelstvo" },
