@@ -117,7 +117,7 @@ export function TranslatorsBody() {
           <ScrollReveal>
             <SectionHeader
               title="Анкета соискателя"
-              subtitle="Расскажите о себе, укажите языковые пары и, если хотите, пройдите короткий AI-тест — это ускорит рассмотрение анкеты."
+              subtitle="Расскажите о себе и укажите языковые пары — мы свяжемся с вами после рассмотрения анкеты."
             />
           </ScrollReveal>
           <ScrollReveal delay={80}>

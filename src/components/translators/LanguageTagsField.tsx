@@ -10,21 +10,13 @@ export interface LanguageEntry {
   level: string;
 }
 
-export interface LanguageScore {
-  score: number;
-  feedback: string;
-  date: string;
-}
-
 export interface LanguageTagsFieldProps {
   languages: LanguageEntry[];
-  scores: Record<string, LanguageScore>;
   onChange: (languages: LanguageEntry[]) => void;
-  onStartTest: (lang: string) => void;
 }
 
-/** Языковые теги анкеты: добавление пары язык+уровень, правка уровня, запуск AI-теста. */
-export function LanguageTagsField({ languages, scores, onChange, onStartTest }: LanguageTagsFieldProps) {
+/** Языковые теги анкеты: добавление пары язык+уровень, правка уровня. */
+export function LanguageTagsField({ languages, onChange }: LanguageTagsFieldProps) {
   const [selLang, setSelLang] = React.useState("");
   const [selLevel, setSelLevel] = React.useState("B2");
   const [editingLang, setEditingLang] = React.useState<string | null>(null);
@@ -78,29 +70,19 @@ export function LanguageTagsField({ languages, scores, onChange, onStartTest }: 
 
       {languages.length ? (
         <div className="tp-langfield__tags">
-          {languages.map((l) => {
-            const sc = scores[l.name];
-            return (
-              <span className="tp-langtag" key={l.name}>
-                <span className="tp-langtag__name" onClick={() => openEdit(l.name, l.level)}>
-                  {l.name}
-                </span>
-                <span className="tp-langtag__level" onClick={() => openEdit(l.name, l.level)}>
-                  {l.level}
-                </span>
-                {sc ? (
-                  <span className="tp-langtag__score">★ {sc.score}/100</span>
-                ) : (
-                  <button type="button" className="tp-langtag__test" onClick={() => onStartTest(l.name)}>
-                    → Тест
-                  </button>
-                )}
-                <button type="button" className="tp-langtag__remove" onClick={() => removeLang(l.name)} aria-label={`Убрать ${l.name}`}>
-                  ✕
-                </button>
+          {languages.map((l) => (
+            <span className="tp-langtag" key={l.name}>
+              <span className="tp-langtag__name" onClick={() => openEdit(l.name, l.level)}>
+                {l.name}
               </span>
-            );
-          })}
+              <span className="tp-langtag__level" onClick={() => openEdit(l.name, l.level)}>
+                {l.level}
+              </span>
+              <button type="button" className="tp-langtag__remove" onClick={() => removeLang(l.name)} aria-label={`Убрать ${l.name}`}>
+                ✕
+              </button>
+            </span>
+          ))}
         </div>
       ) : null}
 

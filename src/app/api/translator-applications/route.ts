@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     phone: body.phone || null,
     email,
     languages,
-    test_scores: body.test_scores || null,
+    test_scores: null,
     employment_type: body.employment_type || null,
     work_type: body.work_type || null,
     workload: body.workload || null,
@@ -80,12 +80,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "ТМС недоступна. Попробуйте позже." }, { status: 502 });
   }
 
-  const scoresLines = payload.test_scores
-    ? Object.entries(payload.test_scores as Record<string, { score: number }>)
-        .map(([lang, s]) => `${lang}: ${s.score}/100`)
-        .join(", ")
-    : null;
-
   void sendMail({
     to: process.env.TRANSLATOR_NOTIFY_EMAIL || SITE_EMAIL,
     subject: `Новая анкета переводчика: ${firstName} ${lastName}`,
@@ -95,9 +89,9 @@ export async function POST(request: NextRequest) {
       `Email: ${email}<br>`,
       payload.phone ? `Телефон: ${payload.phone}<br>` : "",
       `Языки: ${languages.map((l) => `${l.lang} (${l.level})`).join(", ")}<br>`,
-      scoresLines ? `Результаты тестов: ${scoresLines}<br>` : "",
       payload.employment_type ? `Занятость: ${payload.employment_type}<br>` : "",
       payload.salary_level ? `Ожидания по оплате: ${payload.salary_level}<br>` : "",
+      payload.diploma_path ? `Диплом/сертификат: <a href="${payload.diploma_path}">${payload.diploma_path}</a><br>` : "",
       payload.comment ? `Комментарий: ${payload.comment}<br>` : "",
       `</p>`,
       `<p>ID заявки в ТМС: ${tmsResult.id || "—"}</p>`,

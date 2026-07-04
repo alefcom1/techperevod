@@ -1,41 +1,42 @@
 /**
- * Email-уведомления через SMTP — по аналогии с telegram.ts: пока
- * SMTP_HOST/SMTP_USER/SMTP_PASS не заданы в окружении сервера, тихо ничего
- * не делает, ошибка отправки почты не должна ронять основной запрос.
+ * Email-уведомления через EmailJS (api.emailjs.com) — по аналогии с
+ * telegram.ts: пока EMAILJS_SERVICE_ID/EMAILJS_TEMPLATE_ID/EMAILJS_PUBLIC_KEY
+ * не заданы в окружении сервера, тихо ничего не делает; ошибка отправки не
+ * должна ронять основной запрос (сохранение заявки в ТМС важнее письма).
+ *
+ * Серверные (не из браузера) запросы к EmailJS требуют либо приватный ключ
+ * (EMAILJS_PRIVATE_KEY, передаётся как accessToken), либо отключённую в
+ * настройках EmailJS проверку Origin — см. дашборд EmailJS, Account → Security.
+ *
+ * Шаблон в EmailJS должен содержать переменные {{to_email}}, {{subject}},
+ * {{message}} — именно они передаются ниже как template_params.
  */
-import nodemailer from "nodemailer";
 
-let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
-
-function getTransporter() {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  if (!host || !user || !pass) return null;
-
-  if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === "true",
-      auth: { user, pass },
-    });
-  }
-  return transporter;
-}
+const EMAILJS_API = "https://api.emailjs.com/api/v1.0/email/send";
 
 export async function sendMail(opts: { to: string; subject: string; html: string }): Promise<void> {
-  const t = getTransporter();
-  if (!t) return;
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const templateId = process.env.EMAILJS_TEMPLATE_ID;
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  if (!serviceId || !templateId || !publicKey) return;
 
   try {
-    await t.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
-      to: opts.to,
-      subject: opts.subject,
-      html: opts.html,
+    await fetch(EMAILJS_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        accessToken: process.env.EMAILJS_PRIVATE_KEY || undefined,
+        template_params: {
+          to_email: opts.to,
+          subject: opts.subject,
+          message: opts.html,
+        },
+      }),
     });
   } catch {
-    // Недоступность почтового сервера не должна ронять сохранение заявки
+    // Недоступность EmailJS не должна ронять сохранение заявки
   }
 }
