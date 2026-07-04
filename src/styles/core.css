@@ -1,5 +1,11 @@
 /* core: Button, Badge, Card */
 
+/* Без этого сброса width:100% + padding/border у любого элемента (например,
+   fullWidth-кнопки) рендерится ШИРЕ своего контейнера — ровно на величину
+   паддинга/бордера (браузерный дефолт content-box). Так кнопки в карточках
+   тарифов вылезали за рамку на 17px вправо, хотя высоты карточек совпадали. */
+*, *::before, *::after { box-sizing: border-box; }
+
 .tp-btn {
   display: inline-flex;
   align-items: center;
