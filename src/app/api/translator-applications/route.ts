@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendMail } from "@/lib/mailer";
-import { SITE_EMAIL } from "@/data/site";
 
 export const runtime = "nodejs";
 
@@ -14,9 +12,8 @@ interface LanguageEntry {
 
 /**
  * Анкета соискателя-переводчика (/perevodchikam). Пересылает заявку в
- * ТМС бюро (tms.perevod4.ru — см. docs интеграции) и дублирует уведомление
- * на почту. Оба канала — как и просил заказчик; ТМС остаётся источником
- * истины по статусу заявки (pending/approved/...), почта — просто копия.
+ * ТМС бюро (tms.perevod4.ru — см. docs интеграции); ТМС — единственный
+ * получатель и источник истины по статусу заявки (pending/approved/...).
  */
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -79,24 +76,6 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: "ТМС недоступна. Попробуйте позже." }, { status: 502 });
   }
-
-  void sendMail({
-    to: process.env.TRANSLATOR_NOTIFY_EMAIL || SITE_EMAIL,
-    subject: `Новая анкета переводчика: ${firstName} ${lastName}`,
-    html: [
-      `<p><b>Новая анкета соискателя-переводчика</b></p>`,
-      `<p>Имя: ${firstName} ${lastName}${payload.middle_name ? ` ${payload.middle_name}` : ""}<br>`,
-      `Email: ${email}<br>`,
-      payload.phone ? `Телефон: ${payload.phone}<br>` : "",
-      `Языки: ${languages.map((l) => `${l.lang} (${l.level})`).join(", ")}<br>`,
-      payload.employment_type ? `Занятость: ${payload.employment_type}<br>` : "",
-      payload.salary_level ? `Ожидания по оплате: ${payload.salary_level}<br>` : "",
-      payload.diploma_path ? `Диплом/сертификат: <a href="${payload.diploma_path}">${payload.diploma_path}</a><br>` : "",
-      payload.comment ? `Комментарий: ${payload.comment}<br>` : "",
-      `</p>`,
-      `<p>ID заявки в ТМС: ${tmsResult.id || "—"}</p>`,
-    ].join(""),
-  });
 
   return NextResponse.json({ ok: true, id: tmsResult.id, status: tmsResult.status });
 }
