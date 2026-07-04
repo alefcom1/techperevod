@@ -24,6 +24,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/o-nas",
     "/blog",
     "/kontakty",
+    "/oferta",
+    "/politika-pd",
   ].map((path) => ({
     url: `${SITE_URL}${path}`,
     changeFrequency: "monthly" as const,

@@ -8,7 +8,16 @@ import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 import { BrandMark } from "@/components/navigation/BrandMark";
 import { Button } from "@/components/core/Button";
 import { useTheme } from "@/lib/theme";
-import { NAV_LINKS, FOOTER_COLUMNS, SITE_EMAIL, SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/data/site";
+import {
+  NAV_LINKS,
+  FOOTER_COLUMNS,
+  SITE_EMAIL,
+  SITE_INN,
+  SITE_LEGAL_NAME,
+  SITE_OGRNIP,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_TEL,
+} from "@/data/site";
 
 /**
  * Shared chrome for every page: sticky NavBar (logo + links + theme toggle +
@@ -58,12 +67,19 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         }
         columns={FOOTER_COLUMNS}
         bottom={
-          <div className="tp-footer__bottom-row">
-            <span>
-              © 2026 <a href="https://techperevod.com">Техперевод.com</a>
-            </span>
-            <Link href="/bezopasnost">Конфиденциальность и 152-ФЗ</Link>
-          </div>
+          <>
+            <div className="tp-footer__bottom-row">
+              <span>
+                © 2026 <a href="https://techperevod.com">Техперевод.com</a>
+              </span>
+              <Link href="/bezopasnost">Безопасность и 152-ФЗ</Link>
+              <Link href="/politika-pd">Политика персональных данных</Link>
+              <Link href="/oferta">Публичная оферта</Link>
+            </div>
+            <div className="tp-footer__legal">
+              {SITE_LEGAL_NAME} · ИНН {SITE_INN} · ОГРНИП {SITE_OGRNIP}
+            </div>
+          </>
         }
       />
     </div>

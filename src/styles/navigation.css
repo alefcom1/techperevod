@@ -128,3 +128,4 @@
 .tp-footer__bottom-row { display: flex; align-items: center; justify-content: space-between; gap: var(--tp-space-4); flex-wrap: wrap; }
 .tp-footer__bottom-row a { color: inherit; text-decoration: none; }
 .tp-footer__bottom-row a:hover { color: var(--tp-primary); }
+.tp-footer__legal { margin-top: var(--tp-space-3); opacity: 0.8; }

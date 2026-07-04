@@ -1,11 +1,23 @@
 /** Central route + nav config so links stay consistent across every page. */
 
-export const SITE_PHONE_DISPLAY = "+7 985 970-44-13";
-export const SITE_PHONE_TEL = "+79859704413";
+export const SITE_PHONE_DISPLAY = "+7 495 970-44-13";
+export const SITE_PHONE_TEL = "+74959704413";
+export const SITE_WHATSAPP_DISPLAY = "+7 985 970-44-13";
 export const SITE_WHATSAPP_URL = "https://wa.me/79859704413";
 export const SITE_EMAIL = "info@techperevod.com";
 export const SITE_TELEGRAM_HANDLE = "@techperevod";
 export const SITE_TELEGRAM_URL = "https://t.me/techperevod";
+
+export const SITE_OFFICE_ADDRESS = "125009, Москва, Глинищевский пер., д. 6, оф. 2";
+export const SITE_OFFICE_METRO = "Охотный Ряд / Тверская";
+export const SITE_OFFICE_HOURS = "Пн–Пт 9:00–18:00 (МСК)";
+// Координаты дома (см. поиск по адресу) — формат Яндекс.Карт: долгота,широта.
+export const SITE_OFFICE_COORDS = { lon: 37.610485, lat: 55.763138 };
+export const SITE_OFFICE_MAP_EMBED_URL = `https://yandex.ru/map-widget/v1/?ll=${37.610485}%2C${55.763138}&z=17&l=map&pt=${37.610485},${55.763138},pm2rdm`;
+
+export const SITE_LEGAL_NAME = "ИП Волшина Елизавета Максимовна";
+export const SITE_INN = "231149349191";
+export const SITE_OGRNIP = "323237500359402";
 
 export const NAV_LINKS = [
   { label: "Переводчик", href: "/perevodchik" },

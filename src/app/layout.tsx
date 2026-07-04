@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
 import { YandexMetrika } from "@/components/analytics/YandexMetrika";
-import { SITE_EMAIL, SITE_PHONE_TEL, SITE_TELEGRAM_URL } from "@/data/site";
+import { SITE_EMAIL, SITE_INN, SITE_LEGAL_NAME, SITE_PHONE_TEL, SITE_TELEGRAM_URL } from "@/data/site";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -10,10 +10,19 @@ const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Техперевод.com",
+  legalName: SITE_LEGAL_NAME,
+  taxID: SITE_INN,
   url: SITE_URL,
   logo: `${SITE_URL}/assets/favicon-192.png`,
   email: SITE_EMAIL,
   telephone: SITE_PHONE_TEL,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Глинищевский пер., д. 6, оф. 2",
+    addressLocality: "Москва",
+    postalCode: "125009",
+    addressCountry: "RU",
+  },
   sameAs: [SITE_TELEGRAM_URL],
   contactPoint: {
     "@type": "ContactPoint",

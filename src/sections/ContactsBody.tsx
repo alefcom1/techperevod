@@ -10,13 +10,25 @@ import { FileDropzone } from "@/components/forms/FileDropzone";
 import { Button } from "@/components/core/Button";
 import { Icon } from "@/components/core/Icon";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
-import { SITE_EMAIL, SITE_PHONE_DISPLAY, SITE_PHONE_TEL, SITE_TELEGRAM_HANDLE, SITE_TELEGRAM_URL, SITE_WHATSAPP_URL } from "@/data/site";
+import {
+  SITE_EMAIL,
+  SITE_OFFICE_ADDRESS,
+  SITE_OFFICE_HOURS,
+  SITE_OFFICE_MAP_EMBED_URL,
+  SITE_OFFICE_METRO,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_TEL,
+  SITE_TELEGRAM_HANDLE,
+  SITE_TELEGRAM_URL,
+  SITE_WHATSAPP_DISPLAY,
+  SITE_WHATSAPP_URL,
+} from "@/data/site";
 
 const CONTACT_METHODS = [
   { icon: "mail", label: "Email", value: SITE_EMAIL, href: `mailto:${SITE_EMAIL}` },
   { icon: "phone", label: "Телефон", value: SITE_PHONE_DISPLAY, href: `tel:${SITE_PHONE_TEL}` },
   { icon: "send", label: "Telegram", value: SITE_TELEGRAM_HANDLE, href: SITE_TELEGRAM_URL },
-  { icon: "message-circle", label: "WhatsApp", value: SITE_PHONE_DISPLAY, href: SITE_WHATSAPP_URL },
+  { icon: "message-circle", label: "WhatsApp", value: SITE_WHATSAPP_DISPLAY, href: SITE_WHATSAPP_URL },
 ];
 
 export function ContactsBody() {
@@ -83,6 +95,47 @@ export function ContactsBody() {
       </section>
 
       <section className="tp-section tp-section--tint">
+        <div className="tp-section__inner">
+          <ScrollReveal>
+            <SectionHeader title="Наш офис" />
+          </ScrollReveal>
+          <ScrollReveal delay={60}>
+            <div className="tp-office">
+              <Card padding="lg" className="tp-office__info">
+                <div className="tp-contact-card__icon">
+                  <Icon name="map-pin" size={22} />
+                </div>
+                <div className="tp-office__address">{SITE_OFFICE_ADDRESS}</div>
+                <div className="tp-office__row">
+                  <span className="tp-office__row-label">Метро:</span>
+                  <span>{SITE_OFFICE_METRO}</span>
+                </div>
+                <div className="tp-office__row">
+                  <Icon name="calendar" size={16} />
+                  <span>{SITE_OFFICE_HOURS}</span>
+                </div>
+                <div className="tp-office__row">
+                  <Icon name="phone" size={16} />
+                  <a href={`tel:${SITE_PHONE_TEL}`}>{SITE_PHONE_DISPLAY}</a>
+                </div>
+              </Card>
+              <div className="tp-office__map">
+                <iframe
+                  src={SITE_OFFICE_MAP_EMBED_URL}
+                  width="100%"
+                  height="100%"
+                  frameBorder={0}
+                  loading="lazy"
+                  title="Офис Техперевод.com на карте"
+                  style={{ border: 0 }}
+                />
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      <section className="tp-section">
         <div className="tp-section__inner">
           <ScrollReveal>
             <SectionHeader
