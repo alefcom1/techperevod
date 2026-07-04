@@ -97,61 +97,90 @@ export function TranslatorApplicationForm() {
   }
 
   return (
-    <form className="tp-contact-form" onSubmit={submit}>
-      <input type="text" name="website" tabIndex={-1} autoComplete="off" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} aria-hidden="true" />
+    <Card variant="elevated" padding="lg" className="tp-anketa-card">
+      <form className="tp-contact-form" onSubmit={submit}>
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }} aria-hidden="true" />
 
-      <div className="tp-contact-form__row">
-        <Input name="last_name" label="Фамилия" placeholder="Иванов" required />
-        <Input name="first_name" label="Имя" placeholder="Иван" required />
-      </div>
-      <div className="tp-contact-form__row">
-        <Input name="middle_name" label="Отчество" placeholder="Иванович" />
-        <Input name="birth_date" label="Дата рождения" type="date" />
-      </div>
-      <div className="tp-contact-form__row">
-        <Input name="phone" label="Телефон" type="tel" placeholder="+7 900 123-45-67" />
-        <Input name="email" label="Email" type="email" placeholder="you@example.com" required />
-      </div>
+        <div className="tp-anketa-group">
+          <div className="tp-anketa-group__title">
+            <Icon name="user-round" size={16} />
+            Личные данные
+          </div>
+          <div className="tp-contact-form__row">
+            <Input name="last_name" label="Фамилия" placeholder="Иванов" required />
+            <Input name="first_name" label="Имя" placeholder="Иван" required />
+          </div>
+          <div className="tp-contact-form__row">
+            <Input name="middle_name" label="Отчество" placeholder="Иванович" />
+            <Input name="birth_date" label="Дата рождения" type="date" />
+          </div>
+          <div className="tp-contact-form__row">
+            <Input name="phone" label="Телефон" type="tel" placeholder="+7 900 123-45-67" />
+            <Input name="email" label="Email" type="email" placeholder="you@example.com" required />
+          </div>
+        </div>
 
-      <div className="tp-field">
-        <span className="tp-field__label">Языковые пары</span>
-        <LanguageTagsField languages={languages} onChange={setLanguages} />
-      </div>
+        <div className="tp-anketa-group">
+          <div className="tp-anketa-group__title">
+            <Icon name="globe" size={16} />
+            Языковые пары
+          </div>
+          <LanguageTagsField languages={languages} onChange={setLanguages} />
+        </div>
 
-      <div className="tp-contact-form__row">
-        <Select name="employment_type" label="Вид занятости" placeholder="Не указано" options={EMPLOYMENT_TYPES} />
-        <Select name="work_type" label="Тип работы" placeholder="Не указано" options={WORK_TYPES} />
-      </div>
-      <div className="tp-contact-form__row">
-        <Input name="workload" label="Загруженность" placeholder="напр. 6 ч/день" />
-        <Input name="productivity" label="Производительность" placeholder="напр. 8–10 стр/день" />
-      </div>
-      <div className="tp-contact-form__row">
-        <Select name="urgent_works" label="Готовы к срочным заказам?" placeholder="Не указано" options={URGENT_WORK_OPTIONS} />
-        <Input name="urgency_concept" label="Что считаете срочным заказом" placeholder="напр. менее 24 часов" />
-      </div>
-      <div className="tp-contact-form__row">
-        <Input name="salary_level" label="Ожидания по оплате" placeholder="напр. 250–350 ₽/стр" />
-        <Select name="punctuality" label="Пунктуальность (самооценка)" placeholder="Не указано" options={PUNCTUALITY_OPTIONS} />
-      </div>
-      <div className="tp-contact-form__row">
-        <Input name="pc_skills" label="ПК и программы" placeholder="MS Office, Adobe Acrobat…" />
-        <Input name="cat_tools" label="CAT-инструменты" placeholder="SDL Trados, memoQ…" />
-      </div>
+        <div className="tp-anketa-group">
+          <div className="tp-anketa-group__title">
+            <Icon name="clock" size={16} />
+            Условия работы
+          </div>
+          <div className="tp-contact-form__row">
+            <Select name="employment_type" label="Вид занятости" placeholder="Не указано" options={EMPLOYMENT_TYPES} />
+            <Select name="work_type" label="Тип работы" placeholder="Не указано" options={WORK_TYPES} />
+          </div>
+          <div className="tp-contact-form__row">
+            <Input name="workload" label="Загруженность" placeholder="напр. 6 ч/день" />
+            <Input name="productivity" label="Производительность" placeholder="напр. 8–10 стр/день" />
+          </div>
+          <div className="tp-contact-form__row">
+            <Select name="urgent_works" label="Готовы к срочным заказам?" placeholder="Не указано" options={URGENT_WORK_OPTIONS} />
+            <Input name="urgency_concept" label="Что считаете срочным заказом" placeholder="напр. менее 24 часов" />
+          </div>
+          <div className="tp-contact-form__row">
+            <Input name="salary_level" label="Ожидания по оплате" placeholder="напр. 250–350 ₽/стр" />
+            <Select name="punctuality" label="Пунктуальность (самооценка)" placeholder="Не указано" options={PUNCTUALITY_OPTIONS} />
+          </div>
+        </div>
 
-      <Input name="comment" label="Комментарий" placeholder="Опыт работы, специализация, что ещё стоит знать" />
+        <div className="tp-anketa-group">
+          <div className="tp-anketa-group__title">
+            <Icon name="cog" size={16} />
+            Навыки и опыт
+          </div>
+          <div className="tp-contact-form__row">
+            <Input name="pc_skills" label="ПК и программы" placeholder="MS Office, Adobe Acrobat…" />
+            <Input name="cat_tools" label="CAT-инструменты" placeholder="SDL Trados, memoQ…" />
+          </div>
+          <Input name="comment" label="Комментарий" placeholder="Опыт работы, специализация, что ещё стоит знать" />
+        </div>
 
-      <FileDropzone
-        hint="Диплом или сертификат — необязательно, до 10 МБ"
-        state={file ? "done" : "idle"}
-        fileName={file?.name}
-        onFiles={(files) => setFile(files[0])}
-      />
+        <div className="tp-anketa-group">
+          <div className="tp-anketa-group__title">
+            <Icon name="file-text" size={16} />
+            Диплом или сертификат
+          </div>
+          <FileDropzone
+            hint="Необязательно, до 10 МБ"
+            state={file ? "done" : "idle"}
+            fileName={file?.name}
+            onFiles={(files) => setFile(files[0])}
+          />
+        </div>
 
-      {error ? <div className="tp-translator__error">{error}</div> : null}
-      <Button type="submit" size="lg" variant="primary" fullWidth disabled={submitting}>
-        {submitting ? "Отправляем…" : "Отправить анкету"}
-      </Button>
-    </form>
+        {error ? <div className="tp-translator__error">{error}</div> : null}
+        <Button type="submit" size="lg" variant="primary" fullWidth disabled={submitting}>
+          {submitting ? "Отправляем…" : "Отправить анкету"}
+        </Button>
+      </form>
+    </Card>
   );
 }

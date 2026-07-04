@@ -8,6 +8,22 @@
 .tp-requirements li { display: flex; align-items: flex-start; gap: var(--tp-space-3); color: var(--tp-text); font-size: var(--tp-text-body); }
 .tp-requirements li svg { flex: none; margin-top: 2px; }
 
+/* anketa form card + groups */
+.tp-anketa-card { max-width: 720px; margin: 0 auto; }
+.tp-anketa-card .tp-contact-form { gap: var(--tp-space-7); }
+.tp-anketa-group { display: flex; flex-direction: column; gap: var(--tp-space-5); }
+.tp-anketa-group + .tp-anketa-group { padding-top: var(--tp-space-6); border-top: 1px solid var(--tp-border); }
+.tp-anketa-group__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tp-primary);
+}
+
 /* language tags field */
 .tp-langfield { display: flex; flex-direction: column; gap: var(--tp-space-3); }
 .tp-langfield__add { display: flex; gap: var(--tp-space-3); flex-wrap: wrap; }
