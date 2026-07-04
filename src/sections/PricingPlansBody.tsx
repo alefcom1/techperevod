@@ -12,13 +12,13 @@ import { ScrollReveal } from "@/components/core/ScrollReveal";
 import type { SiteContent } from "@/lib/site-content";
 
 /**
- * Тарифы по концепции «конвейер качества»: Free → подписка (Start/Pro/Business)
+ * Тарифы по концепции «конвейер качества»: Бесплатный → подписка (Старт/Про/Бизнес)
  * → редактура человеком как доплата за слово. Единица учёта везде — слово.
  */
 const PLANS = [
   {
     id: "free",
-    name: "Free",
+    name: "Бесплатный",
     price: "0 ₽",
     per: "",
     desc: "Мгновенный перевод фрагментов — попробовать качество.",
@@ -34,12 +34,12 @@ const PLANS = [
   },
   {
     id: "start",
-    name: "Start",
+    name: "Старт",
     price: "2 900 ₽",
     per: "/мес",
     desc: "Для специалистов и небольших команд.",
     words: 100_000,
-    cta: { label: "Выбрать Start", href: "/app/billing?plan=start", variant: "secondary" as const },
+    cta: { label: "Выбрать Старт", href: "/app/billing?plan=start", variant: "secondary" as const },
     features: [
       { text: "100 000 слов AI-перевода / мес", on: true },
       { text: "AI-оркестрация (выбор лучшей модели)", on: true },
@@ -50,13 +50,13 @@ const PLANS = [
   },
   {
     id: "pro",
-    name: "Pro",
+    name: "Про",
     price: "9 900 ₽",
     per: "/мес",
     desc: "Для команд с постоянным потоком документации.",
     words: 500_000,
     featured: true,
-    cta: { label: "Выбрать Pro", href: "/app/billing?plan=pro", variant: "primary" as const },
+    cta: { label: "Выбрать Про", href: "/app/billing?plan=pro", variant: "primary" as const },
     features: [
       { text: "500 000 слов AI-перевода / мес", on: true },
       { text: "AI-оркестрация + объяснение выбора", on: true },
@@ -67,7 +67,7 @@ const PLANS = [
   },
   {
     id: "business",
-    name: "Business",
+    name: "Бизнес",
     price: "по договору",
     per: "",
     desc: "Объёмы, SLA и интеграции под ваш процесс.",

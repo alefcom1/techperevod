@@ -115,7 +115,7 @@ export default function OrchestratorPage() {
             <Card variant="glass" className="tp-about-cta">
               <div>
                 <div className="tp-value-card__title" style={{ fontSize: 22, marginBottom: 8 }}>
-                  Оркестрация доступна с тарифа Start
+                  Оркестрация доступна с тарифа «Старт»
                 </div>
                 <p className="tp-value-card__desc">От 2 900 ₽/мес — 100 000 слов с выбором лучшей модели.</p>
               </div>

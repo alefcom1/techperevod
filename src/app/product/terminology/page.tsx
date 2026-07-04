@@ -108,9 +108,9 @@ export default function TerminologyPage() {
             <Card variant="glass" className="tp-about-cta">
               <div>
                 <div className="tp-value-card__title" style={{ fontSize: 22, marginBottom: 8 }}>
-                  Термбаза без лимита — в тарифе Pro
+                  Термбаза без лимита — в тарифе «Про»
                 </div>
-                <p className="tp-value-card__desc">В Start входит 1 глоссарий; Pro снимает ограничения и добавляет API.</p>
+                <p className="tp-value-card__desc">В «Старте» входит 1 глоссарий; «Про» снимает ограничения и добавляет API.</p>
               </div>
               <Button size="lg" variant="primary" as="a" href="/tarify">
                 Сравнить тарифы

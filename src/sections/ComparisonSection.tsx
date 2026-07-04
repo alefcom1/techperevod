@@ -60,7 +60,7 @@ const ROWS: { feature: string; us: Cell; online: Cell; agency: Cell }[] = [
   },
   {
     feature: "API для интеграции в ваш процесс",
-    us: yes("с тарифа Pro"),
+    us: yes("с тарифа «Про»"),
     online: text("у части сервисов"),
     agency: no(),
   },

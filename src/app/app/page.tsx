@@ -9,7 +9,7 @@ import { StatMetric } from "@/components/marketing/StatMetric";
 import { Button } from "@/components/core/Button";
 
 const PLAN_QUOTAS: Record<string, number> = { free: 10_000, start: 100_000, pro: 500_000 };
-const PLAN_NAMES: Record<string, string> = { free: "Free", start: "Start", pro: "Pro" };
+const PLAN_NAMES: Record<string, string> = { free: "Бесплатный", start: "Старт", pro: "Про" };
 
 const STATUS_LABELS: Record<string, { label: string; tone: "accent" | "primary" | "neutral" }> = {
   quote: { label: "Оценка", tone: "neutral" },

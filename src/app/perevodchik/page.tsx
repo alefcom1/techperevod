@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const PERKS = [
   { icon: "cpu", title: "Технический AI", desc: "Модель настроена на терминологию: сохраняет числа, единицы измерения и формат." },
   { icon: "gauge", title: "Мгновенно", desc: "Перевод за секунды, без регистрации — до 2 000 знаков за раз." },
-  { icon: "shield-check", title: "Без рекламы", desc: "Никаких баннеров и продажи данных. Free-уровень платформы Техперевод." },
+  { icon: "shield-check", title: "Без рекламы", desc: "Никаких баннеров и продажи данных. Бесплатный уровень платформы Техперевод." },
 ];
 
 export default function TranslatorPage() {
