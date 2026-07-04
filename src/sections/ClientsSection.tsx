@@ -14,7 +14,7 @@ export function ClientsSection() {
       <div className="tp-section__inner">
         <SectionHeader
           title="Нам доверяют годами"
-          subtitle="Компании, которые работают с нами от 10 до 25 лет подряд."
+          subtitle="Компании, которые работают с нами от 10 до 25 лет подряд — и это лишь часть клиентов платформы."
         />
         <div className="tp-clients-strip">
           {CASES.map((c) => (

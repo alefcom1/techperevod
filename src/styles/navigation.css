@@ -32,6 +32,7 @@
   text-decoration: none;
   font-family: var(--tp-font-sans);
   font-size: 15px;
+  white-space: nowrap;
   transition: color var(--tp-duration) var(--tp-ease);
 }
 .tp-nav__link:hover { color: var(--tp-text); }

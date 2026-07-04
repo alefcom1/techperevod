@@ -25,6 +25,7 @@ export const NAV_LINKS = [
   { label: "Услуги", href: "/uslugi" },
   { label: "Тарифы", href: "/tarify" },
   { label: "Отрасли", href: "/#industries" },
+  { label: "Кейсы", href: "/keysy" },
   { label: "Блог", href: "/blog" },
 ];
 
