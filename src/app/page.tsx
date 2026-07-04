@@ -12,6 +12,7 @@ import { GlossarySection } from "@/sections/GlossarySection";
 import { AudienceSection } from "@/sections/AudienceSection";
 import { FormatsSection } from "@/sections/FormatsSection";
 import { ProofSection } from "@/sections/ProofSection";
+import { ClientsSection } from "@/sections/ClientsSection";
 import { FinalCtaSection } from "@/sections/FinalCtaSection";
 import { getContent } from "@/lib/site-content";
 
@@ -42,6 +43,7 @@ export default async function HomePage() {
       <AudienceSection title={home.audienceTitle} subtitle={home.audienceSubtitle} />
       <BeforeAfterSection title={home.beforeAfterTitle} />
       <ProofSection title={home.proofTitle} subtitle={home.proofSubtitle} />
+      <ClientsSection />
       <PricingSection title={home.pricingTitle} />
       <FinalCtaSection />
     </SiteShell>

@@ -1,7 +1,6 @@
 import React from "react";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { StatMetric } from "@/components/marketing/StatMetric";
-import { LogoStrip } from "@/components/marketing/LogoStrip";
 import { Testimonial } from "@/components/marketing/Testimonial";
 
 export interface ProofSectionProps {
@@ -33,10 +32,6 @@ export function ProofSection({
             sample
           />
         </div>
-        <LogoStrip
-          caption="Пилотные клиенты платформы (иллюстративные названия — заменить реальными)"
-          logos={["ПРОММАШ", "НЕФТЕСЕРВИС", "МЕДТЕХГРУПП", "ИТ-ВЕКТОР", "ГАЗТЕХНО"]}
-        />
       </div>
     </section>
   );

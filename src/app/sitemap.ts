@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/bezopasnost",
     "/o-nas",
     "/blog",
+    "/keysy",
     "/kontakty",
     "/oferta",
     "/politika-pd",
