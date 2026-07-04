@@ -50,3 +50,5 @@
 .tp-input::placeholder { color: var(--tp-text-muted); }
 .tp-input--mono { font-family: var(--tp-font-mono); font-size: 15px; }
 .tp-field__suffix { color: var(--tp-text-muted); font-size: var(--tp-text-caption); font-family: var(--tp-font-mono); margin-left: var(--tp-space-2); }
+.tp-select { cursor: pointer; }
+.tp-select option { color: initial; background: var(--tp-surface); }

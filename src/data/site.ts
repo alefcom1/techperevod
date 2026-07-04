@@ -89,6 +89,7 @@ export const FOOTER_COLUMNS = [
       { label: "Кейсы", href: "/keysy" },
       { label: "Блог", href: "/blog" },
       { label: "Словарь терминов", href: "/slovar" },
+      { label: "Переводчикам", href: "/perevodchikam" },
       { label: "Контакты", href: "/kontakty" },
     ],
   },
