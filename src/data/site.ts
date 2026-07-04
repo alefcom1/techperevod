@@ -54,6 +54,7 @@ export const FOOTER_COLUMNS = [
       { label: "Медтех и фарма", href: "/otrasli/medteh" },
       { label: "Строительство", href: "/otrasli/stroitelstvo" },
       { label: "Автопром и транспорт", href: "/otrasli/avtoprom" },
+      { label: "Сельское хозяйство", href: "/otrasli/selskoe-hozyaystvo" },
     ],
   },
   {
@@ -345,6 +346,30 @@ export const INDUSTRIES: Industry[] = [
     ],
     formats: ["PDF", "DOCX", "XLSX"],
     relatedServiceSlugs: ["perevod-katalogov-zapchastej", "perevod-reglamentov-to", "perevod-sertifikatov", "perevod-instrukcij"],
+  },
+
+  // ── Сельское хозяйство и агротехника ──
+  {
+    slug: "selskoe-hozyaystvo",
+    name: "Сельское хозяйство и агротехника",
+    iconName: "sprout",
+    heroTitle: "Технический перевод для сельского хозяйства и агротехники",
+    heroSubtitle:
+      "Инструкции к сельхозтехнике, регламенты шеф-монтажа теплиц и каталоги запчастей — переведены инженером с профильным опытом в агросекторе.",
+    docTypes: [
+      { title: "Инструкции по эксплуатации сельхозтехники", desc: "Руководства по эксплуатации тракторов, комбайнов и навесного оборудования от иностранных производителей.", iconName: "file-text" },
+      { title: "Инструкции по установке и наладке", desc: "Руководства по монтажу, пусконаладке и шеф-монтажу теплиц и другого сельскохозяйственного оборудования.", iconName: "cog" },
+      { title: "Каталоги запчастей", desc: "Номенклатура запасных частей к сельхозтехнике с перекрёстными артикулами и позициями на схемах.", iconName: "package-check" },
+      { title: "Сертификаты и декларации соответствия", desc: "Сертификаты и декларации на сельскохозяйственную технику и оборудование для ввоза и эксплуатации в РФ.", iconName: "shield-check" },
+    ],
+    steps: [
+      { iconName: "cloud-upload", title: "Загрузка", description: "Загрузите инструкции, регламенты наладки и каталоги запчастей в исходном формате.", bullets: ["PDF, DOCX, XLSX", "Инструкции по монтажу и наладке"] },
+      { iconName: "cpu", title: "AI-оркестрация", description: "Роутер выбирает модель под терминологию сельхозтехники и агрооборудования." },
+      { iconName: "user-check", title: "Редактор-инженер", description: "Редактор с опытом в агросекторе проверяет термины, артикулы и процедуры наладки." },
+      { iconName: "package-check", title: "Сдача", description: "Готовый документ — с сохранением схем и таблиц запчастей." },
+    ],
+    formats: ["PDF", "DOCX", "XLSX"],
+    relatedServiceSlugs: ["perevod-instrukcij", "perevod-reglamentov-to", "perevod-katalogov-zapchastej", "perevod-sertifikatov"],
   },
 ];
 

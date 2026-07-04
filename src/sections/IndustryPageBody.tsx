@@ -15,6 +15,21 @@ import type { Industry } from "@/data/site";
 import { otherIndustries } from "@/data/site";
 import { SERVICES } from "@/data/services";
 
+const SITE_URL = "https://techperevod.com";
+
+/** JSON-LD BreadcrumbList: Главная → Отрасли → конкретная отрасль. */
+function breadcrumbJsonLd(data: Industry) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Отрасли", item: `${SITE_URL}/otrasli` },
+      { "@type": "ListItem", position: 3, name: data.name, item: `${SITE_URL}/otrasli/${data.slug}` },
+    ],
+  };
+}
+
 /**
  * Shared content for every /otrasli/* industry page. Takes a plain Industry
  * object so the four pages stay thin and only differ in content.
@@ -25,6 +40,11 @@ export function IndustryPageBody({ data }: { data: Industry }) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(data)) }}
+      />
+
       <PageHero
         breadcrumb={
           <span>
