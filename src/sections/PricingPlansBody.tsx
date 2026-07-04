@@ -181,9 +181,6 @@ export function PricingPlansBody({ content }: PricingPlansBodyProps) {
               </ScrollReveal>
             ))}
           </div>
-          <p style={{ textAlign: "center", color: "var(--tp-text-muted)", fontSize: 13, marginTop: 16 }}>
-            * цены иллюстративные — уточняются перед запуском биллинга
-          </p>
         </div>
       </section>
 

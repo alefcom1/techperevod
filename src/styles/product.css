@@ -510,7 +510,10 @@
 
 /* --- Pricing table (/tarify) --- */
 .tp-plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--tp-space-5); align-items: stretch; }
+.tp-plans > .tp-reveal { display: flex; }
 .tp-plan {
+  flex: 1;
+  width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
