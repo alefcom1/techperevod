@@ -27,19 +27,29 @@ export interface TranslateResult {
 }
 
 /**
+ * Есть ли у сервера учётные данные для реальных вызовов Anthropic. Два пути:
+ * прямой ключ (ANTHROPIC_API_KEY) либо прокси-воркер на Vercel — тогда задаются
+ * ANTHROPIC_BASE_URL (https://<worker>.vercel.app/api) и ANTHROPIC_AUTH_TOKEN
+ * (= PROXY_SECRET воркера). SDK читает обе переменные сам, код не меняется.
+ */
+function hasAnthropicCreds(): boolean {
+  return Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
+}
+
+/**
  * Переводит text с source на target. source === "auto" — модель сама
- * определяет исходный язык. Если ANTHROPIC_API_KEY не задан на сервере,
- * возвращает честную демо-заглушку (mode: "demo") вместо ошибки.
+ * определяет исходный язык. Если ни ANTHROPIC_API_KEY, ни ANTHROPIC_AUTH_TOKEN
+ * не заданы на сервере, возвращает честную демо-заглушку (mode: "demo").
  *
  * Бросает Anthropic.RateLimitError / Anthropic.APIError при сбое провайдера —
  * вызывающий код сам решает, как их превратить в HTTP-ответ.
  */
 export async function translateText(text: string, source: string, target: string): Promise<TranslateResult> {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!hasAnthropicCreds()) {
     return {
       mode: "demo",
       translation:
-        "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY в окружении сервера.",
+        "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY (или ANTHROPIC_BASE_URL + ANTHROPIC_AUTH_TOKEN для прокси-воркера) в окружении сервера.",
     };
   }
 
@@ -115,10 +125,10 @@ const SUBMIT_TOOL: Anthropic.Tool = {
  * как таковая везде, где показывается пользователю.
  */
 export async function translateSegmentGraded(text: string, source: string, target: string): Promise<GradedTranslation> {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!hasAnthropicCreds()) {
     return {
       translation:
-        "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY в окружении сервера.",
+        "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY (или ANTHROPIC_BASE_URL + ANTHROPIC_AUTH_TOKEN для прокси-воркера) в окружении сервера.",
       confidence: 3,
       concerns: [],
     };
