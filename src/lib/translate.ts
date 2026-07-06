@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { LANG_NAMES, isKnownLang } from "@/data/langs";
 
 /**
  * Общее ядро AI-перевода — используется и внутренним /api/translate
@@ -7,18 +8,7 @@ import Anthropic from "@anthropic-ai/sdk";
  * одни и те же — качество перевода не отличается между виджетом и API.
  */
 
-export const LANG_NAMES: Record<string, string> = {
-  ru: "русский",
-  en: "английский",
-  de: "немецкий",
-  zh: "китайский",
-  es: "испанский",
-  fr: "французский",
-};
-
-export function isKnownLang(code: string | undefined): code is keyof typeof LANG_NAMES {
-  return !!code && code in LANG_NAMES;
-}
+export { LANG_NAMES, isKnownLang };
 
 export interface TranslateResult {
   mode: "live" | "demo";

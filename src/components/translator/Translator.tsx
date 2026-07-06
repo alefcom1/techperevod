@@ -6,17 +6,11 @@ import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { FileDropzone } from "@/components/forms/FileDropzone";
 import { reachGoal } from "@/lib/metrika";
+import { LANG_NAMES, capitalize } from "@/data/langs";
 
 const AUTO = "auto";
 
-const LANGS = [
-  { code: "ru", label: "Русский" },
-  { code: "en", label: "Английский" },
-  { code: "de", label: "Немецкий" },
-  { code: "zh", label: "Китайский" },
-  { code: "es", label: "Испанский" },
-  { code: "fr", label: "Французский" },
-];
+const LANGS = Object.entries(LANG_NAMES).map(([code, name]) => ({ code, label: capitalize(name) }));
 
 const LANG_CODES = new Set(LANGS.map((l) => l.code));
 
