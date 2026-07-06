@@ -31,10 +31,20 @@ function hasAnthropicCreds(): boolean {
  * определяет исходный язык. Если ни ANTHROPIC_API_KEY, ни ANTHROPIC_AUTH_TOKEN
  * не заданы на сервере, возвращает честную демо-заглушку (mode: "demo").
  *
+ * requestedModel — выбор AI-оркестратора (см. src/lib/modelRouter.ts). Если
+ * не передан, используется TRANSLATE_MODEL из окружения — это аварийный
+ * рубильник уровня инфраструктуры (принудительно одна модель на все запросы,
+ * например для отладки), он ВСЕГДА перекрывает решение роутера.
+ *
  * Бросает Anthropic.RateLimitError / Anthropic.APIError при сбое провайдера —
  * вызывающий код сам решает, как их превратить в HTTP-ответ.
  */
-export async function translateText(text: string, source: string, target: string): Promise<TranslateResult> {
+export async function translateText(
+  text: string,
+  source: string,
+  target: string,
+  requestedModel?: string
+): Promise<TranslateResult> {
   if (!hasAnthropicCreds()) {
     return {
       mode: "demo",
@@ -44,7 +54,7 @@ export async function translateText(text: string, source: string, target: string
   }
 
   const client = new Anthropic();
-  const model = process.env.TRANSLATE_MODEL || "claude-opus-4-8";
+  const model = process.env.TRANSLATE_MODEL || requestedModel || "claude-opus-4-8";
   const response = await client.messages.create({
     model,
     max_tokens: 2048,
@@ -81,6 +91,8 @@ export interface GradedTranslation {
   confidence: number;
   /** Короткие пометки, на что стоит обратить внимание при проверке — если есть. */
   concerns: string[];
+  /** Модель, которая фактически выполнила перевод (после TRANSLATE_MODEL/requestedModel). */
+  model: string;
 }
 
 const SUBMIT_TOOL: Anthropic.Tool = {
@@ -114,18 +126,25 @@ const SUBMIT_TOOL: Anthropic.Tool = {
  * это промпт-based самооценка, а не измеренная величина — честно обозначено
  * как таковая везде, где показывается пользователю.
  */
-export async function translateSegmentGraded(text: string, source: string, target: string): Promise<GradedTranslation> {
+export async function translateSegmentGraded(
+  text: string,
+  source: string,
+  target: string,
+  requestedModel?: string
+): Promise<GradedTranslation> {
+  const model = process.env.TRANSLATE_MODEL || requestedModel || "claude-opus-4-8";
+
   if (!hasAnthropicCreds()) {
     return {
       translation:
         "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY (или ANTHROPIC_BASE_URL + ANTHROPIC_AUTH_TOKEN для прокси-воркера) в окружении сервера.",
       confidence: 3,
       concerns: [],
+      model,
     };
   }
 
   const client = new Anthropic();
-  const model = process.env.TRANSLATE_MODEL || "claude-opus-4-8";
   const response = await client.messages.create({
     model,
     max_tokens: 1024,
@@ -159,6 +178,7 @@ export async function translateSegmentGraded(text: string, source: string, targe
       translation: fallbackText || "",
       confidence: 1,
       concerns: ["Не удалось получить структурированную самооценку модели"],
+      model,
     };
   }
 
@@ -167,5 +187,6 @@ export async function translateSegmentGraded(text: string, source: string, targe
     translation: input.translation,
     confidence,
     concerns: Array.isArray(input.concerns) ? input.concerns.filter((c): c is string => typeof c === "string") : [],
+    model,
   };
 }

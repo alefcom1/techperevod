@@ -69,6 +69,7 @@ model Segment {
   index        Int
   sourceText   String
   aiDraft      String?
+  model        String? // модель, фактически переводившая сегмент (см. src/lib/modelRouter.ts)
   qaFlags      String? // JSON: {numbersMismatch, hasNegation, shortSegment, safetyCritical}
   glossaryHits String? // JSON: [{ru, en}]
   confidence   Int? // самооценка модели, 1-5 (см. src/lib/translate.ts translateSegmentGraded)

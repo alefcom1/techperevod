@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { isKnownLang, translateText } from "@/lib/translate";
 import { corsHeaders, hashText } from "@/lib/widget";
+import { pickInitialModel, type PlanId } from "@/lib/modelRouter";
+
+const PLAN_IDS: PlanId[] = ["free", "start", "pro", "business"];
+function toPlanId(plan: string | undefined): PlanId {
+  return plan && (PLAN_IDS as string[]).includes(plan) ? (plan as PlanId) : "free";
+}
 
 export const runtime = "nodejs";
 
@@ -49,8 +55,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: `Слишком много фрагментов за раз (лимит ${MAX_TEXTS})` }, { status: 400, headers });
   }
 
-  const site = await prisma.widgetSite.findUnique({ where: { siteKey } });
+  const site = await prisma.widgetSite.findUnique({ where: { siteKey }, include: { user: true } });
   if (!site) return NextResponse.json({ error: "Неизвестный siteKey" }, { status: 401, headers });
+  const plan = toPlanId(site.user?.plan);
 
   const targetLangs = JSON.parse(site.targetLangs) as string[];
   if (lang !== site.sourceLang && !targetLangs.includes(lang)) {
@@ -83,7 +90,8 @@ export async function POST(request: NextRequest) {
   });
 
   for (const miss of misses) {
-    const { translation } = await translateText(miss.text, site.sourceLang, lang);
+    const { model } = pickInitialModel({ plan, sourceLang: site.sourceLang, targetLang: lang, sourceText: miss.text });
+    const { translation } = await translateText(miss.text, site.sourceLang, lang, model);
     results[miss.index] = translation;
     await prisma.widgetTranslation
       .upsert({

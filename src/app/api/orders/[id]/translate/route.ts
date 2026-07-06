@@ -3,6 +3,12 @@ import { prisma } from "@/lib/db";
 import { SESSION_COOKIE, getSessionUser } from "@/lib/auth";
 import { isKnownLang, translateSegmentGraded } from "@/lib/translate";
 import { computeQaFlags, shouldRouteToHuman, matchGlossary } from "@/lib/quality";
+import { pickInitialModel, maybeEscalate, type PlanId } from "@/lib/modelRouter";
+
+const PLAN_IDS: PlanId[] = ["free", "start", "pro", "business"];
+function toPlanId(plan: string): PlanId {
+  return (PLAN_IDS as string[]).includes(plan) ? (plan as PlanId) : "free";
+}
 
 export const runtime = "nodejs";
 
@@ -53,28 +59,45 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
 
   const glossaryTerms = await prisma.glossaryTerm.findMany({ where: { userId: user.id } });
+  const plan = toPlanId(user.plan);
 
   const segments = order.segments;
   for (let i = 0; i < segments.length; i += BATCH_SIZE) {
     const batch = segments.slice(i, i + BATCH_SIZE);
     await Promise.all(
       batch.map(async (segment) => {
-        const { translation, confidence, concerns } = await translateSegmentGraded(
-          segment.sourceText,
-          order.sourceLang,
-          order.targetLang,
-        );
-        const flags = computeQaFlags(segment.sourceText, translation);
+        const initial = pickInitialModel({
+          plan,
+          sourceLang: order.sourceLang,
+          targetLang: order.targetLang,
+          sourceText: segment.sourceText,
+        });
+
+        let graded = await translateSegmentGraded(segment.sourceText, order.sourceLang, order.targetLang, initial.model);
+        let flags = computeQaFlags(segment.sourceText, graded.translation);
+        let modelUsed = initial.model;
+
+        // Второй проход более сильной моделью — только если эвристики/самооценка
+        // после первого черновика говорят, что сегмент рискованный, и тариф это окупает.
+        const escalation = maybeEscalate(plan, initial.model, flags, graded.confidence);
+        if (escalation) {
+          const reGraded = await translateSegmentGraded(segment.sourceText, order.sourceLang, order.targetLang, escalation.model);
+          graded = reGraded;
+          flags = computeQaFlags(segment.sourceText, graded.translation);
+          modelUsed = escalation.model;
+        }
+
         const hits = matchGlossary(segment.sourceText, glossaryTerms);
         await prisma.segment.update({
           where: { id: segment.id },
           data: {
-            aiDraft: translation,
+            aiDraft: graded.translation,
+            model: modelUsed,
             qaFlags: JSON.stringify(flags),
             glossaryHits: JSON.stringify(hits),
-            confidence,
-            concerns: JSON.stringify(concerns),
-            needsReview: shouldRouteToHuman(flags, confidence),
+            confidence: graded.confidence,
+            concerns: JSON.stringify(graded.concerns),
+            needsReview: shouldRouteToHuman(flags, graded.confidence),
           },
         });
       }),

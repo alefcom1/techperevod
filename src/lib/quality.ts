@@ -27,18 +27,32 @@ function extractNumbers(text: string): string[] {
   return (text.match(/\d+(?:[.,]\d+)?/g) ?? []).map((n) => n.replace(",", "."));
 }
 
+/**
+ * Часть QaFlags, которую можно посчитать ДО перевода — по одному исходному
+ * тексту, без черновика. Используется в src/lib/modelRouter.ts, чтобы решать,
+ * какую модель вызывать, а не только куда маршрутизировать готовый сегмент.
+ */
+export interface PreTranslationFlags {
+  hasNegation: boolean;
+  shortSegment: boolean;
+  safetyCritical: boolean;
+}
+
+export function computePreTranslationFlags(sourceText: string): PreTranslationFlags {
+  return {
+    hasNegation: NEGATION_RE.test(sourceText),
+    shortSegment: sourceText.trim().split(/\s+/).filter(Boolean).length <= SHORT_SEGMENT_WORDS,
+    safetyCritical: SAFETY_RE.test(sourceText),
+  };
+}
+
 export function computeQaFlags(sourceText: string, aiDraft: string): QaFlags {
   const sourceNumbers = extractNumbers(sourceText);
   const draftNumbers = extractNumbers(aiDraft);
   const numbersMismatch =
     sourceNumbers.length !== draftNumbers.length || sourceNumbers.some((n, i) => n !== draftNumbers[i]);
 
-  return {
-    numbersMismatch,
-    hasNegation: NEGATION_RE.test(sourceText),
-    shortSegment: sourceText.trim().split(/\s+/).filter(Boolean).length <= SHORT_SEGMENT_WORDS,
-    safetyCritical: SAFETY_RE.test(sourceText),
-  };
+  return { numbersMismatch, ...computePreTranslationFlags(sourceText) };
 }
 
 export function needsReview(flags: QaFlags): boolean {
