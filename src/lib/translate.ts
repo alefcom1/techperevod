@@ -1,74 +1,97 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { LANG_NAMES, isKnownLang } from "@/data/langs";
+import type { Provider } from "@/lib/modelRouter";
+import { deeplTranslate } from "@/lib/providers/deepl";
+import { openaiTranslate, openaiTranslateGraded } from "@/lib/providers/openai";
 
 /**
- * Общее ядро AI-перевода — используется и внутренним /api/translate
- * (бесплатный виджет на сайте, лимит по IP), и публичным /api/v1/translate
- * (документированный REST API, лимит по ключу). Модель и системный промпт
- * одни и те же — качество перевода не отличается между виджетом и API.
+ * Общее ядро AI-перевода — используется внутренним /api/translate (виджет),
+ * embed-виджетом, публичным /api/v1/translate и конвейером заказов. Провайдер
+ * и модель приходят от роутера (src/lib/modelRouter.ts); здесь только
+ * диспетчеризация вызова к нужному поставщику.
  */
 
 export { LANG_NAMES, isKnownLang };
 
+/** Выбор оркестратора: какой провайдер и модель выполнят перевод. */
+export interface EngineChoice {
+  provider: Provider;
+  model: string;
+}
+
 export interface TranslateResult {
   mode: "live" | "demo";
   translation: string;
+  provider?: Provider;
   model?: string;
 }
 
 /**
- * Есть ли у сервера учётные данные для реальных вызовов Anthropic. Два пути:
- * прямой ключ (ANTHROPIC_API_KEY) либо прокси-воркер на Vercel — тогда задаются
- * ANTHROPIC_BASE_URL (https://<worker>.vercel.app/api) и ANTHROPIC_AUTH_TOKEN
- * (= PROXY_SECRET воркера). SDK читает обе переменные сам, код не меняется.
+ * Есть ли у сервера учётные данные для реальных вызовов. Anthropic SDK читает
+ * ANTHROPIC_API_KEY либо ANTHROPIC_BASE_URL+ANTHROPIC_AUTH_TOKEN (прокси-воркер);
+ * DeepL/OpenAI ходят через тот же воркер (общий секрет), поэтому наличие
+ * воркер-креденшелов = живой режим для всех провайдеров.
  */
 function hasAnthropicCreds(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
 }
 
+const DEMO_TEXT =
+  "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY (или ANTHROPIC_BASE_URL + ANTHROPIC_AUTH_TOKEN для прокси-воркера) в окружении сервера.";
+
+/**
+ * TRANSLATE_MODEL — аварийный рубильник: если задан, форсит Anthropic + эту
+ * модель на все запросы, минуя роутер. Иначе — выбор оркестратора (choice),
+ * иначе Anthropic + Opus по умолчанию.
+ */
+function resolveEngine(choice?: EngineChoice): EngineChoice {
+  const forced = process.env.TRANSLATE_MODEL;
+  if (forced) return { provider: "anthropic", model: forced };
+  return choice ?? { provider: "anthropic", model: "claude-opus-4-8" };
+}
+
+function buildUserPrompt(text: string, source: string, target: string): string {
+  return source === "auto"
+    ? `Определи язык исходного текста самостоятельно и переведи его на язык «${LANG_NAMES[target]}»:\n\n${text}`
+    : `Переведи с языка «${LANG_NAMES[source]}» на язык «${LANG_NAMES[target]}»:\n\n${text}`;
+}
+
 /**
  * Переводит text с source на target. source === "auto" — модель сама
- * определяет исходный язык. Если ни ANTHROPIC_API_KEY, ни ANTHROPIC_AUTH_TOKEN
- * не заданы на сервере, возвращает честную демо-заглушку (mode: "demo").
+ * определяет исходный язык. Без учётных данных возвращает честную демо-заглушку.
  *
- * requestedModel — выбор AI-оркестратора (см. src/lib/modelRouter.ts). Если
- * не передан, используется TRANSLATE_MODEL из окружения — это аварийный
- * рубильник уровня инфраструктуры (принудительно одна модель на все запросы,
- * например для отладки), он ВСЕГДА перекрывает решение роутера.
- *
- * Бросает Anthropic.RateLimitError / Anthropic.APIError при сбое провайдера —
- * вызывающий код сам решает, как их превратить в HTTP-ответ.
+ * Бросает Anthropic.RateLimitError / Anthropic.APIError (и Error от DeepL/OpenAI)
+ * при сбое провайдера — вызывающий код сам решает, как превратить в HTTP-ответ.
  */
 export async function translateText(
   text: string,
   source: string,
   target: string,
-  requestedModel?: string
+  choice?: EngineChoice
 ): Promise<TranslateResult> {
   if (!hasAnthropicCreds()) {
-    return {
-      mode: "demo",
-      translation:
-        "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY (или ANTHROPIC_BASE_URL + ANTHROPIC_AUTH_TOKEN для прокси-воркера) в окружении сервера.",
-    };
+    return { mode: "demo", translation: DEMO_TEXT };
+  }
+
+  const engine = resolveEngine(choice);
+
+  if (engine.provider === "deepl") {
+    const translation = await deeplTranslate(text, source, target);
+    return { mode: "live", translation, provider: "deepl", model: "deepl" };
+  }
+
+  if (engine.provider === "openai") {
+    const translation = await openaiTranslate(text, source, target, engine.model);
+    return { mode: "live", translation, provider: "openai", model: engine.model };
   }
 
   const client = new Anthropic();
-  const model = process.env.TRANSLATE_MODEL || requestedModel || "claude-opus-4-8";
   const response = await client.messages.create({
-    model,
+    model: engine.model,
     max_tokens: 2048,
     system:
       "Ты — профессиональный технический переводчик платформы Техперевод.com. Переводи точно, сохраняя терминологию, форматирование, числа и единицы измерения. Возвращай ТОЛЬКО перевод, без пояснений и преамбул.",
-    messages: [
-      {
-        role: "user",
-        content:
-          source === "auto"
-            ? `Определи язык исходного текста самостоятельно и переведи его на язык «${LANG_NAMES[target]}»:\n\n${text}`
-            : `Переведи с языка «${LANG_NAMES[source]}» на язык «${LANG_NAMES[target]}»:\n\n${text}`,
-      },
-    ],
+    messages: [{ role: "user", content: buildUserPrompt(text, source, target) }],
   });
 
   const translation = response.content
@@ -77,7 +100,7 @@ export async function translateText(
     .join("")
     .trim();
 
-  return { mode: "live", translation, model };
+  return { mode: "live", translation, provider: "anthropic", model: engine.model };
 }
 
 /** Простой подсчёт слов для полей вида "words" в ответах API. */
@@ -91,7 +114,8 @@ export interface GradedTranslation {
   confidence: number;
   /** Короткие пометки, на что стоит обратить внимание при проверке — если есть. */
   concerns: string[];
-  /** Модель, которая фактически выполнила перевод (после TRANSLATE_MODEL/requestedModel). */
+  /** Провайдер и модель, фактически выполнившие перевод. */
+  provider: Provider;
   model: string;
 }
 
@@ -119,56 +143,44 @@ const SUBMIT_TOOL: Anthropic.Tool = {
 };
 
 /**
- * Как translateText, но для конвейера заказов (см. /api/orders/[id]/translate):
- * модель дополнительно самооценивает уверенность в переводе сегмента — это
- * входные данные для маршрутизации "на человека" (см. src/lib/quality.ts).
- * У Anthropic Messages API нет токен-уровневого confidence score, поэтому
- * это промпт-based самооценка, а не измеренная величина — честно обозначено
- * как таковая везде, где показывается пользователю.
+ * Как translateText, но с самооценкой уверенности — для конвейера заказов
+ * (см. /api/orders/[id]/translate). DeepL сюда не попадает (не умеет
+ * самооценку); провайдер — Anthropic или OpenAI (кросс-вендорная эскалация).
+ * У Messages API нет токен-уровневого confidence — это промпт-based
+ * самооценка, честно обозначенная как таковая везде, где показывается.
  */
 export async function translateSegmentGraded(
   text: string,
   source: string,
   target: string,
-  requestedModel?: string
+  choice?: EngineChoice
 ): Promise<GradedTranslation> {
-  const model = process.env.TRANSLATE_MODEL || requestedModel || "claude-opus-4-8";
+  const engine = resolveEngine(choice);
 
   if (!hasAnthropicCreds()) {
-    return {
-      translation:
-        "[Демо-режим] Здесь появится перевод. Чтобы включить реальный AI-перевод, задайте ANTHROPIC_API_KEY (или ANTHROPIC_BASE_URL + ANTHROPIC_AUTH_TOKEN для прокси-воркера) в окружении сервера.",
-      confidence: 3,
-      concerns: [],
-      model,
-    };
+    return { translation: DEMO_TEXT, confidence: 3, concerns: [], provider: engine.provider, model: engine.model };
+  }
+
+  if (engine.provider === "openai") {
+    const graded = await openaiTranslateGraded(text, source, target, engine.model);
+    return { ...graded, provider: "openai", model: engine.model };
   }
 
   const client = new Anthropic();
   const response = await client.messages.create({
-    model,
+    model: engine.model,
     max_tokens: 1024,
     system:
       "Ты — профессиональный технический переводчик платформы Техперевод.com. Переводи точно, сохраняя терминологию, форматирование, числа и единицы измерения. После перевода честно самооцени уверенность — низкая оценка не наказывается, она нужна, чтобы направить сегмент на проверку инженеру.",
     tools: [SUBMIT_TOOL],
     tool_choice: { type: "tool", name: "submit_translation" },
-    messages: [
-      {
-        role: "user",
-        content:
-          source === "auto"
-            ? `Определи язык исходного текста самостоятельно и переведи его на язык «${LANG_NAMES[target]}»:\n\n${text}`
-            : `Переведи с языка «${LANG_NAMES[source]}» на язык «${LANG_NAMES[target]}»:\n\n${text}`,
-      },
-    ],
+    messages: [{ role: "user", content: buildUserPrompt(text, source, target) }],
   });
 
   const toolUse = response.content.find((b): b is Anthropic.ToolUseBlock => b.type === "tool_use");
   const input = toolUse?.input as Partial<GradedTranslation> | undefined;
 
   if (!input?.translation) {
-    // Модель не вызвала инструмент (редко, но возможно) — не выдаём это за
-    // высокую уверенность, честно помечаем как требующее проверки.
     const fallbackText = response.content
       .filter((b): b is Anthropic.TextBlock => b.type === "text")
       .map((b) => b.text)
@@ -178,7 +190,8 @@ export async function translateSegmentGraded(
       translation: fallbackText || "",
       confidence: 1,
       concerns: ["Не удалось получить структурированную самооценку модели"],
-      model,
+      provider: "anthropic",
+      model: engine.model,
     };
   }
 
@@ -187,6 +200,7 @@ export async function translateSegmentGraded(
     translation: input.translation,
     confidence,
     concerns: Array.isArray(input.concerns) ? input.concerns.filter((c): c is string => typeof c === "string") : [],
-    model,
+    provider: "anthropic",
+    model: engine.model,
   };
 }

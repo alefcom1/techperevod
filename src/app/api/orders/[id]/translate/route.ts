@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { SESSION_COOKIE, getSessionUser } from "@/lib/auth";
 import { isKnownLang, translateSegmentGraded } from "@/lib/translate";
 import { computeQaFlags, shouldRouteToHuman, matchGlossary } from "@/lib/quality";
-import { pickInitialModel, maybeEscalate, type PlanId } from "@/lib/modelRouter";
+import { pickGradedInitial, maybeEscalate, type PlanId } from "@/lib/modelRouter";
 
 const PLAN_IDS: PlanId[] = ["free", "start", "pro", "business"];
 function toPlanId(plan: string): PlanId {
@@ -66,25 +66,27 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const batch = segments.slice(i, i + BATCH_SIZE);
     await Promise.all(
       batch.map(async (segment) => {
-        const initial = pickInitialModel({
+        const initial = pickGradedInitial({
           plan,
           sourceLang: order.sourceLang,
           targetLang: order.targetLang,
           sourceText: segment.sourceText,
         });
 
-        let graded = await translateSegmentGraded(segment.sourceText, order.sourceLang, order.targetLang, initial.model);
+        let graded = await translateSegmentGraded(segment.sourceText, order.sourceLang, order.targetLang, initial);
         let flags = computeQaFlags(segment.sourceText, graded.translation);
-        let modelUsed = initial.model;
 
-        // Второй проход более сильной моделью — только если эвристики/самооценка
-        // после первого черновика говорят, что сегмент рискованный, и тариф это окупает.
-        const escalation = maybeEscalate(plan, initial.model, flags, graded.confidence);
+        // Второй проход — только если эвристики/самооценка после первого черновика
+        // говорят "рискованно" и тариф это окупает (Pro/Business). Если подключён
+        // OpenAI — это другой поставщик (GPT), честная кросс-вендорная перепроверка.
+        // Из двух независимых переводов оставляем более уверенный.
+        const escalation = maybeEscalate(plan, initial, flags, graded.confidence);
         if (escalation) {
-          const reGraded = await translateSegmentGraded(segment.sourceText, order.sourceLang, order.targetLang, escalation.model);
-          graded = reGraded;
-          flags = computeQaFlags(segment.sourceText, graded.translation);
-          modelUsed = escalation.model;
+          const second = await translateSegmentGraded(segment.sourceText, order.sourceLang, order.targetLang, escalation);
+          if (second.confidence >= graded.confidence) {
+            graded = second;
+            flags = computeQaFlags(segment.sourceText, graded.translation);
+          }
         }
 
         const hits = matchGlossary(segment.sourceText, glossaryTerms);
@@ -92,7 +94,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
           where: { id: segment.id },
           data: {
             aiDraft: graded.translation,
-            model: modelUsed,
+            model: graded.model,
             qaFlags: JSON.stringify(flags),
             glossaryHits: JSON.stringify(hits),
             confidence: graded.confidence,

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { isKnownLang, translateText, countWords } from "@/lib/translate";
 import { checkApiKey, extractBearerToken } from "@/lib/api-keys";
-import { pickInitialModel } from "@/lib/modelRouter";
+import { pickPlainEngine } from "@/lib/modelRouter";
 
 export const runtime = "nodejs";
 
@@ -93,13 +93,13 @@ export async function POST(req: NextRequest) {
   try {
     // Ключи API пока не привязаны к реальному User.plan — прагматичное
     // соответствие: demo-ключ ведёт себя как Free, live-ключ — как Start.
-    const { model } = pickInitialModel({
+    const engine = pickPlainEngine({
       plan: isDemo ? "free" : "start",
       sourceLang: source,
       targetLang: target,
       sourceText: text,
     });
-    const result = await translateText(text, source, target, model);
+    const result = await translateText(text, source, target, engine);
     return NextResponse.json({
       translation: result.translation,
       model: result.mode === "demo" ? "demo" : result.model,

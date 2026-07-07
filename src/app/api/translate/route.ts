@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { isKnownLang, translateText } from "@/lib/translate";
-import { pickInitialModel } from "@/lib/modelRouter";
+import { pickPlainEngine } from "@/lib/modelRouter";
 
 export const runtime = "nodejs";
 
@@ -74,8 +74,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { model } = pickInitialModel({ plan: "free", sourceLang: source, targetLang: target, sourceText: text });
-    const result = await translateText(text, source, target, model);
+    const engine = pickPlainEngine({ plan: "free", sourceLang: source, targetLang: target, sourceText: text });
+    const result = await translateText(text, source, target, engine);
     return NextResponse.json({ mode: result.mode, translation: result.translation, remaining: limit.remaining });
   } catch (err) {
     if (err instanceof Anthropic.RateLimitError) {

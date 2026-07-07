@@ -1,23 +1,34 @@
 import { computePreTranslationFlags, shouldRouteToHuman, CONFIDENCE_REVIEW_THRESHOLD, type QaFlags } from "@/lib/quality";
+import { providerEnabled } from "@/lib/workerConfig";
+import { deeplSupports } from "@/lib/providers/deepl";
+import { openaiModel } from "@/lib/providers/openai";
 
 /**
- * "AI-оркестрация" — выбор модели Anthropic под задачу вместо одной модели
+ * "AI-оркестрация" — выбор провайдера И модели под задачу, а не одна модель
  * на все запросы (см. /tarify, /product/orchestrator). Три оси критериев:
  *
- *  1. Тариф — базовый пол/потолок модели (сдерживает расход на бесплатном
- *     и анонимном трафике, отличает уровни подписки).
- *  2. Контент-сигналы — есть готовые эвристики из quality.ts (изначально
- *     собирались для маршрутизации "на редактора"): safetyCritical и
- *     hasNegation считаются ДО перевода по одному исходному тексту и поднимают
- *     модель уже на старте; numbersMismatch известен только ПОСЛЕ черновика —
- *     на нём основана пере-эскалация вторым проходом (см. maybeEscalate).
- *  3. Редкость языковой пары — вне "большой шестёрки" Haiku менее предсказуем,
- *     пол поднимается минимум до Sonnet независимо от тарифа.
+ *  1. Тариф — базовый пол модели Claude (сдерживает расход на бесплатном и
+ *     анонимном трафике, отличает уровни подписки).
+ *  2. Контент-сигналы — эвристики из quality.ts (изначально для маршрутизации
+ *     "на редактора"): safetyCritical/hasNegation считаются ДО перевода и
+ *     поднимают модель на старте; numbersMismatch/низкая самооценка известны
+ *     только ПОСЛЕ черновика и запускают кросс-вендорную пере-эскалацию.
+ *  3. Редкость языковой пары — вне "большой шестёрки" пол минимум Sonnet.
  *
- * TRANSLATE_MODEL в окружении остаётся аварийным рубильником уровня
- * инфраструктуры — если задан, перекрывает роутер целиком (см. translate.ts).
+ * Провайдеры (при наличии ключей в воркере и TRANSLATE_PROVIDERS):
+ *  - DeepL — базовый движок для распространённых пар без риск-флагов
+ *    (быстро, дёшево, качественно). Не умеет самооценку — не идёт в конвейер
+ *    заказов и не берёт safety-critical.
+ *  - Claude — основной LLM: всё, что требует самооценки/контроля, и plain-пары
+ *    вне DeepL.
+ *  - GPT — кросс-вендорная пере-эскалация: если Claude не уверен, перепроверяем
+ *    другим поставщиком.
+ *
+ * TRANSLATE_MODEL в окружении — аварийный рубильник: если задан, translate.ts
+ * форсит Anthropic + эту модель, минуя роутер целиком.
  */
 
+export type Provider = "anthropic" | "openai" | "deepl";
 export type PlanId = "free" | "start" | "pro" | "business";
 
 export const MODEL_HAIKU = "claude-haiku-4-5-20251001";
@@ -31,20 +42,18 @@ const PLAN_FLOOR: Record<PlanId, string> = {
   business: MODEL_OPUS,
 };
 
-// Следующая модель по силе — для эскалации. На Opus эскалировать некуда.
 const NEXT_MODEL: Record<string, string> = {
   [MODEL_HAIKU]: MODEL_SONNET,
   [MODEL_SONNET]: MODEL_OPUS,
   [MODEL_OPUS]: MODEL_OPUS,
 };
 
-// Языковые пары, на которых накоплен основной объём проверенных переводов —
-// вне этого набора эскалируем пол по умолчанию (ось 3).
 const COMMON_LANGS = new Set(["ru", "en", "de", "zh", "es", "fr"]);
 
 export interface RouteDecision {
+  provider: Provider;
   model: string;
-  /** Человекочитаемые причины выбора — основа для будущего "объяснения выбора" на Pro. */
+  /** Человекочитаемые причины — основа для "объяснения выбора" на Pro. */
   reasons: string[];
 }
 
@@ -55,19 +64,19 @@ export interface RouteInput {
   sourceText: string;
 }
 
-/** Модель для первого прохода — до перевода, только по исходному тексту. */
-export function pickInitialModel({ plan, sourceLang, targetLang, sourceText }: RouteInput): RouteDecision {
-  let model = PLAN_FLOOR[plan];
-  const reasons = [`тариф ${plan}: пол ${model}`];
+/** Пол Claude по тарифу с поправкой на редкую пару и риск-флаги. */
+function claudeFloor(input: RouteInput): RouteDecision {
+  let model = PLAN_FLOOR[input.plan];
+  const reasons = [`тариф ${input.plan}: ${model}`];
 
-  // "auto" — язык оригинала ещё не определён, не считаем это редкой парой сам по себе.
-  const rarePair = (sourceLang !== "auto" && !COMMON_LANGS.has(sourceLang)) || !COMMON_LANGS.has(targetLang);
+  const rarePair =
+    (input.sourceLang !== "auto" && !COMMON_LANGS.has(input.sourceLang)) || !COMMON_LANGS.has(input.targetLang);
   if (rarePair && model === MODEL_HAIKU) {
     model = MODEL_SONNET;
     reasons.push("редкая языковая пара — пол поднят до Sonnet");
   }
 
-  const pre = computePreTranslationFlags(sourceText);
+  const pre = computePreTranslationFlags(input.sourceText);
   if (pre.safetyCritical && model !== MODEL_OPUS) {
     model = NEXT_MODEL[model];
     reasons.push("текст помечен как безопасность-критичный");
@@ -76,33 +85,59 @@ export function pickInitialModel({ plan, sourceLang, targetLang, sourceText }: R
     reasons.push("текст содержит отрицания/ограничения — риск неверной трактовки");
   }
 
-  return { model, reasons };
+  return { provider: "anthropic", model, reasons };
 }
 
 /**
- * Пере-эскалация вторым проходом ПОСЛЕ первого черновика — когда эвристики
- * (включая numbersMismatch, который известен только сейчас) или собственная
- * неуверенность модели говорят, что сегмент небезопасно оставлять как есть.
- * Только Pro/Business — двойной проход стоит вдвое дороже и дольше, и по
- * умолчанию не должен включаться там, где это не оправдано ценой ошибки.
- * Возвращает null, если эскалация не нужна или модель уже на потолке (Opus).
+ * Движок для plain-перевода (виджет на сайте, embed-виджет, публичный API) —
+ * самооценка не нужна. DeepL как база для распространённых безопасных пар,
+ * иначе Claude по тарифу.
+ */
+export function pickPlainEngine(input: RouteInput): RouteDecision {
+  const pre = computePreTranslationFlags(input.sourceText);
+  const deeplOk = providerEnabled("deepl") && deeplSupports(input.sourceLang, input.targetLang);
+
+  if (deeplOk && !pre.safetyCritical && !pre.hasNegation) {
+    return { provider: "deepl", model: "deepl", reasons: ["распространённая пара — базовый движок DeepL"] };
+  }
+  return claudeFloor(input);
+}
+
+/**
+ * Модель для первого прохода конвейера заказов — нужна самооценка, поэтому
+ * только LLM Claude (DeepL исключён по построению).
+ */
+export function pickGradedInitial(input: RouteInput): RouteDecision {
+  return claudeFloor(input);
+}
+
+/**
+ * Пере-эскалация после первого черновика: если эвристики (включая
+ * numbersMismatch) или самооценка говорят "рискованно", и тариф это окупает
+ * (Pro/Business) — перепроверяем более сильной моделью. Если подключён
+ * OpenAI, это ДРУГОЙ поставщик (GPT) — честная кросс-вендорная перепроверка;
+ * иначе следующая по силе модель Claude. Возвращает null, если эскалация не
+ * нужна или Claude уже на потолке (Opus) и GPT недоступен.
  */
 export function maybeEscalate(
   plan: PlanId,
-  currentModel: string,
+  current: RouteDecision,
   flags: QaFlags,
   confidence: number
 ): RouteDecision | null {
   if (plan !== "pro" && plan !== "business") return null;
-  if (currentModel === MODEL_OPUS) return null;
   if (!shouldRouteToHuman(flags, confidence)) return null;
 
-  return {
-    model: NEXT_MODEL[currentModel],
-    reasons: [
-      `пере-эскалация: ${
-        confidence < CONFIDENCE_REVIEW_THRESHOLD ? "низкая уверенность модели" : "эвристики отметили сегмент как рискованный"
-      }`,
-    ],
-  };
+  const lowConfidence = confidence < CONFIDENCE_REVIEW_THRESHOLD;
+  const why = lowConfidence ? "низкая уверенность модели" : "эвристики отметили сегмент как рискованный";
+
+  if (providerEnabled("openai")) {
+    return { provider: "openai", model: openaiModel(), reasons: [`перепроверка другим поставщиком (GPT): ${why}`] };
+  }
+
+  if (current.provider === "anthropic" && current.model !== MODEL_OPUS) {
+    return { provider: "anthropic", model: NEXT_MODEL[current.model], reasons: [`пере-эскалация Claude: ${why}`] };
+  }
+
+  return null;
 }

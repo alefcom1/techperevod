@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { isKnownLang, translateText } from "@/lib/translate";
 import { corsHeaders, hashText } from "@/lib/widget";
-import { pickInitialModel, type PlanId } from "@/lib/modelRouter";
+import { pickPlainEngine, type PlanId } from "@/lib/modelRouter";
 
 const PLAN_IDS: PlanId[] = ["free", "start", "pro", "business"];
 function toPlanId(plan: string | undefined): PlanId {
@@ -90,8 +90,8 @@ export async function POST(request: NextRequest) {
   });
 
   for (const miss of misses) {
-    const { model } = pickInitialModel({ plan, sourceLang: site.sourceLang, targetLang: lang, sourceText: miss.text });
-    const { translation } = await translateText(miss.text, site.sourceLang, lang, model);
+    const engine = pickPlainEngine({ plan, sourceLang: site.sourceLang, targetLang: lang, sourceText: miss.text });
+    const { translation } = await translateText(miss.text, site.sourceLang, lang, engine);
     results[miss.index] = translation;
     await prisma.widgetTranslation
       .upsert({
