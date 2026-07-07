@@ -56,6 +56,18 @@ function resolveProvider(pathname) {
     };
   }
 
+  if (rest.startsWith("/yandex/") || rest === "/yandex") {
+    const key = process.env.YANDEX_API_KEY;
+    if (!key) return { error: "YANDEX_API_KEY not configured" };
+    // Yandex Translate (Yandex Cloud). folderId сайт передаёт в теле запроса
+    // (не секрет), ключ — только здесь как заголовок "Api-Key <key>".
+    return {
+      host: "translate.api.cloud.yandex.net",
+      path: rest.replace(/^\/yandex/, ""),
+      authHeader: ["authorization", `Api-Key ${key}`],
+    };
+  }
+
   // По умолчанию — Anthropic (/v1/*).
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return { error: "ANTHROPIC_API_KEY not configured" };

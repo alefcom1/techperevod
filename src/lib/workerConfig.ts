@@ -12,7 +12,7 @@
  * роутер его не выбирает, поведение остаётся Claude-only. Это защищает
  * деплой: код можно выкатить раньше, чем в env Vercel добавлены ключи.
  */
-export type ExtraProvider = "deepl" | "openai";
+export type ExtraProvider = "deepl" | "openai" | "yandex";
 
 /** База воркера (…/api) — из ANTHROPIC_BASE_URL. null, если воркер не настроен. */
 export function workerBase(): string | null {

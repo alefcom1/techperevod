@@ -3,6 +3,7 @@ import { LANG_NAMES, isKnownLang } from "@/data/langs";
 import type { Provider } from "@/lib/modelRouter";
 import { deeplTranslate } from "@/lib/providers/deepl";
 import { openaiTranslate, openaiTranslateGraded } from "@/lib/providers/openai";
+import { yandexTranslate } from "@/lib/providers/yandex";
 
 /**
  * Общее ядро AI-перевода — используется внутренним /api/translate (виджет),
@@ -78,6 +79,11 @@ export async function translateText(
   if (engine.provider === "deepl") {
     const translation = await deeplTranslate(text, source, target);
     return { mode: "live", translation, provider: "deepl", model: "deepl" };
+  }
+
+  if (engine.provider === "yandex") {
+    const translation = await yandexTranslate(text, source, target);
+    return { mode: "live", translation, provider: "yandex", model: "yandex" };
   }
 
   if (engine.provider === "openai") {

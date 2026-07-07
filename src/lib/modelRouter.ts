@@ -2,6 +2,7 @@ import { computePreTranslationFlags, shouldRouteToHuman, CONFIDENCE_REVIEW_THRES
 import { providerEnabled } from "@/lib/workerConfig";
 import { deeplSupports } from "@/lib/providers/deepl";
 import { openaiModel } from "@/lib/providers/openai";
+import { yandexSupports, yandexPreferred } from "@/lib/providers/yandex";
 
 /**
  * "AI-оркестрация" — выбор провайдера И модели под задачу, а не одна модель
@@ -16,19 +17,23 @@ import { openaiModel } from "@/lib/providers/openai";
  *  3. Редкость языковой пары — вне "большой шестёрки" пол минимум Sonnet.
  *
  * Провайдеры (при наличии ключей в воркере и TRANSLATE_PROVIDERS):
- *  - DeepL — базовый движок для распространённых пар без риск-флагов
- *    (быстро, дёшево, качественно). Не умеет самооценку — не идёт в конвейер
- *    заказов и не берёт safety-critical.
+ *  - Yandex — базовый движок для пар с русским и языками СНГ (лучшее качество
+ *    на этих парах + «российский» маршрут под 152-ФЗ). NMT, самооценки нет.
+ *  - DeepL — базовый движок для остальных распространённых пар без риск-флагов
+ *    (быстро, дёшево, качественно). NMT, самооценки нет.
  *  - Claude — основной LLM: всё, что требует самооценки/контроля, и plain-пары
- *    вне DeepL.
+ *    вне DeepL/Yandex.
  *  - GPT — кросс-вендорная пере-эскалация: если Claude не уверен, перепроверяем
  *    другим поставщиком.
+ *
+ * NMT-движки (Yandex, DeepL) не берут safety-critical и не идут в конвейер
+ * заказов — там нужна самооценка, значит LLM.
  *
  * TRANSLATE_MODEL в окружении — аварийный рубильник: если задан, translate.ts
  * форсит Anthropic + эту модель, минуя роутер целиком.
  */
 
-export type Provider = "anthropic" | "openai" | "deepl";
+export type Provider = "anthropic" | "openai" | "deepl" | "yandex";
 export type PlanId = "free" | "start" | "pro" | "business";
 
 export const MODEL_HAIKU = "claude-haiku-4-5-20251001";
@@ -95,10 +100,21 @@ function claudeFloor(input: RouteInput): RouteDecision {
  */
 export function pickPlainEngine(input: RouteInput): RouteDecision {
   const pre = computePreTranslationFlags(input.sourceText);
-  const deeplOk = providerEnabled("deepl") && deeplSupports(input.sourceLang, input.targetLang);
+  const risky = pre.safetyCritical || pre.hasNegation;
 
-  if (deeplOk && !pre.safetyCritical && !pre.hasNegation) {
-    return { provider: "deepl", model: "deepl", reasons: ["распространённая пара — базовый движок DeepL"] };
+  if (!risky) {
+    // Yandex — приоритет для русского ядра и пар СНГ (качество + 152-ФЗ).
+    if (
+      providerEnabled("yandex") &&
+      yandexPreferred(input.sourceLang, input.targetLang) &&
+      yandexSupports(input.sourceLang, input.targetLang)
+    ) {
+      return { provider: "yandex", model: "yandex", reasons: ["пара с русским/СНГ — движок Yandex (качество + 152-ФЗ)"] };
+    }
+    // DeepL — остальные распространённые пары.
+    if (providerEnabled("deepl") && deeplSupports(input.sourceLang, input.targetLang)) {
+      return { provider: "deepl", model: "deepl", reasons: ["распространённая пара — базовый движок DeepL"] };
+    }
   }
   return claudeFloor(input);
 }
