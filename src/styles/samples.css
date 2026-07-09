@@ -1,0 +1,131 @@
+/* /primery-perevodov — «Образцы переводов». Написано mobile-first: базовые
+   правила — одноколоночная мобильная раскладка, расширения — через
+   min-width. Переиспользует .tp-section/.tp-before-after (landing.css) и
+   .tp-card/.tp-badge (core.css) — здесь только специфика страницы. */
+
+.tp-samples-filter-section { padding-top: var(--tp-space-6); padding-bottom: var(--tp-space-6); }
+
+.tp-samples-filter {
+  display: flex;
+  gap: var(--tp-space-3);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.tp-samples-filter::-webkit-scrollbar { display: none; }
+
+.tp-samples-filter__chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 10px 16px;
+  border-radius: var(--tp-radius-pill);
+  border: 1px solid var(--tp-border);
+  background: var(--tp-surface-card);
+  color: var(--tp-text);
+  font-size: 14px;
+  font-weight: var(--tp-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color var(--tp-duration) var(--tp-ease-out), color var(--tp-duration) var(--tp-ease-out);
+}
+.tp-samples-filter__chip:hover { border-color: var(--tp-primary); color: var(--tp-primary); }
+.tp-samples-filter__count {
+  font-family: var(--tp-font-mono);
+  font-size: 12px;
+  color: var(--tp-text-muted);
+  background: var(--tp-surface-sunken);
+  border-radius: var(--tp-radius-pill);
+  padding: 1px 7px;
+}
+
+.tp-samples-spec-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--tp-space-4);
+}
+.tp-samples-spec-header__icon {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: var(--tp-radius-sm);
+  background: var(--tp-primary-soft);
+  color: var(--tp-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tp-samples-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tp-space-6);
+}
+
+.tp-sample-card { display: flex; flex-direction: column; gap: var(--tp-space-5); }
+.tp-sample-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tp-space-3); }
+
+/* Source/translation panels — mobile-first: stacked by default. */
+.tp-before-after--samples { grid-template-columns: 1fr; gap: var(--tp-space-4); }
+.tp-before-after--samples .tp-before-after__panel {
+  border-radius: var(--tp-radius-sm);
+  padding: var(--tp-space-5);
+  border: 1px solid var(--tp-border);
+  background: var(--tp-surface-sunken);
+}
+.tp-before-after--samples .tp-before-after__panel--after {
+  background: var(--tp-accent-soft);
+  border-color: color-mix(in srgb, var(--tp-accent) 35%, var(--tp-border));
+}
+.tp-before-after--samples .tp-before-after__text { font-size: 15px; }
+
+.tp-sample-card__markers {
+  border-top: 1px solid var(--tp-border);
+  padding-top: var(--tp-space-4);
+}
+.tp-sample-card__markers-label {
+  font-family: var(--tp-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--tp-text-muted);
+  margin-bottom: var(--tp-space-3);
+}
+.tp-sample-card__markers ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tp-sample-card__markers li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: var(--tp-leading-body);
+  color: var(--tp-text-muted);
+}
+.tp-sample-card__markers li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tp-accent);
+}
+
+/* Tablet and up: source/translation side by side. */
+@media (min-width: 640px) {
+  .tp-before-after--samples { grid-template-columns: 1fr 1fr; }
+}
+
+/* Desktop: a little more breathing room per card. */
+@media (min-width: 900px) {
+  .tp-samples-spec-header { flex-direction: row; align-items: center; }
+}

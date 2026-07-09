@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/o-nas",
     "/blog",
     "/keysy",
+    "/primery-perevodov",
     "/kontakty",
     "/oferta",
     "/politika-pd",

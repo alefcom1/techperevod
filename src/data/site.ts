@@ -74,6 +74,7 @@ export const NAV_LINKS: NavItem[] = [
     dropdown: [
       { label: "О нас", href: "/o-nas" },
       { label: "Кейсы", href: "/keysy" },
+      { label: "Примеры переводов", href: "/primery-perevodov" },
       { label: "Блог", href: "/blog" },
       { label: "Словарь терминов", href: "/slovar" },
       { label: "Переводчикам", href: "/perevodchikam" },
@@ -140,6 +141,7 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: "О нас", href: "/o-nas" },
       { label: "Кейсы", href: "/keysy" },
+      { label: "Примеры переводов", href: "/primery-perevodov" },
       { label: "Блог", href: "/blog" },
       { label: "Словарь терминов", href: "/slovar" },
       { label: "Переводчикам", href: "/perevodchikam" },
