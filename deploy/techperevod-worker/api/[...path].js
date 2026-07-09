@@ -10,12 +10,7 @@
 //
 // Деплой: cd deploy/techperevod-worker && npx vercel --prod (отдельный
 // проект Vercel `techperevod`, НЕ часть Next.js-сайта).
-//
-// Edge Functions разворачиваются на всех edge-узлах Vercel глобально и не
-// поддерживают привязку к региону (regions — только для serverless/Node
-// функций); указание regions здесь ранее приводило к NOT_FOUND на узлах,
-// отличных от целевого.
-export const config = { runtime: "edge" };
+export const config = { runtime: "edge", regions: ["cdg1"] };
 
 const DEFAULT_ORIGINS = "https://techperevod.com,https://www.techperevod.com";
 
