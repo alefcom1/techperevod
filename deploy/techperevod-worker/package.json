@@ -1,4 +1,5 @@
 {
   "name": "techperevod",
-  "private": true
+  "private": true,
+  "type": "module"
 }
