@@ -1,9 +1,22 @@
+import https from "node:https";
 import Anthropic from "@anthropic-ai/sdk";
 import { LANG_NAMES, isKnownLang } from "@/data/langs";
 import type { Provider } from "@/lib/modelRouter";
 import { deeplTranslate } from "@/lib/providers/deepl";
 import { openaiTranslate, openaiTranslateGraded } from "@/lib/providers/openai";
 import { yandexTranslate } from "@/lib/providers/yandex";
+
+/**
+ * Между вызовами serverless-функция "замораживается"; keep-alive соединение
+ * к воркеру (ANTHROPIC_BASE_URL) может к следующему вызову оказаться уже
+ * разорвано удалённой стороной — тогда запрос виснет/падает ECONNRESET
+ * (та же причина, что чинили в самом воркере при обращении к Anthropic).
+ * keepAlive: false — каждый запрос идёт по свежему соединению.
+ */
+const noKeepAliveAgent = new https.Agent({ keepAlive: false });
+function newAnthropicClient(): Anthropic {
+  return new Anthropic({ httpAgent: noKeepAliveAgent });
+}
 
 /**
  * Общее ядро AI-перевода — используется внутренним /api/translate (виджет),
@@ -91,7 +104,7 @@ export async function translateText(
     return { mode: "live", translation, provider: "openai", model: engine.model };
   }
 
-  const client = new Anthropic();
+  const client = newAnthropicClient();
   const response = await client.messages.create({
     model: engine.model,
     max_tokens: 2048,
@@ -172,7 +185,7 @@ export async function translateSegmentGraded(
     return { ...graded, provider: "openai", model: engine.model };
   }
 
-  const client = new Anthropic();
+  const client = newAnthropicClient();
   const response = await client.messages.create({
     model: engine.model,
     max_tokens: 1024,
