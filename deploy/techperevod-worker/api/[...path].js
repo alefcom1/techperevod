@@ -11,19 +11,19 @@
 // Деплой: cd deploy/techperevod-worker && npx vercel --prod (отдельный
 // проект Vercel `techperevod`, НЕ часть Next.js-сайта).
 //
-// НЕ используем runtime: "edge". На этом проекте (Root Directory —
-// подпапка репозитория, не корень) роутинг Edge-функции для catch-all
-// api/[...path].js ловил только один сегмент пути после /api (например
-// /api/v1 работал, а /api/v1/messages — платформенный NOT_FOUND ещё до
-// вызова функции; подтверждено Runtime Logs — запроса ко второму пути
-// там нет вообще). На обычном Node.js serverless-рантайме та же функция
-// (сигнатура Request → Response, Web API) работает штатно.
+// НЕ используем runtime: "edge" (см. историю коммитов — на этом проекте
+// Edge-роутинг catch-all ловил только один сегмент пути после /api).
+// На Node.js serverless-рантайме без runtime: "edge" Vercel вызывает
+// функцию классической Node.js сигнатурой (req: IncomingMessage,
+// res: ServerResponse), а не Web API Request/Response — отсюда и весь
+// код ниже работает с req/res напрямую, а не с Headers/fetch Response.
+import { Readable } from "node:stream";
 
 const DEFAULT_ORIGINS = "https://techperevod.com,https://www.techperevod.com";
 
-function corsHeaders(request) {
+function corsHeaders(req) {
   const origins = (process.env.ALLOWED_ORIGINS || DEFAULT_ORIGINS).split(",").map((s) => s.trim());
-  const origin = request.headers.get("origin") || "";
+  const origin = req.headers.origin || "";
   if (!origins.includes(origin)) return {};
   return {
     "access-control-allow-origin": origin,
@@ -86,60 +86,71 @@ function resolveProvider(pathname) {
   };
 }
 
-export default async function handler(request) {
-  const cors = corsHeaders(request);
+function sendJson(res, cors, status, body) {
+  res.writeHead(status, { ...cors, "content-type": "application/json" });
+  res.end(JSON.stringify(body));
+}
 
-  if (request.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: cors });
+export default async function handler(req, res) {
+  const cors = corsHeaders(req);
+
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, cors);
+    res.end();
+    return;
   }
 
-  const url = new URL(request.url);
+  const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
 
   // Авторизация сайта перед воркером: единый PROXY_SECRET.
-  const bearer = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
+  const bearer = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
   const qsSecret = url.searchParams.get("secret");
   const secret = process.env.PROXY_SECRET;
   if (!secret || (bearer !== secret && qsSecret !== secret)) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 403,
-      headers: { ...cors, "content-type": "application/json" },
-    });
+    sendJson(res, cors, 403, { error: "Unauthorized" });
+    return;
   }
 
   const provider = resolveProvider(url.pathname);
   if (provider.error) {
-    return new Response(JSON.stringify({ error: provider.error }), {
-      status: 500,
-      headers: { ...cors, "content-type": "application/json" },
-    });
+    sendJson(res, cors, 500, { error: provider.error });
+    return;
   }
 
   url.searchParams.delete("secret");
   const target = `https://${provider.host}${provider.path}` + (url.searchParams.toString() ? "?" + url.searchParams.toString() : "");
 
-  const headers = new Headers(request.headers);
-  headers.delete("authorization");
-  headers.delete("x-api-key");
-  headers.delete("host");
-  headers.delete("origin");
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(req.headers)) {
+    if (["authorization", "x-api-key", "host", "origin", "connection", "content-length"].includes(name)) continue;
+    if (Array.isArray(value)) headers.set(name, value.join(", "));
+    else if (value !== undefined) headers.set(name, value);
+  }
   headers.set(provider.authHeader[0], provider.authHeader[1]);
   if (provider.anthropic && !headers.has("anthropic-version")) headers.set("anthropic-version", "2023-06-01");
 
   try {
-    const hasBody = !["GET", "HEAD"].includes(request.method);
+    const hasBody = !["GET", "HEAD"].includes(req.method);
     const upstream = await fetch(target, {
-      method: request.method,
+      method: req.method,
       headers,
-      body: hasBody ? request.body : undefined,
+      body: hasBody ? Readable.toWeb(req) : undefined,
       ...(hasBody ? { duplex: "half" } : {}),
     });
-    const respHeaders = new Headers(upstream.headers);
-    for (const [k, v] of Object.entries(cors)) respHeaders.set(k, v);
-    return new Response(upstream.body, { status: upstream.status, headers: respHeaders });
-  } catch (e) {
-    return new Response(JSON.stringify({ error: "Proxy error", details: String(e?.message || e) }), {
-      status: 502,
-      headers: { ...cors, "content-type": "application/json" },
+
+    const respHeaders = { ...cors };
+    upstream.headers.forEach((v, k) => {
+      if (k === "content-encoding" || k === "content-length" || k === "transfer-encoding") return;
+      respHeaders[k] = v;
     });
+    res.writeHead(upstream.status, respHeaders);
+
+    if (upstream.body) {
+      Readable.fromWeb(upstream.body).pipe(res);
+    } else {
+      res.end();
+    }
+  } catch (e) {
+    sendJson(res, cors, 502, { error: "Proxy error", details: String(e?.message || e) });
   }
 }
