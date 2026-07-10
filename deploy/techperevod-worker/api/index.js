@@ -27,6 +27,13 @@
 // продолжает читать оригинальный путь без изменений.
 import { Readable } from "node:stream";
 import { buffer as readBody } from "node:stream/consumers";
+import { fetch, Agent, Headers } from "undici";
+
+// Между вызовами serverless-функция "замораживается"; пул keep-alive
+// соединений undici может держать сокет к upstream, который к моменту
+// следующего вызова уже разорван удалённой стороной — тогда запрос падает
+// с ECONNRESET. pipelining: 0 отключает переиспользование соединений.
+const upstreamAgent = new Agent({ pipelining: 0, keepAliveTimeout: 1 });
 
 const DEFAULT_ORIGINS = "https://techperevod.com,https://www.techperevod.com";
 
@@ -149,6 +156,7 @@ export default async function handler(req, res) {
       method: req.method,
       headers,
       body,
+      dispatcher: upstreamAgent,
     });
 
     const respHeaders = { ...cors };
