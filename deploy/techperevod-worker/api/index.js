@@ -26,6 +26,7 @@
 // сохраняет исходный req.url при rewrite, так что resolveProvider ниже
 // продолжает читать оригинальный путь без изменений.
 import { Readable } from "node:stream";
+import { buffer as readBody } from "node:stream/consumers";
 
 const DEFAULT_ORIGINS = "https://techperevod.com,https://www.techperevod.com";
 
@@ -139,11 +140,15 @@ export default async function handler(req, res) {
 
   try {
     const hasBody = !["GET", "HEAD"].includes(req.method);
+    // Буферизуем тело целиком, а не стримим — стриминг Node Readable в
+    // fetch (duplex: "half") приводил к ECONNRESET на upstream-стороне.
+    // Тела здесь небольшие (JSON с текстом на перевод), так что буфер
+    // не проблема, а надёжность важнее.
+    const body = hasBody ? await readBody(req) : undefined;
     const upstream = await fetch(target, {
       method: req.method,
       headers,
-      body: hasBody ? Readable.toWeb(req) : undefined,
-      ...(hasBody ? { duplex: "half" } : {}),
+      body,
     });
 
     const respHeaders = { ...cors };
