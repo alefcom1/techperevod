@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
     const result = await translateText(text, source, target, engine);
     return NextResponse.json({ mode: result.mode, translation: result.translation, remaining: limit.remaining });
   } catch (err) {
+    console.error("[/api/translate]", err);
     if (err instanceof Anthropic.RateLimitError) {
       return NextResponse.json({ error: "Сервис перегружен, попробуйте через минуту." }, { status: 503 });
     }
