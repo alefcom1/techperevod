@@ -11,13 +11,13 @@
 // Деплой: cd deploy/techperevod-worker && npx vercel --prod (отдельный
 // проект Vercel `techperevod`, НЕ часть Next.js-сайта).
 //
-// Edge Functions разворачиваются на всех edge-узлах Vercel глобально и не
-// поддерживают привязку к региону (regions — только для serverless/Node
-// функций). Ранее regions: ["cdg1"] здесь и в vercel.json приводил к
-// платформенному NOT_FOUND на любом edge-узле, отличном от cdg1, т.к.
-// анкаст-маршрутизация продолжает направлять запросы на ближайший к
-// клиенту узел, где функции физически нет.
-export const config = { runtime: "edge" };
+// НЕ используем runtime: "edge". На этом проекте (Root Directory —
+// подпапка репозитория, не корень) роутинг Edge-функции для catch-all
+// api/[...path].js ловил только один сегмент пути после /api (например
+// /api/v1 работал, а /api/v1/messages — платформенный NOT_FOUND ещё до
+// вызова функции; подтверждено Runtime Logs — запроса ко второму пути
+// там нет вообще). На обычном Node.js serverless-рантайме та же функция
+// (сигнатура Request → Response, Web API) работает штатно.
 
 const DEFAULT_ORIGINS = "https://techperevod.com,https://www.techperevod.com";
 
@@ -126,10 +126,12 @@ export default async function handler(request) {
   if (provider.anthropic && !headers.has("anthropic-version")) headers.set("anthropic-version", "2023-06-01");
 
   try {
+    const hasBody = !["GET", "HEAD"].includes(request.method);
     const upstream = await fetch(target, {
       method: request.method,
       headers,
-      body: ["GET", "HEAD"].includes(request.method) ? undefined : request.body,
+      body: hasBody ? request.body : undefined,
+      ...(hasBody ? { duplex: "half" } : {}),
     });
     const respHeaders = new Headers(upstream.headers);
     for (const [k, v] of Object.entries(cors)) respHeaders.set(k, v);
