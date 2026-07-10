@@ -159,6 +159,7 @@ export default async function handler(req, res) {
       res.end();
     }
   } catch (e) {
-    sendJson(res, cors, 502, { error: "Proxy error", details: String(e?.message || e) });
+    const cause = e?.cause ? ` (cause: ${e.cause.code || e.cause.message || e.cause})` : "";
+    sendJson(res, cors, 502, { error: "Proxy error", details: String(e?.message || e) + cause });
   }
 }
