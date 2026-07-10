@@ -1,0 +1,62 @@
+/* /standarty — «Стандарты и нормативы перевода». Mobile-first, переиспользует
+   .tp-samples-filter/.tp-samples-spec-header/.tp-sample-card__markers из
+   samples.css — тот же справочный хаб-паттерн, здесь только карточка
+   стандарта. */
+
+.tp-standards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--tp-space-6);
+}
+
+.tp-standard-card { display: flex; flex-direction: column; gap: var(--tp-space-4); }
+
+.tp-standard-card__code {
+  font-family: var(--tp-font-display);
+  font-weight: var(--tp-weight-heading);
+  font-size: 19px;
+  color: var(--tp-text);
+}
+.tp-standard-card__fullname {
+  font-size: 14px;
+  color: var(--tp-text-muted);
+  margin-top: 2px;
+}
+.tp-standard-card__summary {
+  margin: 0;
+  font-size: 15px;
+  line-height: var(--tp-leading-body);
+  color: var(--tp-text);
+}
+
+.tp-standard-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--tp-space-3);
+  border-top: 1px solid var(--tp-border);
+  padding-top: var(--tp-space-4);
+}
+.tp-standard-card__forwhom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--tp-text-muted);
+}
+.tp-standard-card__forwhom svg { flex: none; color: var(--tp-text-muted); }
+.tp-standard-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: var(--tp-weight-medium);
+  color: var(--tp-primary);
+  text-decoration: none;
+}
+.tp-standard-card__link:hover { text-decoration: underline; }
+
+@media (min-width: 900px) {
+  .tp-standards-grid { grid-template-columns: 1fr 1fr; }
+}
