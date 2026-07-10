@@ -11,12 +11,20 @@
 // Деплой: cd deploy/techperevod-worker && npx vercel --prod (отдельный
 // проект Vercel `techperevod`, НЕ часть Next.js-сайта).
 //
-// НЕ используем runtime: "edge" (см. историю коммитов — на этом проекте
-// Edge-роутинг catch-all ловил только один сегмент пути после /api).
-// На Node.js serverless-рантайме без runtime: "edge" Vercel вызывает
-// функцию классической Node.js сигнатурой (req: IncomingMessage,
-// res: ServerResponse), а не Web API Request/Response — отсюда и весь
-// код ниже работает с req/res напрямую, а не с Headers/fetch Response.
+// НЕ используем runtime: "edge" (на этом проекте Edge-роутинг
+// файлового catch-all ловил только один сегмент пути после /api).
+// На Node.js serverless-рантайме Vercel вызывает функцию классической
+// Node.js сигнатурой (req: IncomingMessage, res: ServerResponse), а не
+// Web API Request/Response — отсюда работа с req/res напрямую, а не с
+// Headers/fetch Response.
+//
+// Файл лежит как api/index.js (НЕ api/[...path].js): даже под Node.js
+// рантаймом файловый catch-all [...path].js ловил только один сегмент
+// пути (Runtime Logs подтвердили — запросы вида /api/v1/messages вообще
+// не доходили до функции). Вместо файлового catch-all путь матчится
+// явным rewrite в vercel.json ("/api/:path*" → "/api/index"); Vercel
+// сохраняет исходный req.url при rewrite, так что resolveProvider ниже
+// продолжает читать оригинальный путь без изменений.
 import { Readable } from "node:stream";
 
 const DEFAULT_ORIGINS = "https://techperevod.com,https://www.techperevod.com";
