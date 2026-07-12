@@ -1,5 +1,5 @@
-import https from "node:https";
 import Anthropic from "@anthropic-ai/sdk";
+import { Agent as UndiciAgent } from "undici";
 import { LANG_NAMES, isKnownLang } from "@/data/langs";
 import type { Provider } from "@/lib/modelRouter";
 import { deeplTranslate } from "@/lib/providers/deepl";
@@ -7,15 +7,17 @@ import { openaiTranslate, openaiTranslateGraded } from "@/lib/providers/openai";
 import { yandexTranslate } from "@/lib/providers/yandex";
 
 /**
- * Между вызовами serverless-функция "замораживается"; keep-alive соединение
- * к воркеру (ANTHROPIC_BASE_URL) может к следующему вызову оказаться уже
- * разорвано удалённой стороной — тогда запрос виснет/падает ECONNRESET
- * (та же причина, что чинили в самом воркере при обращении к Anthropic).
- * keepAlive: false — каждый запрос идёт по свежему соединению.
+ * Долгоживущий keep-alive пул к воркеру (ANTHROPIC_BASE_URL) может держать
+ * соединение, которое к моменту следующего запроса уже разорвано удалённой
+ * стороной (Vercel закрывает простаивающие соединения) — тогда запрос падает
+ * с ECONNRESET (та же причина, что чинили в самом воркере при его обращении
+ * к api.anthropic.com). pipelining: 0 отключает переиспользование соединений;
+ * передаётся через fetchOptions.dispatcher — единственный официально
+ * поддерживаемый SDK способ подменить transport для Node.js fetch (undici).
  */
-const noKeepAliveAgent = new https.Agent({ keepAlive: false });
+const upstreamAgent = new UndiciAgent({ pipelining: 0, keepAliveTimeout: 1 });
 function newAnthropicClient(): Anthropic {
-  return new Anthropic({ httpAgent: noKeepAliveAgent });
+  return new Anthropic({ fetchOptions: { dispatcher: upstreamAgent } });
 }
 
 /**
