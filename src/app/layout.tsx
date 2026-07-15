@@ -79,6 +79,9 @@ export const metadata: Metadata = {
     ],
     apple: "/assets/apple-touch-icon.png",
   },
+  verification: {
+    google: "jX8NmDPxq2Zb2MN2UQBusdKfICqKkC-3prEkI1Xfiic",
+  },
 };
 
 // Applies the stored theme to <html> before first paint to avoid a flash of
