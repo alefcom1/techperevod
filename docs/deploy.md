@@ -1,5 +1,20 @@
 # Деплой сайта techperevod.com
 
+## Шпаргалка — команды для обновления сайта
+
+По SSH на сервер, затем:
+
+```bash
+cd ~/techperevod
+git fetch origin && git reset --hard origin/main
+npm install
+npm run build
+pm2 restart techperevod --update-env
+```
+
+Выполнять после каждого `git push origin main` на GitHub. Подробности и
+нюансы — ниже.
+
 Сервер: VPS под FASTPANEL, доступ по SSH (root). Сайт лежит в `~/techperevod`,
 процесс управляется через PM2 под именем `techperevod`.
 
