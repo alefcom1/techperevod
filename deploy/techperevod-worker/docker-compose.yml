@@ -1,0 +1,30 @@
+# Запуск воркера отдельным контейнером в существующей Docker-сети (вариант для
+# сервера, где 80/443 держит чужой reverse-proxy — Caddy стека sitelens/remarka).
+#
+# Воркер подключается к ВНЕШНЕЙ сети этого стека, и Caddy проксирует на него по
+# имени `techperevod-worker:8787`. Порт наружу не публикуется — доступ только
+# изнутри Docker-сети (снаружи ходит только Caddy по HTTPS на своём домене).
+#
+# Имя внешней сети (где живёт Caddy) передаётся через переменную CADDY_NETWORK.
+# Узнать имя сети:
+#   docker inspect sitelens-caddy-1 \
+#     --format '{{range $net,$v := .NetworkSettings.Networks}}{{$net}}{{"\n"}}{{end}}'
+#
+# Развёртывание (на сервере, в этой папке) — подставьте своё имя сети:
+#   CADDY_NETWORK=sitelens_default docker compose up -d --build
+# Обновление после git pull — та же команда.
+services:
+  techperevod-worker:
+    build: .
+    image: techperevod-worker
+    container_name: techperevod-worker
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    networks:
+      - sitelens
+
+networks:
+  sitelens:
+    external: true
+    name: ${CADDY_NETWORK:?set CADDY_NETWORK to the Docker network name where Caddy runs}

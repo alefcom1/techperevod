@@ -91,6 +91,60 @@ VPS (см. `docs/deploy.md` в корне репозитория). После н
 Обновление после `git push` в `main`: `git pull && npm install && pm2 restart techperevod-worker`
 (без build-шага — это не Next.js, просто голый JS).
 
+## Деплой контейнером в существующую Docker-сеть (порты 80/443 заняты чужим прокси)
+
+Вариант для сервера, где 80/443 уже держит reverse-proxy другого проекта (например
+Caddy стека sitelens/remarka). Тогда воркер поднимается отдельным контейнером в той
+же Docker-сети, а существующий Caddy проксирует на него по имени `techperevod-worker:8787`.
+Порт наружу не публикуется; правка чужого `docker-compose` не требуется, только один
+site-блок в `Caddyfile` + `caddy reload` (без пересоздания контейнера — без простоя).
+
+```bash
+# 1. Код воркера
+git clone https://github.com/alefcom1/techperevod.git ~/techperevod-worker-src
+cd ~/techperevod-worker-src/deploy/techperevod-worker
+
+# 2. Секреты в .env.local (тот же формат, что выше; PORT=8787 внутри контейнера)
+nano .env.local
+
+# 3. Узнать имя Docker-сети, где живёт Caddy
+docker inspect sitelens-caddy-1 \
+  --format '{{range $net,$v := .NetworkSettings.Networks}}{{$net}}{{"\n"}}{{end}}'
+
+# 4. Поднять воркер в этой сети (подставьте имя сети из шага 3)
+CADDY_NETWORK=sitelens_default docker compose up -d --build
+
+# 5. Проверка изнутри сети (Caddy видит воркер по имени):
+docker exec sitelens-caddy-1 wget -qO- http://techperevod-worker:8787/api/pingtest
+#   → {"error":"Unauthorized"}  — значит воркер жив и доступен Caddy
+```
+
+Затем добавить в `Caddyfile` (host-файл, что смонтирован в Caddy) блок:
+
+```
+proxy.techperevod.com {
+	encode zstd gzip
+	reverse_proxy techperevod-worker:8787
+	log {
+		output stdout
+		format console
+	}
+}
+```
+
+и применить на лету, без простоя других сайтов:
+
+```bash
+docker exec sitelens-caddy-1 caddy reload --config /etc/caddy/Caddyfile
+```
+
+Предусловие: DNS A-запись `proxy.techperevod.com` → IP сервера должна существовать
+ДО reload (иначе Caddy не выпустит TLS-сертификат по ACME). После этого — обновить
+на сайте `ANTHROPIC_BASE_URL=https://proxy.techperevod.com/api` и `ANTHROPIC_AUTH_TOKEN`
+(тот же PROXY_SECRET), затем `pm2 restart techperevod --update-env`.
+
+Обновление после `git push`: `git pull && CADDY_NETWORK=<сеть> docker compose up -d --build`.
+
 ## Проверка
 
 ```bash
