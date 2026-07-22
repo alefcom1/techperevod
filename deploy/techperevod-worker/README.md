@@ -1,11 +1,16 @@
 # techperevod — прокси-воркер к провайдерам ИИ-перевода
 
-Единый Vercel-воркер (Node.js serverless-функция — не Edge: под Edge
-runtime на этом проекте catch-all `api/[...path].js` ловил только один
-сегмент пути после `/api`, многосегментные пути вроде `/api/v1/messages`
-получали платформенный NOT_FOUND ещё до вызова функции), через который
-сайт techperevod.com ходит к нескольким провайдерам. Реальные ключи живут
-только здесь, в env Vercel; сайт знает один `PROXY_SECRET`.
+Единый воркер, через который сайт techperevod.com ходит к нескольким
+провайдерам. Реальные ключи живут только здесь; сайт знает один
+`PROXY_SECRET`. Основной handler (`api/index.js`) написан под обычную
+Node.js сигнатуру `(req, res)` и одинаково запускается двумя способами:
+
+- **на Vercel** — как serverless-функция (см. «Деплой на Vercel» ниже);
+- **на своём VPS** — как обычный Node-процесс через `server.js` (см.
+  «Деплой на свой VPS»). Актуально, если IP-диапазон `*.vercel.app`
+  заблокирован для части клиентов сайта (так и произошло — VPS сайта в
+  России не мог достучаться до `techperevod.vercel.app` на уровне TCP,
+  хотя сам воркер на Anthropic ходил без проблем).
 
 ## Маршрутизация по пути
 
@@ -34,7 +39,7 @@ Yandex: ключ (`Api-Key`) — в воркере; `folderId` каталога 
 
 После добавления/изменения переменных — Deployments → ⋯ → **Redeploy**.
 
-## Деплой
+## Деплой на Vercel
 
 ```bash
 cd deploy/techperevod-worker
@@ -43,6 +48,48 @@ npx vercel --prod
 
 Либо через дашборд Vercel: Import проекта, Root Directory =
 `deploy/techperevod-worker`.
+
+## Деплой на свой VPS
+
+Нужен отдельный сервер (не тот, где сайт) — свежий Ubuntu с Node.js 20+,
+nginx, certbot, и поддомен (например `proxy.techperevod.com`), A-запись
+которого указывает на IP этого VPS.
+
+```bash
+# 1. Node.js 20 (если ещё не стоит)
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt-get install -y nodejs nginx
+
+# 2. Код воркера
+git clone https://github.com/alefcom1/techperevod.git ~/techperevod-worker-src
+cd ~/techperevod-worker-src/deploy/techperevod-worker
+npm install
+
+# 3. Секреты — ТОЛЬКО в .env.local (в .gitignore, деплой/git pull его не тронет)
+cat > .env.local <<'EOF'
+PROXY_SECRET=<openssl rand -hex 32>
+ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...          # если используете GPT
+DEEPL_API_KEY=...              # если используете DeepL
+YANDEX_API_KEY=...             # если используете Yandex Translate
+ALLOWED_ORIGINS=https://techperevod.com,https://www.techperevod.com
+PORT=8787
+EOF
+
+# 4. Процесс через pm2 (npm i -g pm2, если ещё не стоит)
+pm2 start npm --name techperevod-worker -- start
+pm2 save
+```
+
+Дальше — nginx как reverse proxy с TLS (certbot) с `proxy.techperevod.com`
+на `127.0.0.1:8787`, аналогично тому, как уже настроен сам сайт на своём
+VPS (см. `docs/deploy.md` в корне репозитория). После настройки DNS и
+сертификата — обновить на сайте `ANTHROPIC_BASE_URL=https://proxy.techperevod.com/api`
+и `ANTHROPIC_AUTH_TOKEN=<тот же PROXY_SECRET>` в `.env.local` сайта, затем
+`pm2 restart techperevod --update-env`.
+
+Обновление после `git push` в `main`: `git pull && npm install && pm2 restart techperevod-worker`
+(без build-шага — это не Next.js, просто голый JS).
 
 ## Проверка
 

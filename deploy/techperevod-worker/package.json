@@ -2,6 +2,9 @@
   "name": "techperevod",
   "private": true,
   "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env.local server.js"
+  },
   "dependencies": {
     "undici": "^6.19.8"
   }
