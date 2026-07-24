@@ -44,16 +44,25 @@ export const NAV_LINKS: NavItem[] = [
     ],
   },
   {
-    label: "Услуги",
+    label: "Документы",
     dropdown: [
-      { label: "Перевод китайской документации", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
-      { label: "Перевод инструкций", href: "/uslugi/perevod-instrukcij" },
-      { label: "Перевод чертежей", href: "/uslugi/perevod-chertezhej" },
+      { label: "Китайская документация", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
+      { label: "Инструкции и руководства", href: "/uslugi/perevod-instrukcij" },
+      { label: "Чертежи DWG/DXF", href: "/uslugi/perevod-chertezhej" },
       { label: "Паспорта безопасности", href: "/uslugi/perevod-pasportov-bezopasnosti" },
-      { label: "Перевод патентов", href: "/uslugi/perevod-patentov" },
+      { label: "Патенты", href: "/uslugi/perevod-patentov" },
       { label: "Локализация ПО", href: "/uslugi/lokalizaciya-po" },
-      { label: "Языковые пары", href: "/perevod" },
-      { label: "Все услуги →", href: "/uslugi" },
+      { label: "Все документы →", href: "/uslugi" },
+    ],
+  },
+  {
+    label: "Языки",
+    dropdown: [
+      { label: "С английского", href: "/perevod/s-anglijskogo" },
+      { label: "На английский", href: "/perevod/na-anglijskij" },
+      { label: "С немецкого", href: "/perevod/s-nemeckogo" },
+      { label: "С китайского", href: "/perevod/s-kitajskogo" },
+      { label: "Все языки →", href: "/perevod" },
     ],
   },
   {
@@ -66,6 +75,14 @@ export const NAV_LINKS: NavItem[] = [
       { label: "Строительство", href: "/otrasli/stroitelstvo" },
       { label: "Автопром и транспорт", href: "/otrasli/avtoprom" },
       { label: "Все отрасли →", href: "/otrasli" },
+    ],
+  },
+  {
+    label: "Задачи",
+    dropdown: [
+      { label: "Сертификация в ЕАЭС", href: "/zadachi/sertifikaciya-v-eaes" },
+      { label: "Выход на экспорт", href: "/zadachi/eksport-dokumentacii" },
+      { label: "Все задачи →", href: "/zadachi" },
     ],
   },
   { label: "Тарифы", href: "/tarify" },

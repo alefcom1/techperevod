@@ -4,6 +4,7 @@ import { SERVICES } from "@/data/services";
 import { LANGUAGES } from "@/data/languages";
 import { POSTS } from "@/data/posts";
 import { DICTIONARIES } from "@/data/dictionary";
+import { USECASES } from "@/data/usecases";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -17,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/product/api",
     "/product/localization",
     "/uslugi",
+    "/zadachi",
     "/otrasli",
     "/perevod",
     "/slovar",
@@ -60,6 +62,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  const usecaseRoutes = USECASES.map((u) => ({
+    url: `${SITE_URL}/zadachi/${u.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const dictionaryRoutes = DICTIONARIES.map((d) => ({
     url: `${SITE_URL}/slovar/${d.slug}`,
     changeFrequency: "monthly" as const,
@@ -71,6 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...industryRoutes,
     ...serviceRoutes,
     ...languageRoutes,
+    ...usecaseRoutes,
     ...postRoutes,
     ...dictionaryRoutes,
   ];
