@@ -44,7 +44,7 @@ export function PrimeryPerevodovBody() {
         icon={<Icon name="file-text" size={26} />}
         title="Примеры переводов"
         subtitle="Исходный текст и перевод рядом — по техническому, юридическому, медицинскому и IT-переводу. Данные обезличены, но формулировки и терминология — те же, что в реальных проектах."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Обсудить свой документ"
       />
 
@@ -130,7 +130,7 @@ export function PrimeryPerevodovBody() {
                   объём.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Обсудить проект
               </Button>
             </Card>

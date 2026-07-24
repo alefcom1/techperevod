@@ -26,7 +26,7 @@ export function AboutBody() {
         }
         title="Скорость AI, точность инженера"
         subtitle="Техперевод — платформа технического перевода для инженерных, IT- и промышленных компаний. Мы соединяем AI-оркестрацию моделей с редактурой инженеров-переводчиков."
-        ctaHref="/#hero"
+        ctaHref="#zakaz"
       />
 
       <section className="tp-section">
@@ -77,7 +77,7 @@ export function AboutBody() {
                   Расскажите, что нужно перевести — пришлём оценку в течение рабочего дня.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Связаться с нами
               </Button>
             </Card>

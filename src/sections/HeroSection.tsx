@@ -23,7 +23,7 @@ export function HeroSection({
           </h1>
           <p className="tp-hero__subtitle">{subtitle}</p>
           <div className="tp-hero__ctas">
-            <Button size="lg" variant="primary" as="a" href="/kontakty" onClick={() => reachGoal("doc_cta")}>
+            <Button size="lg" variant="primary" as="a" href="#zakaz" onClick={() => reachGoal("doc_cta")}>
               Перевести документ
             </Button>
             <Button size="lg" variant="ghost" as="a" href="#translate">

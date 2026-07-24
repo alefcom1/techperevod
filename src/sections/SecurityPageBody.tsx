@@ -130,7 +130,7 @@ export function SecurityPageBody() {
         icon={<Icon name="shield-check" size={26} />}
         title="Конфиденциальность и защита данных"
         subtitle="Чертежи, патентные заявки и регистрационные досье — это не текст для публичного онлайн-переводчика. Рассказываем, как мы храним, защищаем и удаляем ваши документы и почему NDA подписывается за 2 часа, а не за две недели."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Обсудить NDA"
       />
 
@@ -315,7 +315,7 @@ export function SecurityPageBody() {
                   вопросы про хранение данных ещё до того, как вы что-либо загрузите.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Обсудить NDA
               </Button>
             </Card>

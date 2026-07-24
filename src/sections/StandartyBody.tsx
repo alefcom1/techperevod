@@ -45,7 +45,7 @@ export function StandartyBody() {
         icon={<Icon name="shield-check" size={26} />}
         title="Стандарты и нормативы перевода"
         subtitle="На что мы опираемся при переводе технической, медицинской, юридической и IT-документации — и что конкретно каждый стандарт требует от готового текста."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Спросить про конкретный стандарт"
       />
 
@@ -143,7 +143,7 @@ export function StandartyBody() {
                   подберём редактора с нужным профилем.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Обсудить проект
               </Button>
             </Card>

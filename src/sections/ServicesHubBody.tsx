@@ -83,7 +83,7 @@ export function ServicesHubBody() {
         icon={<Icon name="package-check" size={26} />}
         title="Услуги перевода технической документации"
         subtitle="Документы, чертежи, ПО и регуляторные досье — на 15+ языковых парах, с проверкой инженером-носителем профильной специальности."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Получить оценку за 2 минуты"
       />
 
@@ -210,7 +210,7 @@ export function ServicesHubBody() {
                   или нестандартный документ.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>

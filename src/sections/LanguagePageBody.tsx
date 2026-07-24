@@ -111,7 +111,7 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
         }
         title={data.heroTitle}
         subtitle={data.heroSubtitle}
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Получить оценку за 2 минуты"
       />
 
@@ -279,7 +279,7 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
                   152-ФЗ, данные храним в РФ — <Link href="/bezopasnost">NDA подписываем за 2 часа</Link>.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>

@@ -112,7 +112,7 @@ export function ServicePageBody({ data }: { data: Service }) {
         icon={<Icon name={data.iconName} size={26} />}
         title={data.heroTitle}
         subtitle={data.heroSubtitle}
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Получить оценку за 2 минуты"
       />
 
@@ -370,7 +370,7 @@ export function ServicePageBody({ data }: { data: Service }) {
                   152-ФЗ, данные храним в РФ — <Link href="/bezopasnost">NDA подписываем за 2 часа</Link>.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>

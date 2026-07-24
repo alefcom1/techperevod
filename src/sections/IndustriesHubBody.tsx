@@ -72,7 +72,7 @@ export function IndustriesHubBody() {
         icon={<Icon name="cog" size={26} />}
         title="Технический перевод по отраслям"
         subtitle="Своя терминологическая база, форматы и специалист-редактор для каждой отрасли — от нефтегаза до авиации."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Получить оценку за 2 минуты"
       />
 
@@ -161,7 +161,7 @@ export function IndustriesHubBody() {
                   оценим объём за 2 минуты.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>

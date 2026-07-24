@@ -71,7 +71,7 @@ export function DictionaryPageBody({ data }: { data: DictionaryCollection }) {
         icon={<Icon name={data.iconName} size={26} />}
         title={data.title}
         subtitle={data.subtitle}
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Получить оценку за 2 минуты"
       />
 
@@ -182,7 +182,7 @@ export function DictionaryPageBody({ data }: { data: DictionaryCollection }) {
                   дадим оценку стоимости и срока перевода.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>

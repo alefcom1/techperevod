@@ -7,6 +7,7 @@ import { Footer } from "@/components/navigation/Footer";
 import { ThemeToggle } from "@/components/navigation/ThemeToggle";
 import { BrandMark } from "@/components/navigation/BrandMark";
 import { Button } from "@/components/core/Button";
+import { OrderModalHost } from "@/components/order/OrderModal";
 import { useTheme } from "@/lib/theme";
 import {
   NAV_LINKS,
@@ -52,6 +53,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       />
 
       {children}
+
+      <OrderModalHost />
 
       <Footer
         logo={

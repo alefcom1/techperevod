@@ -46,7 +46,7 @@ export function DictionaryHubBody() {
         icon={<Icon name="database" size={26} />}
         title="Технический словарь"
         subtitle="Коллекции терминов «русский ↔ английский» по отраслям: машиностроение, нефтегаз, IT и локализация, медтехника и фарма — с пояснениями там, где перевод неочевиден."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Получить оценку за 2 минуты"
       />
 
@@ -118,7 +118,7 @@ export function DictionaryHubBody() {
                   отдельный глоссарий под ваше производство.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>

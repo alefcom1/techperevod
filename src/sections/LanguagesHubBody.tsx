@@ -78,7 +78,7 @@ export function LanguagesHubBody() {
         icon={<Icon name="globe" size={26} />}
         title="С какими языками мы работаем"
         subtitle="AI-оркестратор моделей плюс инженер-редактор для каждой языковой пары — с учётом терминологии, стандартов и грамматических особенностей конкретного языка."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Получить оценку за 2 минуты"
       />
 
@@ -194,7 +194,7 @@ export function LanguagesHubBody() {
                   Пришлите документ — скажем, работаем ли с этой парой, и оценим объём за 2 минуты.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>

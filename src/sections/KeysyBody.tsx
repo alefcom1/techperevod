@@ -42,7 +42,7 @@ export function KeysyBody() {
         icon={<Icon name="user-check" size={26} />}
         title="Компании, которые работают с нами годами"
         subtitle="От 10 до 25 лет сотрудничества — производство, тяжёлое машиностроение, строительство, сельхозтехника, юридические услуги. Ниже — лишь часть клиентов платформы, а не полный список."
-        ctaHref="/kontakty"
+        ctaHref="#zakaz"
         ctaLabel="Стать следующим кейсом"
       />
 
@@ -115,7 +115,7 @@ export function KeysyBody() {
                   долгосрочную работу.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Обсудить проект
               </Button>
             </Card>

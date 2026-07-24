@@ -73,7 +73,7 @@ export function IndustryPageBody({ data }: { data: Industry }) {
         icon={<Icon name={data.iconName} size={26} />}
         title={data.heroTitle}
         subtitle={data.heroSubtitle}
-        ctaHref="/#hero"
+        ctaHref="#zakaz"
       />
 
       {data.intro && data.intro.length > 0 ? (

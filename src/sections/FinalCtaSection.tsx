@@ -21,7 +21,7 @@ export function FinalCtaSection() {
                 Пришлите документ — оценим за 2 минуты и покажем разницу уровней на вашем тексте.
               </p>
             </div>
-            <Button size="lg" variant="primary" as="a" href="/kontakty">
+            <Button size="lg" variant="primary" as="a" href="#zakaz">
               Получить оценку
             </Button>
           </Card>

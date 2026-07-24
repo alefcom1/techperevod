@@ -19,7 +19,7 @@ export function BlogBody() {
         }
         title="Блог"
         subtitle="Об AI-оркестрации, работе с термбазой и техническом переводе по отраслям."
-        ctaHref="/#hero"
+        ctaHref="#zakaz"
       />
 
       <section className="tp-section">

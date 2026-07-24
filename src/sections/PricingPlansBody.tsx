@@ -230,7 +230,7 @@ export function PricingPlansBody({ content }: PricingPlansBodyProps) {
                   Пришлите документ — покажем разницу между уровнями на вашем тексте.
                 </p>
               </div>
-              <Button size="lg" variant="primary" as="a" href="/kontakty">
+              <Button size="lg" variant="primary" as="a" href="#zakaz">
                 Получить оценку
               </Button>
             </Card>
