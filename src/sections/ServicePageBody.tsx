@@ -14,6 +14,7 @@ import { ProductWindow } from "@/components/marketing/ProductWindow";
 import type { Service } from "@/data/services";
 import { otherServices } from "@/data/services";
 import { getIndustry } from "@/data/site";
+import { POSTS } from "@/data/posts";
 import { GENERIC_PROCESS_STEPS } from "@/data/genericSteps";
 
 const SITE_URL = "https://techperevod.com";
@@ -81,6 +82,9 @@ export function ServicePageBody({ data }: { data: Service }) {
   const industries = data.relatedIndustrySlugs
     .map((slug) => getIndustry(slug))
     .filter((i): i is NonNullable<typeof i> => Boolean(i));
+  // Обратные ссылки услуга→блог: посты, у которых эта услуга в relatedServiceSlugs.
+  // Стекает информационный трафик к продающей странице (см. docs/seo-clusters-plan.md).
+  const relatedPosts = POSTS.filter((p) => p.relatedServiceSlugs.includes(data.slug));
 
   return (
     <>
@@ -305,6 +309,29 @@ export function ServicePageBody({ data }: { data: Service }) {
                 <ScrollReveal key={ind.slug} delay={i * 70}>
                   <Link href={`/otrasli/${ind.slug}`} style={{ textDecoration: "none", display: "block" }}>
                     <IndustryCard icon={<Icon name={ind.iconName} color="var(--tp-primary)" />} name={ind.name} />
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {relatedPosts.length > 0 ? (
+        <section className="tp-section">
+          <div className="tp-section__inner">
+            <ScrollReveal>
+              <SectionHeader title="Полезные статьи" />
+            </ScrollReveal>
+            <div className="tp-industry-grid">
+              {relatedPosts.map((post, i) => (
+                <ScrollReveal key={post.slug} delay={i * 60}>
+                  <Link href={`/blog/${post.slug}`} style={{ textDecoration: "none", display: "block" }}>
+                    <Card padding="lg" style={{ height: "100%" }}>
+                      <div className="tp-value-card__title" style={{ fontSize: 17 }}>
+                        {post.title}
+                      </div>
+                    </Card>
                   </Link>
                 </ScrollReveal>
               ))}

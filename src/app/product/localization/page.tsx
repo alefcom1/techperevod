@@ -10,11 +10,11 @@ import { ScrollReveal } from "@/components/core/ScrollReveal";
 import { Button } from "@/components/core/Button";
 
 export const metadata: Metadata = {
-  title: "Локализация сайта на лету — виджет перевода | Техперевод.com",
+  title: "Виджет перевода сайта на лету",
   description:
     "JS-виджет переводит ваш сайт на лету, без переделки кода: вставьте один тег script, выберите языки — посетители увидят перевод сразу. PoC, открытая демонстрация.",
   alternates: { canonical: "/product/localization" },
-  openGraph: { title: "Локализация сайта на лету | Техперевод.com", url: "/product/localization", type: "website" },
+  openGraph: { title: "Виджет перевода сайта на лету | Техперевод.com", url: "/product/localization", type: "website" },
 };
 
 const POINTS = [
