@@ -10,10 +10,43 @@ export interface NavDropdownItem {
   href: string;
 }
 
+export interface NavMegaItem {
+  label: string;
+  href: string;
+  iconName?: string;
+  flag?: string;
+}
+
+export interface NavMegaSection {
+  key: string;
+  railLabel: string;
+  panelTitle: string;
+  seeAllHref: string;
+  seeAllLabel: string;
+  items: NavMegaItem[];
+}
+
 export interface NavLink {
   label: string;
   href?: string;
   dropdown?: NavDropdownItem[];
+  mega?: NavMegaSection[];
+}
+
+/** Ячейка мегаменю: флаг-эмодзи для языков, иконка из реестра — для остального. */
+function MegaGlyph({ item }: { item: NavMegaItem }) {
+  if (item.flag) {
+    return (
+      <span className="tp-mega__flag" aria-hidden="true">
+        {item.flag}
+      </span>
+    );
+  }
+  return (
+    <span className="tp-mega__ico" aria-hidden="true">
+      <Icon name={item.iconName || "file-text"} size={18} />
+    </span>
+  );
 }
 
 export interface NavBarProps {
@@ -50,6 +83,7 @@ function SmartLink({ href, className, onClick, children }: { href: string; class
 export function NavBar({ logo, links = [], cta, right, className = "" }: NavBarProps) {
   const [scrolled, setScrolled] = React.useState(false);
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
+  const [megaSection, setMegaSection] = React.useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
   const navRef = React.useRef<HTMLElement>(null);
@@ -97,6 +131,10 @@ export function NavBar({ logo, links = [], cta, right, className = "" }: NavBarP
     return () => document.removeEventListener("keydown", onKey);
   }, [mobileOpen]);
 
+  // Открытая мегапанель (пункт «Решения») и её активное измерение.
+  const openMega = links.find((l) => l.label === openDropdown && l.mega)?.mega;
+  const activeSection = openMega ? openMega.find((s) => s.key === megaSection) ?? openMega[0] : null;
+
   return (
     <header ref={navRef} className={["tp-nav", scrolled ? "tp-nav--scrolled" : "", className].filter(Boolean).join(" ")}>
       <div className="tp-nav__inner">
@@ -104,19 +142,23 @@ export function NavBar({ logo, links = [], cta, right, className = "" }: NavBarP
 
         <nav className="tp-nav__links">
           {links.map((l) =>
-            l.dropdown ? (
+            l.dropdown || l.mega ? (
               <div className="tp-nav__item" key={l.label}>
                 <button
                   type="button"
                   className={["tp-nav__link", "tp-nav__trigger", openDropdown === l.label ? "tp-nav__trigger--open" : ""].filter(Boolean).join(" ")}
                   aria-haspopup="true"
                   aria-expanded={openDropdown === l.label}
-                  onClick={() => setOpenDropdown(openDropdown === l.label ? null : l.label)}
+                  onClick={() => {
+                    const willOpen = openDropdown !== l.label;
+                    setOpenDropdown(willOpen ? l.label : null);
+                    if (willOpen && l.mega) setMegaSection(l.mega[0].key);
+                  }}
                 >
                   {l.label}
                   <Icon name="chevron-down" size={15} />
                 </button>
-                {openDropdown === l.label ? (
+                {openDropdown === l.label && l.dropdown ? (
                   <div className="tp-nav__dropdown">
                     {l.dropdown.map((d) => (
                       <SmartLink key={d.label} href={d.href} className="tp-nav__dropdown-link" onClick={() => setOpenDropdown(null)}>
@@ -151,36 +193,114 @@ export function NavBar({ logo, links = [], cta, right, className = "" }: NavBarP
         </div>
       </div>
 
-      {mobileOpen ? (
-        <div className="tp-nav__drawer">
-          {links.map((l) =>
-            l.dropdown ? (
-              <div className="tp-nav__accordion" key={l.label}>
+      {openMega && activeSection ? (
+        <div className="tp-nav__mega-wrap">
+          <div className="tp-mega" role="region" aria-label="Решения">
+            <div className="tp-mega__rail">
+              {openMega.map((s) => (
                 <button
                   type="button"
-                  className="tp-nav__accordion-trigger"
-                  aria-expanded={openAccordion === l.label}
-                  onClick={() => setOpenAccordion(openAccordion === l.label ? null : l.label)}
+                  key={s.key}
+                  className={["tp-mega__rail-item", activeSection.key === s.key ? "tp-mega__rail-item--active" : ""].filter(Boolean).join(" ")}
+                  onMouseEnter={() => setMegaSection(s.key)}
+                  onFocus={() => setMegaSection(s.key)}
+                  onClick={() => setMegaSection(s.key)}
                 >
-                  {l.label}
-                  <Icon name="chevron-down" size={16} className={openAccordion === l.label ? "tp-nav__accordion-chevron--open" : ""} />
+                  <span>{s.railLabel}</span>
+                  <Icon name="arrow-right" size={15} />
                 </button>
-                {openAccordion === l.label ? (
-                  <div className="tp-nav__accordion-panel">
-                    {l.dropdown.map((d) => (
-                      <SmartLink key={d.label} href={d.href} className="tp-nav__drawer-link" onClick={() => setMobileOpen(false)}>
-                        {d.label}
-                      </SmartLink>
-                    ))}
-                  </div>
-                ) : null}
+              ))}
+            </div>
+            <div className="tp-mega__panel">
+              <div className="tp-mega__panel-title">{activeSection.panelTitle}</div>
+              <div className="tp-mega__grid">
+                {activeSection.items.map((it) => (
+                  <SmartLink key={it.href} href={it.href} className="tp-mega__link" onClick={() => setOpenDropdown(null)}>
+                    <MegaGlyph item={it} />
+                    <span className="tp-mega__link-label">{it.label}</span>
+                  </SmartLink>
+                ))}
               </div>
-            ) : (
+              <div className="tp-mega__foot">
+                <SmartLink href={activeSection.seeAllHref} className="tp-mega__seeall" onClick={() => setOpenDropdown(null)}>
+                  {activeSection.seeAllLabel}
+                </SmartLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {mobileOpen ? (
+        <div className="tp-nav__drawer">
+          {links.map((l) => {
+            if (l.mega) {
+              return (
+                <div className="tp-nav__accordion" key={l.label}>
+                  <button
+                    type="button"
+                    className="tp-nav__accordion-trigger"
+                    aria-expanded={openAccordion === l.label}
+                    onClick={() => setOpenAccordion(openAccordion === l.label ? null : l.label)}
+                  >
+                    {l.label}
+                    <Icon name="chevron-down" size={16} className={openAccordion === l.label ? "tp-nav__accordion-chevron--open" : ""} />
+                  </button>
+                  {openAccordion === l.label ? (
+                    <div className="tp-nav__accordion-panel">
+                      {l.mega.map((s) => (
+                        <div className="tp-nav__mega-m-group" key={s.key}>
+                          <div className="tp-nav__mega-m-title">{s.railLabel}</div>
+                          {s.items.map((it) => (
+                            <SmartLink key={it.href} href={it.href} className="tp-nav__drawer-link tp-nav__drawer-link--sub" onClick={() => setMobileOpen(false)}>
+                              {it.flag ? (
+                                <span className="tp-mega__flag" aria-hidden="true">
+                                  {it.flag}
+                                </span>
+                              ) : null}
+                              {it.label}
+                            </SmartLink>
+                          ))}
+                          <SmartLink href={s.seeAllHref} className="tp-nav__drawer-link tp-nav__mega-m-seeall" onClick={() => setMobileOpen(false)}>
+                            {s.seeAllLabel}
+                          </SmartLink>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            }
+            if (l.dropdown) {
+              return (
+                <div className="tp-nav__accordion" key={l.label}>
+                  <button
+                    type="button"
+                    className="tp-nav__accordion-trigger"
+                    aria-expanded={openAccordion === l.label}
+                    onClick={() => setOpenAccordion(openAccordion === l.label ? null : l.label)}
+                  >
+                    {l.label}
+                    <Icon name="chevron-down" size={16} className={openAccordion === l.label ? "tp-nav__accordion-chevron--open" : ""} />
+                  </button>
+                  {openAccordion === l.label ? (
+                    <div className="tp-nav__accordion-panel">
+                      {l.dropdown.map((d) => (
+                        <SmartLink key={d.label} href={d.href} className="tp-nav__drawer-link" onClick={() => setMobileOpen(false)}>
+                          {d.label}
+                        </SmartLink>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            }
+            return (
               <SmartLink key={l.label} href={l.href || "#"} className="tp-nav__drawer-link tp-nav__drawer-link--top" onClick={() => setMobileOpen(false)}>
                 {l.label}
               </SmartLink>
-            )
-          )}
+            );
+          })}
           <div className="tp-nav__drawer-actions">
             {right}
             {cta}

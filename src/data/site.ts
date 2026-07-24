@@ -24,13 +24,36 @@ export interface NavDropdownItem {
   href: string;
 }
 
+/** Одна ссылка в сетке мегаменю: иконка (из реестра Icon) ИЛИ флаг-эмодзи. */
+export interface NavMegaItem {
+  label: string;
+  href: string;
+  iconName?: string;
+  flag?: string;
+}
+
+/** Одно измерение мегаменю: пункт левого рельса + правая сетка ссылок. */
+export interface NavMegaSection {
+  key: string;
+  railLabel: string;
+  panelTitle: string;
+  seeAllHref: string;
+  seeAllLabel: string;
+  items: NavMegaItem[];
+}
+
 export interface NavItem {
   label: string;
   href?: string;
   dropdown?: NavDropdownItem[];
+  mega?: NavMegaSection[];
 }
 
-/** 5 top-level items — 4 grouped as dropdowns, «Тарифы» direct (конверсионная страница). */
+/**
+ * Верхнее меню: Продукт · Решения (мегапанель по 4 измерениям) · Тарифы ·
+ * Компания. «Решения» раскрывает мегаменю с левым рельсом (язык / документ /
+ * задача / отрасль) и правой сеткой ссылок с иконками — см. NavBar.
+ */
 export const NAV_LINKS: NavItem[] = [
   {
     label: "Продукт",
@@ -44,53 +67,91 @@ export const NAV_LINKS: NavItem[] = [
     ],
   },
   {
-    label: "Документы",
-    dropdown: [
-      { label: "Китайская документация", href: "/uslugi/perevod-kitajskogo-oborudovaniya" },
-      { label: "Инструкции и руководства", href: "/uslugi/perevod-instrukcij" },
-      { label: "Чертежи DWG/DXF", href: "/uslugi/perevod-chertezhej" },
-      { label: "Паспорта безопасности", href: "/uslugi/perevod-pasportov-bezopasnosti" },
-      { label: "Патенты", href: "/uslugi/perevod-patentov" },
-      { label: "Локализация ПО", href: "/uslugi/lokalizaciya-po" },
-      { label: "Все документы →", href: "/uslugi" },
-    ],
-  },
-  {
-    label: "Языки",
-    dropdown: [
-      { label: "С английского", href: "/perevod/s-anglijskogo" },
-      { label: "На английский", href: "/perevod/na-anglijskij" },
-      { label: "С немецкого", href: "/perevod/s-nemeckogo" },
-      { label: "С китайского", href: "/perevod/s-kitajskogo" },
-      { label: "С итальянского", href: "/perevod/s-italyanskogo" },
-      { label: "С японского", href: "/perevod/s-yaponskogo" },
-      { label: "С корейского", href: "/perevod/s-korejskogo" },
-      { label: "С турецкого", href: "/perevod/s-tureckogo" },
-      { label: "Все языки →", href: "/perevod" },
-    ],
-  },
-  {
-    label: "Отрасли",
-    dropdown: [
-      { label: "IT и SaaS", href: "/otrasli/it-saas" },
-      { label: "Нефтегаз", href: "/otrasli/neftegaz" },
-      { label: "Машиностроение", href: "/otrasli/mashinostroenie" },
-      { label: "Медтех и фарма", href: "/otrasli/medteh" },
-      { label: "Строительство", href: "/otrasli/stroitelstvo" },
-      { label: "Автопром и транспорт", href: "/otrasli/avtoprom" },
-      { label: "Все отрасли →", href: "/otrasli" },
-    ],
-  },
-  {
-    label: "Задачи",
-    dropdown: [
-      { label: "Сертификация в ЕАЭС", href: "/zadachi/sertifikaciya-v-eaes" },
-      { label: "Выход на экспорт", href: "/zadachi/eksport-dokumentacii" },
-      { label: "Патентование за рубежом", href: "/zadachi/patentovanie-za-rubezhom" },
-      { label: "Международный тендер", href: "/zadachi/mezhdunarodnyj-tender" },
-      { label: "Запуск китайской линии", href: "/zadachi/zapusk-kitajskogo-oborudovaniya" },
-      { label: "Регистрация медизделий", href: "/zadachi/registraciya-medizdelij" },
-      { label: "Все задачи →", href: "/zadachi" },
+    label: "Решения",
+    mega: [
+      {
+        key: "language",
+        railLabel: "По языку",
+        panelTitle: "Языки",
+        seeAllHref: "/perevod",
+        seeAllLabel: "Все языки →",
+        items: [
+          { label: "С английского", href: "/perevod/s-anglijskogo", flag: "🇬🇧" },
+          { label: "На английский", href: "/perevod/na-anglijskij", flag: "🇬🇧" },
+          { label: "С немецкого", href: "/perevod/s-nemeckogo", flag: "🇩🇪" },
+          { label: "С французского", href: "/perevod/s-francuzskogo", flag: "🇫🇷" },
+          { label: "С испанского", href: "/perevod/s-ispanskogo", flag: "🇪🇸" },
+          { label: "С итальянского", href: "/perevod/s-italyanskogo", flag: "🇮🇹" },
+          { label: "С китайского", href: "/perevod/s-kitajskogo", flag: "🇨🇳" },
+          { label: "На китайский", href: "/perevod/na-kitajskij", flag: "🇨🇳" },
+          { label: "С японского", href: "/perevod/s-yaponskogo", flag: "🇯🇵" },
+          { label: "С корейского", href: "/perevod/s-korejskogo", flag: "🇰🇷" },
+          { label: "С турецкого", href: "/perevod/s-tureckogo", flag: "🇹🇷" },
+          { label: "С польского", href: "/perevod/s-polskogo", flag: "🇵🇱" },
+          { label: "С чешского", href: "/perevod/s-cheshskogo", flag: "🇨🇿" },
+          { label: "С португальского", href: "/perevod/s-portugalskogo", flag: "🇵🇹" },
+          { label: "С арабского", href: "/perevod/s-arabskogo", flag: "🇸🇦" },
+          { label: "С казахского", href: "/perevod/s-kazahskogo", flag: "🇰🇿" },
+          { label: "С украинского", href: "/perevod/s-ukrainskogo", flag: "🇺🇦" },
+          { label: "С иврита", href: "/perevod/s-ivrita", flag: "🇮🇱" },
+        ],
+      },
+      {
+        key: "document",
+        railLabel: "По документу",
+        panelTitle: "Документы",
+        seeAllHref: "/uslugi",
+        seeAllLabel: "Все документы →",
+        items: [
+          { label: "Китайское оборудование", href: "/uslugi/perevod-kitajskogo-oborudovaniya", iconName: "cog" },
+          { label: "Инструкции и руководства", href: "/uslugi/perevod-instrukcij", iconName: "file-text" },
+          { label: "Чертежи DWG / DXF", href: "/uslugi/perevod-chertezhej", iconName: "gauge" },
+          { label: "Паспорта безопасности", href: "/uslugi/perevod-pasportov-bezopasnosti", iconName: "flask-conical" },
+          { label: "Патенты", href: "/uslugi/perevod-patentov", iconName: "scale" },
+          { label: "Локализация ПО", href: "/uslugi/lokalizaciya-po", iconName: "cpu" },
+          { label: "ТУ и спецификации", href: "/uslugi/perevod-tu-i-specifikacij", iconName: "file-text" },
+          { label: "Регламенты ТО", href: "/uslugi/perevod-reglamentov-to", iconName: "wrench" },
+          { label: "Каталоги запчастей", href: "/uslugi/perevod-katalogov-zapchastej", iconName: "package-check" },
+          { label: "Сертификаты соответствия", href: "/uslugi/perevod-sertifikatov", iconName: "shield-check" },
+          { label: "Нормативная документация", href: "/uslugi/perevod-normativnoj-dokumentacii", iconName: "database" },
+          { label: "Тендерная документация", href: "/uslugi/perevod-tendernoj-dokumentacii", iconName: "send" },
+        ],
+      },
+      {
+        key: "usecase",
+        railLabel: "По задаче",
+        panelTitle: "Задачи",
+        seeAllHref: "/zadachi",
+        seeAllLabel: "Все задачи →",
+        items: [
+          { label: "Сертификация в ЕАЭС", href: "/zadachi/sertifikaciya-v-eaes", iconName: "shield-check" },
+          { label: "Выход на экспорт", href: "/zadachi/eksport-dokumentacii", iconName: "globe" },
+          { label: "Патентование за рубежом", href: "/zadachi/patentovanie-za-rubezhom", iconName: "scale" },
+          { label: "Международный тендер", href: "/zadachi/mezhdunarodnyj-tender", iconName: "send" },
+          { label: "Запуск китайской линии", href: "/zadachi/zapusk-kitajskogo-oborudovaniya", iconName: "cog" },
+          { label: "Регистрация медизделий", href: "/zadachi/registraciya-medizdelij", iconName: "pill" },
+        ],
+      },
+      {
+        key: "industry",
+        railLabel: "По отрасли",
+        panelTitle: "Отрасли",
+        seeAllHref: "/otrasli",
+        seeAllLabel: "Все отрасли →",
+        items: [
+          { label: "IT и SaaS", href: "/otrasli/it-saas", iconName: "cpu" },
+          { label: "Нефтегаз и энергетика", href: "/otrasli/neftegaz", iconName: "flame" },
+          { label: "Машиностроение", href: "/otrasli/mashinostroenie", iconName: "cog" },
+          { label: "Медтех и фарма", href: "/otrasli/medteh", iconName: "pill" },
+          { label: "Энергетика и электротехника", href: "/otrasli/energetika", iconName: "plug-zap" },
+          { label: "Строительство", href: "/otrasli/stroitelstvo", iconName: "file-text" },
+          { label: "Химпром", href: "/otrasli/himprom", iconName: "flask-conical" },
+          { label: "Автопром и транспорт", href: "/otrasli/avtoprom", iconName: "car" },
+          { label: "Металлургия", href: "/otrasli/metallurgiya", iconName: "gauge" },
+          { label: "Авиация и космос", href: "/otrasli/aviatsiya", iconName: "plane" },
+          { label: "Сельское хозяйство", href: "/otrasli/selskoe-hozyaystvo", iconName: "sprout" },
+        ],
+      },
     ],
   },
   { label: "Тарифы", href: "/tarify" },
