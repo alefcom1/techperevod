@@ -26,7 +26,9 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   gap: var(--tp-space-3);
-  align-items: stretch;
+  /* start, а не stretch: панели не равняются принудительно по высоте, чтобы
+     ручной resize / авторост одной панели не растягивал другую. */
+  align-items: start;
 }
 .tp-translator__pane {
   display: flex;
@@ -76,7 +78,11 @@
 }
 /* Большие панели «как у DeepL»: авторост по контенту + ручной resize */
 .tp-translator__text {
-  flex: 1;
+  /* Без flex:1 — иначе flexbox сам управляет высотой и затирает высоту,
+     заданную нативным resize. Высоту ведёт min-height + авторост (JS) +
+     ручной resize. */
+  display: block;
+  width: 100%;
   min-height: 220px;
   resize: vertical;
   overflow: hidden;

@@ -41,6 +41,9 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
   const [rating, setRating] = React.useState<"up" | "down" | null>(null);
 
   const sourceRef = React.useRef<HTMLTextAreaElement>(null);
+  // true, когда пользователь потянул за resize-грип — тогда авторост отключаем
+  // и высоту держит заданная руками (иначе эффект ниже её затирает).
+  const manualResizeRef = React.useRef(false);
   const abortRef = React.useRef<AbortController | null>(null);
   // ключ «текст+пара» последнего отправленного запроса — не дублируем запросы
   const lastKeyRef = React.useRef<string>("");
@@ -78,10 +81,11 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
     }
   }, [source, target]);
 
-  // Автовысота textarea: растёт вместе с текстом, ручной resize тоже доступен
+  // Автовысота textarea: растёт вместе с текстом. Если пользователь потянул
+  // за resize-грип (manualResizeRef) — не трогаем высоту, отдаём управление ему.
   React.useEffect(() => {
     const el = sourceRef.current;
-    if (!el) return;
+    if (!el || manualResizeRef.current) return;
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
   }, [text]);
@@ -176,7 +180,14 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
     setError(null);
     setRating(null);
     setLoading(false);
-    sourceRef.current?.focus();
+    // Сброс к автовысоте: очистка возвращает поле в исходное состояние
+    manualResizeRef.current = false;
+    const el = sourceRef.current;
+    if (el) {
+      el.style.overflowY = "";
+      el.style.height = "auto";
+    }
+    el?.focus();
   }
 
   async function copyResult() {
@@ -316,6 +327,16 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
                 maxLength={MAX_CHARS}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onPointerDown={(e) => {
+                  // Клик в правый-нижний угол (~20px) — это resize-грип: включаем
+                  // ручной режим высоты и разрешаем прокрутку контента.
+                  const el = e.currentTarget;
+                  const r = el.getBoundingClientRect();
+                  if (e.clientX >= r.right - 20 && e.clientY >= r.bottom - 20) {
+                    manualResizeRef.current = true;
+                    el.style.overflowY = "auto";
+                  }
+                }}
               />
             </div>
 
