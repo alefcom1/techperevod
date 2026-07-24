@@ -14,6 +14,7 @@ import { Button } from "@/components/core/Button";
 import type { Industry } from "@/data/site";
 import { otherIndustries } from "@/data/site";
 import { SERVICES } from "@/data/services";
+import { SamplesSection } from "@/sections/SamplesSection";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -156,6 +157,8 @@ export function IndustryPageBody({ data }: { data: Industry }) {
           </div>
         </div>
       </section>
+
+      <SamplesSection slug={data.slug} />
 
       <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">

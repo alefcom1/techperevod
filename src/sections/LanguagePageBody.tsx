@@ -6,6 +6,7 @@ import { Card } from "@/components/core/Card";
 import { IndustryCard } from "@/components/marketing/IndustryCard";
 import { FormatChip } from "@/components/marketing/FormatChip";
 import { ScrollReveal } from "@/components/core/ScrollReveal";
+import { SamplesSection } from "@/sections/SamplesSection";
 import { Icon } from "@/components/core/Icon";
 import { Button } from "@/components/core/Button";
 import { StackedSteps } from "@/components/marketing/StackedSteps";
@@ -181,6 +182,8 @@ export function LanguagePageBody({ data }: { data: LanguagePage }) {
           />
         </div>
       </section>
+
+      <SamplesSection slug={data.slug} />
 
       <section className="tp-section tp-section--tint">
         <div className="tp-section__inner">

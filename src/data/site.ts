@@ -82,6 +82,10 @@ export const NAV_LINKS: NavItem[] = [
     dropdown: [
       { label: "Сертификация в ЕАЭС", href: "/zadachi/sertifikaciya-v-eaes" },
       { label: "Выход на экспорт", href: "/zadachi/eksport-dokumentacii" },
+      { label: "Патентование за рубежом", href: "/zadachi/patentovanie-za-rubezhom" },
+      { label: "Международный тендер", href: "/zadachi/mezhdunarodnyj-tender" },
+      { label: "Запуск китайской линии", href: "/zadachi/zapusk-kitajskogo-oborudovaniya" },
+      { label: "Регистрация медизделий", href: "/zadachi/registraciya-medizdelij" },
       { label: "Все задачи →", href: "/zadachi" },
     ],
   },
