@@ -30,6 +30,19 @@ function breadcrumbJsonLd(data: Industry) {
   };
 }
 
+/** JSON-LD FAQPage — собирается на сервере, если у отрасли заполнен faq. */
+function faqJsonLd(data: Industry) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: (data.faq ?? []).map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
 /**
  * Shared content for every /otrasli/* industry page. Takes a plain Industry
  * object so the four pages stay thin and only differ in content.
@@ -44,6 +57,12 @@ export function IndustryPageBody({ data }: { data: Industry }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(data)) }}
       />
+      {data.faq && data.faq.length > 0 ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(data)) }}
+        />
+      ) : null}
 
       <PageHero
         breadcrumb={
@@ -56,6 +75,20 @@ export function IndustryPageBody({ data }: { data: Industry }) {
         subtitle={data.heroSubtitle}
         ctaHref="/#hero"
       />
+
+      {data.intro && data.intro.length > 0 ? (
+        <section className="tp-section">
+          <div className="tp-section__inner">
+            <ScrollReveal>
+              <div className="tp-service-intro">
+                {data.intro.map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      ) : null}
 
       <section className="tp-section">
         <div className="tp-section__inner">
@@ -159,6 +192,29 @@ export function IndustryPageBody({ data }: { data: Industry }) {
           </div>
         </div>
       </section>
+
+      {data.faq && data.faq.length > 0 ? (
+        <section className="tp-section tp-section--tint">
+          <div className="tp-section__inner">
+            <ScrollReveal>
+              <SectionHeader title="Частые вопросы" />
+            </ScrollReveal>
+            <div className="tp-faq">
+              {data.faq.map((item, i) => (
+                <ScrollReveal key={item.q} delay={i * 50} as="div">
+                  <details className="tp-faq__item">
+                    <summary className="tp-faq__q">
+                      <span>{item.q}</span>
+                      <Icon name="arrow-right" size={18} className="tp-faq__chevron" />
+                    </summary>
+                    <p className="tp-faq__a">{item.a}</p>
+                  </details>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {relatedServices.length ? (
         <section className="tp-section">
