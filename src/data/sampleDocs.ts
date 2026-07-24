@@ -32,6 +32,14 @@ export const SAMPLE_DOCS: SampleDoc[] = [
   { file: "/samples/katalog-produkcii-ru-pt.pdf", docLabel: "Каталог продукции", pairLabel: "RU → PT", targetLang: "pt", targetLangName: "португальский" },
   { file: "/samples/pasport-izdeliya-ru-pl.pdf", docLabel: "Паспорт изделия", pairLabel: "RU → PL", targetLang: "pl", targetLangName: "польский" },
   { file: "/samples/shema-elektricheskaya-ru-cs.pdf", docLabel: "Электрическая схема", pairLabel: "RU → CS", targetLang: "cs", targetLangName: "чешский" },
+  { file: "/samples/protokol-ispytanij-ru-kk.pdf", docLabel: "Протокол испытаний", pairLabel: "RU → KK", targetLang: "kk", targetLangName: "казахский" },
+  { file: "/samples/sertifikat-ru-uz.pdf", docLabel: "Сертификат соответствия", pairLabel: "RU → UZ", targetLang: "uz", targetLangName: "узбекский" },
+  { file: "/samples/pasport-bezopasnosti-ru-az.pdf", docLabel: "Паспорт безопасности (SDS)", pairLabel: "RU → AZ", targetLang: "az", targetLangName: "азербайджанский" },
+  { file: "/samples/rukovodstvo-eks-ru-hy.pdf", docLabel: "Руководство по эксплуатации", pairLabel: "RU → HY", targetLang: "hy", targetLangName: "армянский" },
+  { file: "/samples/tu-specifikaciya-ru-vi.pdf", docLabel: "ТУ / спецификация", pairLabel: "RU → VI", targetLang: "vi", targetLangName: "вьетнамский" },
+  { file: "/samples/instrukciya-medizdelie-ru-he.pdf", docLabel: "Инструкция к медизделию", pairLabel: "RU → HE", targetLang: "he", targetLangName: "иврит" },
+  { file: "/samples/listok-vkladysh-ru-hi.pdf", docLabel: "Листок-вкладыш к препарату", pairLabel: "RU → HI", targetLang: "hi", targetLangName: "хинди" },
+  { file: "/samples/kommercheskoe-predlozhenie-ru-zh.pdf", docLabel: "Коммерческое предложение", pairLabel: "RU → ZH", targetLang: "zh", targetLangName: "китайский" },
 ];
 
 /**

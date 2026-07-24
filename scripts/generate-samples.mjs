@@ -152,6 +152,9 @@ function generateOne(sample) {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 let count = 0;
 for (const sample of SAMPLE_DOCS) {
+  // Образцы для письменностей с RTL/сложным шейпингом (иврит, деванагари) и
+  // CJK верстаются отдельным Chromium-генератором — здесь их пропускаем.
+  if (sample.renderer === "chromium") continue;
   const file = generateOne(sample);
   count++;
   console.log(`✓ ${path.relative(ROOT, file)}`);
