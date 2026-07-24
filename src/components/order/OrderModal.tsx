@@ -135,6 +135,10 @@ export function OrderModal({ open, onClose }: { open: boolean; onClose: () => vo
     try {
       const fd = new FormData(e.currentTarget);
       fd.append("langPair", `${capitalize(LANG_NAMES[source] ?? source)} → ${capitalize(LANG_NAMES[target] ?? target)}`);
+      // Коды языков отдельно от отображаемой строки — нужны TMS для
+      // language_pair в формате каталога (напр. "en-ru").
+      fd.append("sourceLangCode", source);
+      fd.append("targetLangCode", target);
       fd.append("urgency", urgency);
       if (baseTotal > 0) {
         fd.append("totalRub", String(total));

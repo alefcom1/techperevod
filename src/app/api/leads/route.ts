@@ -38,6 +38,8 @@ export async function POST(request: NextRequest) {
   const phone = String(form.get("phone") ?? "").trim() || null;
   const company = String(form.get("company") ?? "").trim() || null;
   const langPair = String(form.get("langPair") ?? "").trim() || null;
+  const sourceLangCode = String(form.get("sourceLangCode") ?? "").trim() || null;
+  const targetLangCode = String(form.get("targetLangCode") ?? "").trim() || null;
   const rawComment = String(form.get("comment") ?? "").trim() || null;
   const urgency = String(form.get("urgency") ?? "").trim() || null;
   const totalRub = Number(form.get("totalRub")) || null;
@@ -106,20 +108,22 @@ export async function POST(request: NextRequest) {
 
   void notifyTelegram(["<b>Новая заявка с сайта</b>", ...summaryLines].join("\n"));
   void notifyEmail(`Заявка с techperevod.com: ${name}${quotePriceRub != null ? ` — ${quotePriceRub} ₽` : ""}`, summaryLines.join("\n"), attachments);
+
+  const tmsTitle = fileSummaries.length
+    ? `Перевод документов с сайта: ${fileName}${langPair ? ` (${langPair})` : ""}`
+    : `Заявка с сайта techperevod.com${langPair ? ` (${langPair})` : ""}`;
+  // Срок к дедлайну считаем от срочности (~etaDays рабочих дней), грубо
+  // как календарные дни — TMS сам уточнит точную дату при обработке.
+  const deadline = etaDays ? new Date(Date.now() + etaDays * 24 * 60 * 60 * 1000).toISOString() : null;
   void notifyTms({
-    source: "techperevod.com",
-    name,
-    email,
-    phone,
-    company,
-    langPair,
-    urgency,
-    comment: rawComment,
-    files: fileSummaries,
-    totalRub: quotePriceRub,
-    etaDays,
-    leadId: lead.id,
-    createdAt: new Date().toISOString(),
+    contactName: name,
+    contactEmail: email,
+    contactPhone: phone,
+    title: tmsTitle,
+    comment: [rawComment, company ? `Компания: ${company}` : null].filter(Boolean).join("\n") || null,
+    languagePair: sourceLangCode && targetLangCode ? `${sourceLangCode}-${targetLangCode}` : null,
+    deadline,
+    sourceRef: lead.id,
   });
 
   return NextResponse.json({ ok: true, leadId: lead.id });
