@@ -24,6 +24,14 @@ export const SAMPLE_DOCS: SampleDoc[] = [
   { file: "/samples/reglament-to-ru-pl.pdf", docLabel: "Регламент ТО", pairLabel: "RU → PL", targetLang: "pl", targetLangName: "польский" },
   { file: "/samples/sertifikat-ru-cs.pdf", docLabel: "Сертификат соответствия", pairLabel: "RU → CS", targetLang: "cs", targetLangName: "чешский" },
   { file: "/samples/rukovodstvo-po-ru-nl.pdf", docLabel: "Руководство пользователя ПО", pairLabel: "RU → NL", targetLang: "nl", targetLangName: "нидерландский" },
+  { file: "/samples/protokol-ispytanij-ru-de.pdf", docLabel: "Протокол испытаний", pairLabel: "RU → DE", targetLang: "de", targetLangName: "немецкий" },
+  { file: "/samples/obosnovanie-bezopasnosti-ru-en.pdf", docLabel: "Обоснование безопасности", pairLabel: "RU → EN", targetLang: "en", targetLangName: "английский" },
+  { file: "/samples/instrukciya-montazh-ru-it.pdf", docLabel: "Инструкция по монтажу", pairLabel: "RU → IT", targetLang: "it", targetLangName: "итальянский" },
+  { file: "/samples/etiketka-markirovka-ru-fr.pdf", docLabel: "Этикетка и маркировка", pairLabel: "RU → FR", targetLang: "fr", targetLangName: "французский" },
+  { file: "/samples/kommercheskoe-predlozhenie-ru-en.pdf", docLabel: "Коммерческое предложение", pairLabel: "RU → EN", targetLang: "en", targetLangName: "английский" },
+  { file: "/samples/katalog-produkcii-ru-pt.pdf", docLabel: "Каталог продукции", pairLabel: "RU → PT", targetLang: "pt", targetLangName: "португальский" },
+  { file: "/samples/pasport-izdeliya-ru-pl.pdf", docLabel: "Паспорт изделия", pairLabel: "RU → PL", targetLang: "pl", targetLangName: "польский" },
+  { file: "/samples/shema-elektricheskaya-ru-cs.pdf", docLabel: "Электрическая схема", pairLabel: "RU → CS", targetLang: "cs", targetLangName: "чешский" },
 ];
 
 /**

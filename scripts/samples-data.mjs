@@ -19,6 +19,7 @@ export const WATERMARK_BY_LANG = {
   pl: "WZÓR",
   cs: "VZOREK",
   nl: "VOORBEELD",
+  pt: "AMOSTRA",
 };
 
 /**
@@ -121,6 +122,18 @@ export const CERT_TEXTS = {
     ],
     signatureLabel: "Hoofd kwaliteitsborging, www.techperevod.com — handtekening",
     dateLabel: "Datum",
+  },
+  pt: {
+    title: "Certificação de exatidão da tradução",
+    subtitle: (docTitle) => `Tradução: ${docTitle} — do russo para o português`,
+    paragraphs: [
+      "Na qualidade de representante autorizado da www.techperevod.com, agência de traduções técnicas, certifico pela presente que o documento acima mencionado foi traduzido por um tradutor profissional qualificado e competente, com pleno domínio de ambas as línguas do par indicado. Tanto quanto é do nosso conhecimento, o texto traduzido reflete fielmente o conteúdo, o sentido e o estilo do texto original e constitui, em todos os aspetos, uma tradução completa e exata do documento original.",
+      "A revisão técnica da tradução foi efetuada por um engenheiro com competência específica na matéria. A terminologia foi verificada com base na base terminológica do cliente e nas normas aplicáveis.",
+      "A presente certificação refere-se exclusivamente à exatidão da tradução. Não garantimos a autenticidade nem o conteúdo do documento original. Uma cópia da tradução encontra-se anexada à presente certificação.",
+      "NOTA: o presente documento é uma AMOSTRA ilustrativa sem valor vinculativo e não um certificado emitido.",
+    ],
+    signatureLabel: "Responsável pela qualidade, www.techperevod.com — assinatura",
+    dateLabel: "Data",
   },
 };
 
@@ -317,6 +330,221 @@ export const SAMPLE_DOCS = [
         ],
       },
       { p: "Opmerking van het vertaalbureau: interface-elementen («Nieuwe taak», «Productie») komen overeen met de daadwerkelijke schermteksten van de software; plaatshouders zoals {snelheid} blijven onvertaald." },
+    ],
+  },
+  {
+    docSlug: "protokol-ispytanij",
+    sourceLang: "ru",
+    targetLang: "de",
+    docTitle: "Протокол испытаний (фрагмент)",
+    translatedTitle: "PRÜFPROTOKOLL (Auszug)",
+    sourceNote: "Übersetzung aus dem Russischen · Auszug: Prüfergebnisse · Alle Daten sind fiktiv",
+    body: [
+      {
+        rows: [
+          ["Protokoll Nr.", "TP-PI-0147/26 (fiktive Angabe)"],
+          ["Prüfgegenstand", "Kreiselpumpe TP-C 65-200 (fiktive Bezeichnung)"],
+          ["Prüfgrundlage", "GOST 6134 (Pumpen — Prüfverfahren), Werksnorm"],
+          ["Prüfstand", "Prüfstand Nr. 2, Prüflabor «Primer-Test» (fiktiv)"],
+          ["Prüfdatum", "15.01.2026 (fiktive Angabe)"],
+        ],
+      },
+      { h: "3. Prüfergebnisse" },
+      {
+        rows: [
+          ["Förderstrom Q (Nennpunkt)", "50 m³/h (Sollwert: 50 ± 2,5 m³/h) — bestanden"],
+          ["Förderhöhe H", "49,7 m (Sollwert: 50 ± 1,5 m) — bestanden"],
+          ["Wirkungsgrad η", "71,2 % (mind. 70 %) — bestanden"],
+          ["Leistungsaufnahme P", "9,4 kW (max. 9,8 kW) — bestanden"],
+          ["Schwingstärke (RMS)", "2,4 mm/s (zul. 4,5 mm/s nach ISO 10816) — bestanden"],
+          ["Dichtheitsprüfung, 1,5·PN, 10 min", "keine Leckage — bestanden"],
+        ],
+      },
+      { p: "Schlussfolgerung: Der Prüfgegenstand entspricht den Anforderungen der Prüfgrundlage. Das Erzeugnis wird zur Auslieferung freigegeben." },
+      { p: "Hinweis des Übersetzungsbüros: Messwerte, Einheiten und Protokollnummern bleiben unverändert; GOST-Normbezeichnungen werden beibehalten und bei Bedarf mit ISO-Äquivalenten ergänzt." },
+    ],
+  },
+  {
+    docSlug: "obosnovanie-bezopasnosti",
+    sourceLang: "ru",
+    targetLang: "en",
+    docTitle: "Обоснование безопасности (фрагмент)",
+    translatedTitle: "SAFETY JUSTIFICATION REPORT (extract)",
+    sourceNote: "Translated from Russian · Extract: hazard identification · All data is fictitious",
+    body: [
+      { h: "4. Hazard identification and risk assessment" },
+      { p: "The hazard analysis has been carried out for all stages of the machine life cycle: transportation, installation, commissioning, operation, maintenance and decommissioning, in accordance with TR CU 010/2011 “On safety of machinery and equipment” and GOST 33272 (safety justification of machinery)." },
+      {
+        rows: [
+          ["Hazard: rotating coupling (pos. 12)", "Risk before measures: high. Measure: fixed guard per GOST ISO 13857; interlocked with drive start. Residual risk: low."],
+          ["Hazard: hydraulic pressure 25 MPa", "Measure: relief valve set at 27 MPa; pressure test 1.25·PN at commissioning. Residual risk: low."],
+          ["Hazard: noise 84 dB(A)", "Measure: warning sign, mandatory hearing protection within 2 m zone. Residual risk: acceptable."],
+          ["Hazard: hot surface up to 95 °C", "Measure: thermal insulation and warning marking per GOST R 12.4.026. Residual risk: low."],
+        ],
+      },
+      { p: "Safe operation limits: ambient temperature +1…+40 °C; the machine shall not be operated with guards removed or safety devices bypassed. The list of critical failures and personnel actions is given in section 6 of the full document." },
+      { p: "Translator's note: the section structure follows GOST 33272; references to TR CU technical regulations are kept in their official English form (TR CU 010/2011)." },
+    ],
+  },
+  {
+    docSlug: "instrukciya-montazh",
+    sourceLang: "ru",
+    targetLang: "it",
+    docTitle: "Инструкция по монтажу (фрагмент)",
+    translatedTitle: "ISTRUZIONI DI MONTAGGIO (estratto)",
+    sourceNote: "Tradotto dal russo · Estratto: installazione e allineamento · Dati fittizi",
+    body: [
+      { h: "5. Installazione sul basamento" },
+      { p: "Posizionare il gruppo sul basamento di calcestruzzo stagionato (resistenza minima C20/25). Verificare la planarità della superficie di appoggio: scostamento massimo 0,5 mm/m. Inserire gli spessori di regolazione in acciaio accanto a ciascun bullone di fondazione." },
+      { p: "Serrare i bulloni di fondazione M20 in sequenza incrociata in due passaggi: primo passaggio 200 N·m, passaggio finale 380–420 N·m. Dopo 72 ore di funzionamento ripetere il controllo della coppia di serraggio." },
+      { h: "6. Allineamento dell'albero" },
+      {
+        rows: [
+          ["Disallineamento radiale", "max 0,05 mm"],
+          ["Disallineamento angolare", "max 0,03 mm su 100 mm"],
+          ["Distanza tra i semigiunti", "3,0 ± 0,5 mm"],
+          ["Metodo di controllo", "comparatore a quadrante o sistema laser"],
+        ],
+      },
+      { p: "AVVERTENZA: prima dell'avviamento verificare il senso di rotazione del motore con il giunto scollegato. Un senso di rotazione errato danneggia la tenuta meccanica." },
+      { p: "Nota dell'agenzia di traduzione: la numerazione delle sezioni e i valori di coppia corrispondono all'originale; le parole di segnalazione seguono la gerarchia normalizzata (AVVERTENZA/ATTENZIONE)." },
+    ],
+  },
+  {
+    docSlug: "etiketka-markirovka",
+    sourceLang: "ru",
+    targetLang: "fr",
+    docTitle: "Этикетка и маркировка продукции",
+    translatedTitle: "ÉTIQUETTE ET MARQUAGE DU PRODUIT (extrait)",
+    sourceNote: "Traduit du russe · Extrait : étiquette produit et marquage de transport · Données fictives",
+    body: [
+      { h: "Étiquette produit" },
+      {
+        rows: [
+          ["Dénomination", "Enduit anticorrosion «TP-Protect 12» (dénomination fictive)"],
+          ["Référence / lot", "TPP-12-B0426 · Lot n° 0426 (fictif)"],
+          ["Masse nette", "20 kg"],
+          ["Date de fabrication", "01/2026 (fictive) · À utiliser avant : 01/2028"],
+          ["Conditions de stockage", "de +5 à +30 °C, à l'abri du rayonnement solaire direct ; craint le gel"],
+          ["Fabricant", "OOO « Primer-Chim » (société fictive), Moscou, Russie"],
+        ],
+      },
+      { h: "Marquage de transport" },
+      { p: "Mentions de manutention selon GOST 14192 : « Craint l'humidité », « Haut », « Limite de température ». Groupe d'emballage III. Les mentions de danger et conseils de prudence (phrases H et P) figurent dans la version complète de l'étiquette selon les formulations officielles CLP." },
+      { p: "Note du bureau de traduction : les références (TPP-…), numéros de lot et dates restent inchangés ; seules les mentions textuelles sont traduites. La mise en page de l'étiquette d'origine est conservée." },
+    ],
+  },
+  {
+    docSlug: "kommercheskoe-predlozhenie",
+    sourceLang: "ru",
+    targetLang: "en",
+    docTitle: "Коммерческое предложение (фрагмент)",
+    translatedTitle: "COMMERCIAL PROPOSAL (extract)",
+    sourceNote: "Translated from Russian · Extract: scope of supply and terms · All data is fictitious",
+    body: [
+      {
+        rows: [
+          ["Proposal No.", "TP-CP-0089/26 dated 20.01.2026 (fictitious)"],
+          ["Supplier", "OOO «Primer-Mash» (fictitious company), Russia"],
+          ["Subject", "Centrifugal pump unit TP-C 65-200 with control cabinet"],
+          ["Validity", "60 calendar days from the proposal date"],
+        ],
+      },
+      { h: "1. Scope of supply and price" },
+      {
+        rows: [
+          ["Pump unit TP-C 65-200, 9.5 kW", "2 pcs. · EUR 8,400.00 / pc. (fictitious price)"],
+          ["Control cabinet with soft starter", "1 pc. · EUR 2,150.00"],
+          ["Spare parts kit for 2 years of operation", "1 set · EUR 640.00"],
+          ["Supervision of installation and commissioning", "5 working days · EUR 1,900.00"],
+          ["Total, EXW excluding VAT", "EUR 21,490.00 (fictitious)"],
+        ],
+      },
+      { h: "2. Terms" },
+      { p: "Delivery: EXW manufacturer's warehouse (Incoterms 2020); lead time 10–12 weeks from advance payment. Payment: 50 % advance, 50 % before shipment. Warranty: 24 months from commissioning, but not more than 30 months from delivery." },
+      { p: "Translator's note: prices, references and dates are kept as in the original; Incoterms clauses are not expanded or interpreted in translation." },
+    ],
+  },
+  {
+    docSlug: "katalog-produkcii",
+    sourceLang: "ru",
+    targetLang: "pt",
+    docTitle: "Каталог продукции (фрагмент)",
+    translatedTitle: "CATÁLOGO DE PRODUTOS (excerto)",
+    sourceNote: "Traduzido do russo · Excerto: bombas centrífugas série TP-C · Dados fictícios",
+    body: [
+      { h: "Série TP-C — bombas centrífugas monobloco" },
+      { p: "Bombas centrífugas horizontais para líquidos limpos e ligeiramente contaminados: abastecimento de água, sistemas de aquecimento, circuitos de arrefecimento industriais. Corpo em ferro fundido EN-GJL-250, impulsor em aço inoxidável, vedação mecânica de cartucho." },
+      {
+        rows: [
+          ["TP-C 32-125", "Q até 12,5 m³/h · H até 20 m · 1,1 kW"],
+          ["TP-C 50-160", "Q até 25 m³/h · H até 32 m · 4,0 kW"],
+          ["TP-C 65-200", "Q até 50 m³/h · H até 50 m · 9,5 kW"],
+          ["TP-C 80-250", "Q até 100 m³/h · H até 80 m · 30 kW"],
+          ["Temperatura do líquido", "-15…+110 °C"],
+          ["Pressão máxima de serviço", "16 bar (PN16)"],
+        ],
+      },
+      { p: "Opções: execução para atmosferas explosivas, aquecimento elétrico do corpo, sensores de vibração e temperatura dos rolamentos. Ligações flangeadas segundo EN 1092-2 (equivalente GOST 33259)." },
+      { p: "Nota da agência de tradução: as designações dos modelos (TP-C…) não se alteram na tradução; as unidades mantêm-se no sistema SI. As referências a normas GOST são acompanhadas dos equivalentes EN mais próximos." },
+    ],
+  },
+  {
+    docSlug: "pasport-izdeliya",
+    sourceLang: "ru",
+    targetLang: "pl",
+    docTitle: "Паспорт изделия (фрагмент)",
+    translatedTitle: "PASZPORT WYROBU (fragment)",
+    sourceNote: "Tłumaczenie z języka rosyjskiego · Fragment: dane podstawowe i gwarancja · Dane fikcyjne",
+    body: [
+      { h: "1. Dane podstawowe wyrobu" },
+      {
+        rows: [
+          ["Nazwa wyrobu", "Przekładnia zębata walcowa TP-R 250 (oznaczenie fikcyjne)"],
+          ["Numer fabryczny", "26-00147 (fikcyjny)"],
+          ["Data produkcji", "styczeń 2026 (fikcyjna)"],
+          ["Przełożenie", "i = 31,5"],
+          ["Moment nominalny na wale wyjściowym", "2 500 N·m"],
+          ["Masa", "185 kg"],
+          ["Producent", "OOO «Primer-Masz» (spółka fikcyjna), Rosja"],
+        ],
+      },
+      { h: "2. Świadectwo odbioru" },
+      { p: "Przekładnia TP-R 250 nr fabryczny 26-00147 została wyprodukowana i odebrana zgodnie z dokumentacją techniczną oraz uznana za zdatną do eksploatacji. Wyniki prób odbiorczych — protokół nr TP-PI-0147/26." },
+      { h: "3. Warunki gwarancji" },
+      { p: "Okres gwarancji wynosi 24 miesiące od daty uruchomienia, lecz nie więcej niż 30 miesięcy od daty dostawy, pod warunkiem przestrzegania zasad transportu, przechowywania, montażu i eksploatacji określonych w instrukcji obsługi. Wpisy o uruchomieniu i przeglądach należy odnotowywać w tabeli w rozdziale 5 pełnej wersji paszportu." },
+      { p: "Uwaga biura tłumaczeń: numery fabryczne i daty pozostają bez zmian; struktura rozdziałów odpowiada oryginałowi paszportu wyrobu." },
+    ],
+  },
+  {
+    docSlug: "shema-elektricheskaya",
+    sourceLang: "ru",
+    targetLang: "cs",
+    docTitle: "Схема электрическая принципиальная (пояснения)",
+    translatedTitle: "ELEKTRICKÉ SCHÉMA ZAPOJENÍ — vysvětlivky (výtah)",
+    sourceNote: "Přeloženo z ruštiny · Výtah: seznam prvků a poznámky ke schématu · Údaje jsou fiktivní",
+    body: [
+      {
+        rows: [
+          ["Označení výkresu", "TP-2026.15.00.000 E3 (fiktivní)"],
+          ["Napájecí soustava", "3× 400 V AC, 50 Hz, síť TN-S"],
+          ["Instalovaný výkon", "7,5 kW"],
+          ["Hlavní jistič QF1", "25 A, char. C, vypínací schopnost 10 kA"],
+        ],
+      },
+      { h: "Seznam prvků (výtah)" },
+      {
+        rows: [
+          ["QF1", "jistič hlavního přívodu, 25 A"],
+          ["KM1", "stykač hlavního pohonu, 18,5 kW / AC-3"],
+          ["F1–F3", "pojistky řídicího obvodu, 2 A"],
+          ["SB1 «STOP»", "tlačítko nouzového zastavení s aretací, rozpínací kontakt"],
+          ["HL1", "signálka «síť zapnuta», zelená, 230 V"],
+          ["M1", "asynchronní motor 7,5 kW, 1 450 ot/min, IE3"],
+        ],
+      },
+      { p: "Poznámky: 1. Barevné značení vodičů podle ČSN EN 60445 (ekvivalent GOST 33542). 2. Ochranné pospojování provést vodičem PE 6 mm². 3. Nouzové zastavení odpovídá kategorii stop 0 podle ČSN EN 60204-1." },
+      { p: "Poznámka překladatelské kanceláře: písmenná označení prvků (QF, KM, SB…) se v překladu nemění; překládají se pouze popisy a poznámky. Odkazy na normy GOST jsou doplněny nejbližšími ekvivalenty ČSN EN." },
     ],
   },
 ];
