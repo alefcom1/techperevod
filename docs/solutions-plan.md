@@ -100,3 +100,41 @@
 водяной знак «ПРИМЕР» на каждой странице, сертификат — от имени нашего же
 бюро (не имитация третьих лиц). Это витрина качества, аналог примеров на
 /primery-perevodov, но в «боевом» оформлении PDF.
+
+---
+
+## Этап 2 (июль 2026): языки 14 → 30, примеры → 16+
+
+### Новые 16 языковых страниц (волны агентов + моя вычитка)
+
+Выбор по реальному спросу техперевода в РФ (ЕАЭС, ВЭД, промышленность):
+
+| Волна | Слаги |
+|---|---|
+| A | s-portugalskogo (авиация/агро Бразилии), s-finskogo (энергетика, лесопром), s-shvedskogo (SKF/Atlas Copco-класс), s-vengerskogo (автопром) |
+| B | s-rumynskogo (автокомпоненты), s-bolgarskogo, s-serbskogo, s-ukrainskogo |
+| C | s-kazahskogo (ЕАЭС, добыча), s-uzbekskogo (растущий рынок), s-azerbajdzhanskogo (нефтегаз), s-armyanskogo (ЕАЭС) |
+| D | s-ivrita (медтех/IT), s-hindi (фарма/IT), s-vetnamskogo (производство), na-kitajskij (экспорт в КНР — обратное направление) |
+
+Каждая страница — полный состав LanguagePage (intro, linguisticNotes с
+ложными друзьями и нац. стандартами, typicalDocuments, whoOrdersThis, FAQ,
+metaTitle ≤60) + автоматически блок «Примеры перевода», sitemap, JSON-LD.
+Меню «Языки» — оставить 8 топ-пунктов + «Все языки → /perevod» (30 в
+dropdown не влезает — полный список на хабе).
+
+### PDF-примеры: пул 8 → 16
+
+Принцип качества: витринные PDF генерируются только на языках, где перевод
+фрагмента можно гарантировать без носителя (en, de, fr, es, it, pl, cs, nl,
+pt). Для новых «экзотических» языков (ko, ja, ar, tr, kk, he, hi, vi …)
+PDF-образцы НЕ публикуем, пока фрагменты не вычитаны переводчиками бюро —
+черновики можно сгенерировать тем же скриптом позже (этап 3, после проверки
+вашими носителями). Разнообразие блока обеспечивается типами документов:
+
++8 новых PDF (новые ТИПЫ документов, надёжные языки):
+protokol-ispytanij-ru-de, obosnovanie-bezopasnosti-ru-en,
+instrukciya-montazh-ru-it, etiketka-markirovka-ru-fr,
+kommercheskoe-predlozhenie-ru-en, katalog-produkcii-ru-pt,
+pasport-izdeliya-ru-pl, shema-elektricheskaya-ru-cs.
+
+pickSamples работает с любым размером пула (hash-выбор 4 из 16).
