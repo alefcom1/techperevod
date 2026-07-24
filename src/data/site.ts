@@ -5,8 +5,8 @@ export const SITE_PHONE_TEL = "+74959704413";
 export const SITE_WHATSAPP_DISPLAY = "+7 985 970-44-13";
 export const SITE_WHATSAPP_URL = "https://wa.me/79859704413";
 export const SITE_EMAIL = "info@techperevod.com";
-export const SITE_TELEGRAM_HANDLE = "@techperevod";
-export const SITE_TELEGRAM_URL = "https://t.me/techperevod";
+export const SITE_TELEGRAM_HANDLE = "@massimoalef";
+export const SITE_TELEGRAM_URL = "https://t.me/massimoalef";
 
 export const SITE_OFFICE_ADDRESS = "125009, Москва, Глинищевский пер., д. 6, оф. 2";
 export const SITE_OFFICE_METRO = "Охотный Ряд / Тверская";
