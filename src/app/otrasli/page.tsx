@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { IndustriesHubBody } from "@/sections/IndustriesHubBody";
 
-const title = "Технический перевод по отраслям";
+const title = "Перевод документации по отраслям";
 const description =
   "Технический перевод с отраслевой термбазой: нефтегаз, машиностроение, IT, медтех, строительство, автопром, металлургия, авиация и другие направления.";
 

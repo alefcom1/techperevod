@@ -3,7 +3,7 @@ import { SiteShell } from "@/components/layout/SiteShell";
 import { StandartyBody } from "@/sections/StandartyBody";
 
 export const metadata: Metadata = {
-  title: "Стандарты и нормативы перевода | Техперевод.com",
+  title: "Стандарты и нормативы перевода",
   description:
     "ISO 17100 и ГОСТ Р, ЕСКД, ISO 13485 и ICH-GCP, 152-ФЗ, GDPR и требования Роспатента к переводу заявок PCT — на что мы опираемся и что это значит для готового перевода.",
   alternates: { canonical: "/standarty" },

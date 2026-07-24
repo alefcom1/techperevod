@@ -13,7 +13,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const language = getLanguage(params.slug);
   if (!language) return {};
-  const title = language.heroTitle;
+  const title = language.metaTitle || language.heroTitle;
   const description =
     language.heroSubtitle.length > 155 ? `${language.heroSubtitle.slice(0, 154).trimEnd()}…` : language.heroSubtitle;
   const path = `/perevod/${language.slug}`;

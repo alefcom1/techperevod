@@ -12,7 +12,7 @@ import {
 } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Публичная оферта | Техперевод.com",
+  title: "Публичная оферта",
   description: "Публичная оферта на оказание услуг технического перевода — условия, порядок оплаты, реквизиты исполнителя.",
   alternates: { canonical: "/oferta" },
   robots: { index: true, follow: true },

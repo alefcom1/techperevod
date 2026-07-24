@@ -25,6 +25,7 @@ export interface LanguagePage {
   slug: string; // сегмент маршрута под /perevod/
   name: string; // короткое имя для хлебных крошек и карточек
   heroTitle: string;
+  metaTitle?: string; // SEO <title>; если пусто — берётся heroTitle
   heroSubtitle: string;
   intro: string[]; // вводные абзацы — основной SEO-текст страницы
   linguisticNotes: LanguageLinguisticNote[]; // особенности пары: ложные друзья, грамматика, стандарты
@@ -41,6 +42,7 @@ export const LANGUAGES: LanguagePage[] = [
     slug: "s-anglijskogo",
     name: "С английского",
     heroTitle: "Технический перевод с английского на русский",
+    metaTitle: "Перевод с английского: техдокументация",
     heroSubtitle:
       "Мануалы, datasheet'ы и паспорта безопасности от поставщиков из США, Великобритании и Евросоюза — перевод инженером с проверкой терминологии по ГОСТ.",
     intro: [
@@ -111,6 +113,7 @@ export const LANGUAGES: LanguagePage[] = [
     slug: "na-anglijskij",
     name: "На английский",
     heroTitle: "Технический перевод с русского на английский",
+    metaTitle: "Перевод на английский для экспорта",
     heroSubtitle:
       "Экспортная документация, тендерные заявки и патенты — перевод, который читается как написанный носителем языка, с опциональной вычиткой native speaker'ом.",
     intro: [
@@ -185,6 +188,7 @@ export const LANGUAGES: LanguagePage[] = [
     slug: "s-nemeckogo",
     name: "С немецкого",
     heroTitle: "Технический перевод с немецкого",
+    metaTitle: "Перевод с немецкого: техника, DIN",
     heroSubtitle:
       "Документация машиностроительных и автомобильных поставщиков Германии, Австрии и Швейцарии — с точным разбором Fachbegriffe и сверкой DIN с ГОСТ.",
     intro: [
@@ -254,6 +258,7 @@ export const LANGUAGES: LanguagePage[] = [
     slug: "s-kitajskogo",
     name: "С китайского",
     heroTitle: "Технический перевод с китайского",
+    metaTitle: "Перевод с китайского: мануалы, GB",
     heroSubtitle:
       "Общая техническая документация с китайского на русский — сертификаты, спецификации, коммерческие материалы — с носителем языка и редактором-инженером.",
     intro: [
@@ -324,6 +329,7 @@ export const LANGUAGES: LanguagePage[] = [
     slug: "s-francuzskogo",
     name: "С французского",
     heroTitle: "Технический перевод с французского",
+    metaTitle: "Перевод с французского: техтексты",
     heroSubtitle:
       "Документация аэрокосмических и энергетических поставщиков Франции, а также материалы франкоязычной Канады — с учётом формального регистра и региональных различий.",
     intro: [
@@ -393,6 +399,7 @@ export const LANGUAGES: LanguagePage[] = [
     slug: "s-ispanskogo",
     name: "С испанского",
     heroTitle: "Технический перевод с испанского",
+    metaTitle: "Перевод с испанского: техтексты",
     heroSubtitle:
       "Документация от поставщиков из Испании и Латинской Америки — с учётом различий терминологии между регионами и растущих поставок промышленного оборудования.",
     intro: [

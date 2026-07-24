@@ -3,7 +3,7 @@ import { SiteShell } from "@/components/layout/SiteShell";
 import { PrimeryPerevodovBody } from "@/sections/PrimeryPerevodovBody";
 
 export const metadata: Metadata = {
-  title: "Примеры переводов: технический, юридический, медицинский, IT | Техперевод.com",
+  title: "Примеры технического перевода: до и после",
   description:
     "12 фрагментов «исходный текст / перевод» по техническому, юридическому, медицинскому и IT-переводу — с разбором, что именно отличает профессиональный перевод от машинного.",
   alternates: { canonical: "/primery-perevodov" },

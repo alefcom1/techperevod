@@ -12,7 +12,7 @@ import {
 } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "Политика обработки персональных данных | Техперевод.com",
+  title: "Политика обработки персональных данных",
   description: "Политика обработки персональных данных в соответствии с 152-ФЗ «О персональных данных».",
   alternates: { canonical: "/politika-pd" },
   robots: { index: true, follow: true },
