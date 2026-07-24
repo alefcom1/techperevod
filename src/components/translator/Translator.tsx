@@ -41,6 +41,7 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
   const [rating, setRating] = React.useState<"up" | "down" | null>(null);
 
   const sourceRef = React.useRef<HTMLTextAreaElement>(null);
+  const outputRef = React.useRef<HTMLDivElement>(null);
   // true, когда пользователь потянул за resize-грип — тогда авторост отключаем
   // и высоту держит заданная руками (иначе эффект ниже её затирает).
   const manualResizeRef = React.useRef(false);
@@ -89,6 +90,21 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
   }, [text]);
+
+  // Правая панель (вывод) повторяет высоту левой при любом её изменении —
+  // и ручном resize, и авторосте, — чтобы колонки тянулись вместе, как в DeepL.
+  React.useEffect(() => {
+    const src = sourceRef.current;
+    const out = outputRef.current;
+    if (!src || !out || typeof ResizeObserver === "undefined") return;
+    const sync = () => {
+      out.style.minHeight = `${src.offsetHeight}px`;
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(src);
+    return () => ro.disconnect();
+  }, []);
 
   const translateNow = React.useCallback(
     async (opts?: { force?: boolean }) => {
@@ -420,7 +436,7 @@ export function Translator({ onQuoteCreated }: { onQuoteCreated?: (orderId: stri
                   ) : null}
                 </div>
               </div>
-              <div className={`tp-translator__output ${result ? "" : "tp-translator__output--empty"}`}>
+              <div ref={outputRef} className={`tp-translator__output ${result ? "" : "tp-translator__output--empty"}`}>
                 {loading ? "Переводим…" : result || "Перевод появится здесь"}
               </div>
             </div>
