@@ -145,6 +145,22 @@ docker exec sitelens-caddy-1 caddy reload --config /etc/caddy/Caddyfile
 
 Обновление после `git push`: `git pull && CADDY_NETWORK=<сеть> docker compose up -d --build`.
 
+### Стойкость роутинг-блока в чужом Caddyfile
+
+`Caddyfile` стека remarka ведётся вручную (не в git, без генератора) и может
+быть переписан их деплоем/другой сессией, стирая наш site-блок. Чтобы блок
+восстанавливался, есть идемпотентный скрипт `ensure-caddy-route.sh`: если блок
+на месте — ничего не делает, если пропал — дописывает и перезагружает Caddy
+на лету (без простоя).
+
+```bash
+bash ~/techperevod-worker-src/deploy/techperevod-worker/ensure-caddy-route.sh
+```
+
+Рекомендуется добавить этот вызов в конец деплой-процесса remarka — тогда блок
+самовосстанавливается после каждого их деплоя. Сертификат уже лежит в volume
+`caddy_data`, повторный выпуск не нужен — скрипту достаточно вернуть роутинг.
+
 ## Проверка
 
 ```bash
