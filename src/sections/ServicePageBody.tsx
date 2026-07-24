@@ -16,8 +16,37 @@ import { otherServices } from "@/data/services";
 import { getIndustry } from "@/data/site";
 import { POSTS } from "@/data/posts";
 import { GENERIC_PROCESS_STEPS } from "@/data/genericSteps";
+import { SamplesSection } from "@/sections/SamplesSection";
+import { SERVICE_ROUND_B } from "@/data/servicesContent";
 
 const SITE_URL = "https://techperevod.com";
+
+/** Токен инлайн-ссылки в строковых полях данных: [[/путь|текст]]. */
+const LINK_TOKEN_RE = /\[\[(\/[^|\]]+)\|([^\]]+)\]\]/g;
+
+/** Рендерит строку с токенами [[/путь|текст]] как текст вперемешку с <Link>. */
+function renderInlineLinks(text: string): React.ReactNode {
+  const nodes: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let key = 0;
+  const re = new RegExp(LINK_TOKEN_RE);
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      nodes.push(<React.Fragment key={key++}>{text.slice(lastIndex, match.index)}</React.Fragment>);
+    }
+    nodes.push(
+      <Link key={key++} href={match[1]}>
+        {match[2]}
+      </Link>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    nodes.push(<React.Fragment key={key++}>{text.slice(lastIndex)}</React.Fragment>);
+  }
+  return nodes;
+}
 
 /** «До/после» — только для самых показательных услуг, не для всех 12. */
 const BEFORE_AFTER: Record<string, { before: string; after: string }> = {
@@ -43,12 +72,12 @@ const BEFORE_AFTER: Record<string, { before: string; after: string }> = {
   },
 };
 
-/** JSON-LD FAQPage — собирается на сервере из данных услуги. */
-function faqJsonLd(data: Service) {
+/** JSON-LD FAQPage — собирается на сервере из объединённого списка вопросов. */
+function faqJsonLd(faq: Service["faq"]) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: data.faq.map((item) => ({
+    mainEntity: faq.map((item) => ({
       "@type": "Question",
       name: item.q,
       acceptedAnswer: { "@type": "Answer", text: item.a },
@@ -86,12 +115,17 @@ export function ServicePageBody({ data }: { data: Service }) {
   // Стекает информационный трафик к продающей странице (см. docs/seo-clusters-plan.md).
   const relatedPosts = POSTS.filter((p) => p.relatedServiceSlugs.includes(data.slug));
 
+  // Раунд B: подмешиваем блок «кто заказывает» и дополнительные вопросы.
+  const roundB = SERVICE_ROUND_B[data.slug];
+  const faq = roundB ? [...data.faq, ...roundB.extraFaq] : data.faq;
+  const whoOrders = data.whoOrdersThis ?? roundB?.whoOrdersThis;
+
   return (
     <>
       {/* Структурированные данные для сниппетов поиска */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(data)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faq)) }}
       />
       <script
         type="application/ld+json"
@@ -254,6 +288,23 @@ export function ServicePageBody({ data }: { data: Service }) {
         </div>
       </section>
 
+      {whoOrders ? (
+        <section className="tp-section">
+          <div className="tp-section__inner">
+            <ScrollReveal>
+              <SectionHeader title="Кто и когда это заказывает" />
+            </ScrollReveal>
+            <ScrollReveal delay={40}>
+              <div className="tp-service-intro">
+                <p>{renderInlineLinks(whoOrders)}</p>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+      ) : null}
+
+      <SamplesSection slug={data.slug} />
+
       {BEFORE_AFTER[data.slug] ? (
         <section className="tp-section tp-section--tint">
           <div className="tp-section__inner">
@@ -283,7 +334,7 @@ export function ServicePageBody({ data }: { data: Service }) {
             <SectionHeader title="Частые вопросы" />
           </ScrollReveal>
           <div className="tp-faq">
-            {data.faq.map((item, i) => (
+            {faq.map((item, i) => (
               <ScrollReveal key={item.q} delay={i * 50} as="div">
                 <details className="tp-faq__item">
                   <summary className="tp-faq__q">

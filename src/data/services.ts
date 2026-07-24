@@ -27,6 +27,11 @@ export interface Service {
   formats: string[];
   faq: ServiceFaqItem[];
   relatedIndustrySlugs: string[]; // существующие слаги /otrasli/*
+  /**
+   * Абзац «кто и когда заказывает» с инлайн-токенами [[/путь|текст]] для
+   * перелинковки на отрасли, языки и задачи (Раунд B). Опционально.
+   */
+  whoOrdersThis?: string;
 }
 
 export const SERVICES: Service[] = [
