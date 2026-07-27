@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/theme";
 import { YandexMetrika } from "@/components/analytics/YandexMetrika";
 import { SITE_EMAIL, SITE_INN, SITE_LEGAL_NAME, SITE_PHONE_TEL, SITE_TELEGRAM_URL } from "@/data/site";
+import { inter, jetbrainsMono } from "@/lib/fonts";
 
 const SITE_URL = "https://techperevod.com";
 
@@ -93,14 +94,13 @@ const themeInitScript = `try{var t=localStorage.getItem('tp-landing-theme')||'li
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" data-tp-theme="light" suppressHydrationWarning>
+    <html
+      lang="ru"
+      data-tp-theme="light"
+      suppressHydrationWarning
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"

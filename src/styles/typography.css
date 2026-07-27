@@ -12,9 +12,13 @@
    ========================================================================== */
 
 :root {
-  --tp-font-display: "Inter", system-ui, -apple-system, sans-serif;
-  --tp-font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --tp-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  /* Шрифты самохостятся через next/font (src/lib/fonts.ts) — переменные
+     --font-inter/--font-jetbrains-mono подставляются next/font на <html>.
+     Литералы в fallback-цепочке оставлены на случай, если переменная
+     почему-то не применилась (напр. рендер вне RootLayout). */
+  --tp-font-display: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+  --tp-font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+  --tp-font-mono: var(--font-jetbrains-mono), "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
   --tp-tracking-tight: -0.02em;
   --tp-tracking-normal: 0;
