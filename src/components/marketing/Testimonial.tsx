@@ -14,10 +14,15 @@ export interface TestimonialProps {
  * system by design), name/role/company. `sample` renders a small "пример" tag
  * so a placeholder quote reads honestly.
  */
+// Служебные частицы (нидерл./нем./франц. фамилии), которые не считаются
+// при подсчёте инициалов — иначе «Ron den Heijer» даёт «RD» вместо «RH».
+const NAME_PARTICLES = new Set(["van", "der", "den", "von", "de", "la", "le", "af"]);
+
 export function Testimonial({ quote, name, role, company, sample = false, className = "" }: TestimonialProps) {
   const initials = name
     ? name
         .split(" ")
+        .filter((p) => !NAME_PARTICLES.has(p.toLowerCase()))
         .map((p) => p[0])
         .slice(0, 2)
         .join("")

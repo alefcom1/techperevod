@@ -26,10 +26,9 @@ export function ProofSection({
           </div>
           <Testimonial
             quote="Отправляем чертежи вечером — утром уже виден перевод с сохранённой разметкой таблиц, редактору остаётся только сверить термины."
-            name="Роман Соколов"
+            name="Ron den Heijer"
             role="Руководитель проектов"
-            company="промышленный холдинг"
-            sample
+            company="Growtech Holland"
           />
         </div>
       </div>
