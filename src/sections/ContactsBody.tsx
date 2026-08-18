@@ -14,7 +14,8 @@ import {
   SITE_EMAIL,
   SITE_OFFICE_ADDRESS,
   SITE_OFFICE_HOURS,
-  SITE_OFFICE_MAP_EMBED_URL,
+  SITE_OFFICE_MAP_LINK,
+  SITE_OFFICE_MAP_STATIC_URL,
   SITE_OFFICE_METRO,
   SITE_PHONE_DISPLAY,
   SITE_PHONE_TEL,
@@ -119,17 +120,22 @@ export function ContactsBody() {
                   <a href={`tel:${SITE_PHONE_TEL}`}>{SITE_PHONE_DISPLAY}</a>
                 </div>
               </Card>
-              <div className="tp-office__map">
-                <iframe
-                  src={SITE_OFFICE_MAP_EMBED_URL}
-                  width="100%"
-                  height="100%"
-                  frameBorder={0}
+              <a
+                href={SITE_OFFICE_MAP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tp-office__map"
+                aria-label="Открыть офис Техперевод.com на Яндекс.Картах в новой вкладке"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={SITE_OFFICE_MAP_STATIC_URL}
+                  alt="Карта: офис Техперевод.com, Глинищевский пер., д. 6"
                   loading="lazy"
-                  title="Офис Техперевод.com на карте"
-                  style={{ border: 0 }}
+                  width={650}
+                  height={450}
                 />
-              </div>
+              </a>
             </div>
           </ScrollReveal>
         </div>

@@ -13,7 +13,12 @@ export const SITE_OFFICE_METRO = "Охотный Ряд / Тверская";
 export const SITE_OFFICE_HOURS = "Пн–Пт 9:00–18:00 (МСК)";
 // Координаты дома (см. поиск по адресу) — формат Яндекс.Карт: долгота,широта.
 export const SITE_OFFICE_COORDS = { lon: 37.610485, lat: 55.763138 };
-export const SITE_OFFICE_MAP_EMBED_URL = `https://yandex.ru/map-widget/v1/?ll=${37.610485}%2C${55.763138}&z=17&l=map&pt=${37.610485},${55.763138},pm2rdm`;
+// Статичная картинка карты (Static API) вместо интерактивного iframe: не
+// требует cookies, не режется блокировщиками рекламы (yandex.ru/map-widget/*
+// массово в списках блокировки) и рендерится даже там, где виджет молчал.
+export const SITE_OFFICE_MAP_STATIC_URL = `https://static-maps.yandex.ru/1.x/?ll=${37.610485},${55.763138}&z=16&l=map&pt=${37.610485},${55.763138},pm2rdm&size=650,450&lang=ru_RU`;
+// Клик по картинке ведёт на полноценную интерактивную карту в новой вкладке.
+export const SITE_OFFICE_MAP_LINK = `https://yandex.ru/maps/?ll=${37.610485}%2C${55.763138}&z=17&pt=${37.610485},${55.763138},pm2rdm`;
 
 export const SITE_LEGAL_NAME = "ИП Волшина Елизавета Максимовна";
 export const SITE_INN = "231149349191";
