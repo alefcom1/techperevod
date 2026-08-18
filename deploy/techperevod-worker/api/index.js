@@ -91,6 +91,22 @@ function resolveProvider(pathname) {
     };
   }
 
+  if (rest.startsWith("/telegram/") || rest === "/telegram") {
+    // Telegram — единственный провайдер, которому воркер ничего не
+    // подставляет. Токен бота обязан лежать в самом пути (/bot<токен>/метод —
+    // так устроен Bot API), поэтому его приносит клиент, а воркер работает
+    // сквозным каналом. Секрет воркера при этом всё равно проверяется выше:
+    // authorization отбрасывается при пересылке и до Telegram не доходит.
+    //
+    // Через этот же маршрут идёт скачивание файлов (/file/bot<токен>/<путь>),
+    // поэтому важно, что ответ отдаётся потоком: там двоичные данные.
+    return {
+      host: "api.telegram.org",
+      path: rest.replace(/^\/telegram/, ""),
+      authHeader: null,
+    };
+  }
+
   // По умолчанию — Anthropic (/v1/*).
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) return { error: "ANTHROPIC_API_KEY not configured" };
@@ -142,7 +158,8 @@ export default async function handler(req, res) {
     if (Array.isArray(value)) headers.set(name, value.join(", "));
     else if (value !== undefined) headers.set(name, value);
   }
-  headers.set(provider.authHeader[0], provider.authHeader[1]);
+  // У сквозных провайдеров подставлять нечего.
+  if (provider.authHeader) headers.set(provider.authHeader[0], provider.authHeader[1]);
   if (provider.anthropic && !headers.has("anthropic-version")) headers.set("anthropic-version", "2023-06-01");
 
   try {
